@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 560" width="1200" height="560" role="img" aria-label="Chat model generates text then parses it; minojev reads probabilities directly">
+  <defs>
+    <linearGradient id="ex-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0d14"/>
+      <stop offset="1" stop-color="#0c1322"/>
+    </linearGradient>
+    <linearGradient id="ex-green" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#6ea8fe"/>
+      <stop offset="1" stop-color="#59d3a8"/>
+    </linearGradient>
+    <marker id="ex-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5f6d85"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="560" fill="url(#ex-bg)"/>
+
+  <!-- shared input -->
+  <rect x="36" y="120" width="212" height="320" rx="16" fill="#121a2b" stroke="#25304a" stroke-width="2"/>
+  <text x="142" y="160" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="13" letter-spacing="2" fill="#8d9bb3">SAME REQUEST</text>
+  <text x="142" y="205" text-anchor="middle" font-family="ui-sans-serif, -apple-system, sans-serif" font-size="17" fill="#e8edf7">state</text>
+  <text x="142" y="232" text-anchor="middle" font-family="ui-sans-serif, -apple-system, sans-serif" font-size="17" fill="#e8edf7">+ question</text>
+  <text x="142" y="266" text-anchor="middle" font-family="ui-sans-serif, -apple-system, sans-serif" font-size="17" fill="#59d3a8">+ candidates</text>
+  <text x="142" y="330" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#5f6d85">"which queue should</text>
+  <text x="142" y="350" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#5f6d85">this ticket go to?"</text>
+
+  <!-- lane divider -->
+  <line x1="280" y1="278" x2="1164" y2="278" stroke="#25304a" stroke-dasharray="6 8"/>
+
+  <!-- chat lane -->
+  <text x="280" y="82" font-family="ui-monospace, Menlo, monospace" font-size="14" letter-spacing="3" fill="#ef7b8b">CHAT MODEL</text>
+  <rect x="288" y="100" width="388" height="130" rx="14" fill="#1a1520" stroke="#5c2f3a" stroke-width="2"/>
+  <text x="310" y="132" font-family="ui-sans-serif, -apple-system, sans-serif" font-size="15" fill="#c9a7b0">generate token by token</text>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="13">
+    <rect x="310" y="148" width="38" height="26" rx="6" fill="#241a26"/><text x="329" y="166" text-anchor="middle" fill="#ef7b8b">This</text>
+    <rect x="354" y="148" width="34" height="26" rx="6" fill="#241a26"/><text x="371" y="166" text-anchor="middle" fill="#ef7b8b">is</text>
+    <rect x="394" y="148" width="58" height="26" rx="6" fill="#241a26"/><text x="423" y="166" text-anchor="middle" fill="#ef7b8b">likely</text>
+    <rect x="458" y="148" width="66" height="26" rx="6" fill="#241a26"/><text x="491" y="166" text-anchor="middle" fill="#ef7b8b">billing</text>
+    <rect x="530" y="148" width="34" height="26" rx="6" fill="#241a26"/><text x="547" y="166" text-anchor="middle" fill="#ef7b8b">...</text>
+  </g>
+  <text x="310" y="205" font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#a06a76">one token at a time · seconds · output-token cost</text>
+
+  <rect x="700" y="100" width="200" height="130" rx="14" fill="#1a1520" stroke="#5c2f3a" stroke-width="2"/>
+  <text x="800" y="150" text-anchor="middle" font-family="ui-sans-serif, -apple-system, sans-serif" font-size="15" fill="#c9a7b0">parse the text</text>
+  <text x="800" y="178" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#a06a76">regex · JSON repair</text>
+  <text x="800" y="198" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#a06a76">format can break</text>
+
+  <rect x="924" y="100" width="240" height="130" rx="14" fill="#1a1520" stroke="#5c2f3a" stroke-width="2"/>
+  <text x="1044" y="150" text-anchor="middle" font-family="ui-sans-serif, -apple-system, sans-serif" font-size="15" fill="#c9a7b0">untyped guess</text>
+  <text x="1044" y="182" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="14" fill="#ef7b8b">"probably billing?"</text>
+
+  <!-- minojev lane -->
+  <text x="280" y="342" font-family="ui-monospace, Menlo, monospace" font-size="14" letter-spacing="3" fill="#59d3a8">MINOJEV</text>
+  <rect x="288" y="360" width="388" height="130" rx="14" fill="#101a20" stroke="#1f5c49" stroke-width="2"/>
+  <text x="310" y="396" font-family="ui-sans-serif, -apple-system, sans-serif" font-size="15" fill="#9fd8c4">one forward pass</text>
+  <text x="310" y="428" font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#6fa691">no output tokens · parallel questions</text>
+  <text x="310" y="452" font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#6fa691">shared-state KV reuse</text>
+  <text x="310" y="476" font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#6fa691">~tens of milliseconds on CPU</text>
+
+  <rect x="700" y="360" width="464" height="130" rx="14" fill="#101a20" stroke="#1f5c49" stroke-width="2"/>
+  <text x="724" y="390" font-family="ui-sans-serif, -apple-system, sans-serif" font-size="15" fill="#9fd8c4">typed distribution, read not written</text>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="12.5" fill="#8d9bb3">
+    <text x="724" y="418">access</text>
+    <rect x="790" y="408" width="270" height="11" rx="5.5" fill="#0d1320"/>
+    <rect x="790" y="408" width="214" height="11" rx="5.5" fill="url(#ex-green)"/>
+    <text x="1072" y="418" fill="#e8edf7">0.79</text>
+
+    <text x="724" y="442">deliverability</text>
+    <rect x="790" y="432" width="270" height="11" rx="5.5" fill="#0d1320"/>
+    <rect x="790" y="432" width="38" height="11" rx="5.5" fill="url(#ex-green)"/>
+    <text x="1072" y="442" fill="#e8edf7">0.14</text>
+
+    <text x="724" y="466">billing</text>
+    <rect x="790" y="456" width="270" height="11" rx="5.5" fill="#0d1320"/>
+    <rect x="790" y="456" width="19" height="11" rx="5.5" fill="url(#ex-green)"/>
+    <text x="1072" y="466" fill="#e8edf7">0.07</text>
+  </g>
+
+  <!-- arrows -->
+  <line x1="250" y1="165" x2="284" y2="165" stroke="#5f6d85" stroke-width="2" marker-end="url(#ex-arrow)"/>
+  <line x1="676" y1="165" x2="696" y2="165" stroke="#5f6d85" stroke-width="2" marker-end="url(#ex-arrow)"/>
+  <line x1="900" y1="165" x2="920" y2="165" stroke="#5f6d85" stroke-width="2" marker-end="url(#ex-arrow)"/>
+  <line x1="250" y1="425" x2="284" y2="425" stroke="#5f6d85" stroke-width="2" marker-end="url(#ex-arrow)"/>
+  <line x1="676" y1="425" x2="696" y2="425" stroke="#5f6d85" stroke-width="2" marker-end="url(#ex-arrow)"/>
+
+  <!-- verdicts -->
+  <text x="600" y="530" text-anchor="middle" font-family="ui-sans-serif, -apple-system, sans-serif" font-size="16" fill="#8d9bb3">
+    A decision is not a sentence. The model already formed an opinion while reading your question —
+    minojev reads it instead of writing it out.
+  </text>
+</svg>

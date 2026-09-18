@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/banner.svg" alt="minojev — decisions, not tokens" width="960"></p>
 
 <p align="center">
-  <a href="README.zh-CN.md">简体中文</a> · <b>English</b>
+  <a href="README.zh-CN.md">简体中文</a> · <b>English</b> · <a href="https://zeredy879.github.io/minojev/">Live demos</a> · <a href="https://huggingface.co/zeredy879/minojev">Models</a>
 </p>
 
 <p align="center">
@@ -12,33 +12,59 @@
   <img alt="parameters" src="https://img.shields.io/badge/parameters-547k-8d9bb3">
 </p>
 
-**minojev turns runtime-defined judgment problems into typed probability
-distributions in a single forward pass.** State and questions go in; complete
-distributions come out; no output token is ever generated. The whole pipeline —
-data generation, training, calibration, serving, and evaluation — runs offline
-on a laptop CPU.
+> **A decision is not a sentence.** By the time a model has read your question,
+> it has already formed an opinion. minojev reads that opinion directly instead
+> of making the model write it out.
 
-## Why "decisions, not tokens"?
+## The idea in 30 seconds
 
-A chat model answers a routing question by generating a sentence that software
-parses back into an `if` statement. That costs output tokens, adds latency, and
-can hallucinate. minojev gives software the decision directly: calibrated
-probabilities over declared candidates, read from hidden states, never sampled.
+Ask a chat model *"Which queue should this ticket go to?"* and it answers with
+a paragraph. Your code then parses the paragraph back into a label and a
+confidence number. The paragraph was never the answer — it was packaging, and
+you paid for it in latency, money, and format risk.
 
-|  |  |
-|---|---|
-| **Primitives** | `choice` (2–255 candidates), `boolean` (one proposition), `score` (2–10 ordered levels + expected value) |
-| **Decoding** | zero output tokens; every record reports `decode_steps: 0` |
-| **Parallelism** | many independent questions scored in one pass, no cross-question attention |
-| **Reuse** | one KV-cache prefill per distinct state, then a branch per question and candidate |
-| **Calibration** | dev-fitted temperatures make confidence track accuracy, with ECE reported |
-| **Auditable** | exact teacher targets by construction, dev-selected checkpoints, permutation-equivariance tests |
+minojev removes the packaging:
+
+```
+state + question + candidates  ──►  one forward pass  ──►  {access: 0.79, deliverability: 0.14, billing: 0.07}
+```
+
+No sentence. No parsing. No format errors. Just a typed probability
+distribution your software can branch on. Every record it returns says
+`decode_steps: 0`, because no output token was ever generated.
+
+<img src="assets/explainer.svg" alt="Chat model: generate token by token, then parse. minojev: one forward pass, read the distribution." width="100%">
+
+## What makes minojev different
+
+| | A chat model | minojev |
+|---|---|---|
+| Output | a sentence to parse | typed distribution over declared candidates |
+| Where the answer comes from | token-by-token sampling | read from hidden states, zero output tokens |
+| Cost driver | output tokens | one forward pass |
+| Format errors | possible | impossible — the output space is declared up front |
+| Confidence | self-reported, often overconfident | dev-calibrated; ECE measured and reported |
+| Many questions, one state | one generation each | one pass, shared KV prefix |
+| Runs on | GPU cluster or API | a laptop CPU; Hugging Face backbones optional |
+
+What sets **this** project apart from other decision-model experiments:
+
+- **Fully offline reproduction.** The bundled 547k-parameter models train from
+  scratch on CPU in minutes. No downloads, no API keys, no GPU.
+- **Every claim has an artifact.** Datasets, teacher targets, per-question
+  predictions, metrics, and replay bundles are committed in the repo.
+- **Calibration is first-class.** `--calibrate gold` is the default, because a
+  probability you cannot trust is worse than a label.
+- **Two engines.** Trained decision heads for full control, plus a
+  native-logits route for pretrained Hugging Face models.
+- **Bilingual and visual.** English + 简体中文 docs, an animated maze agent, and
+  an interactive decision console.
 
 ## Live demos
 
 | [Maze agent replay](https://zeredy879.github.io/minojev/maze.html) | [Parallel decision console](https://zeredy879.github.io/minojev/console.html) |
 |---|---|
-| An animated grid run where every step shows the move distribution, four parallel safety booleans, and the code-enforced final move. **5/6 mazes solved.** | One state, many runtime questions scored together, with teacher distributions overlaid for comparison. |
+| Watch an agent navigate a grid while every step shows the move distribution, four parallel safety booleans, and the code-enforced final move. **5/6 mazes solved.** | One state, many runtime questions scored together, with teacher distributions overlaid. |
 
 ![Maze replay preview](https://zeredy879.github.io/minojev/data/maze-preview.svg)
 
@@ -83,13 +109,13 @@ minojev maze-rollout --checkpoint runs/maze/checkpoint \
   --output web/data/maze.json --count 6 --seed 23
 ```
 
-## Calibration
+## Calibration: confidence that means something
 
 Training minimizes distribution loss, which does not by itself make confidence
 meaningful. `minojev calibrate` fits one temperature per primitive on a dev
-split by minimizing negative log-likelihood, stored in the checkpoint and
-applied at serving time. Temperature scaling never changes the predicted
-candidate.
+split, stores it in the checkpoint, and applies it at serving time. A positive
+temperature never changes the predicted candidate — only how much the model
+believes it.
 
 | Bundled run | Accuracy | ECE before | ECE after | Mean confidence |
 |---|---:|---:|---:|---:|
@@ -106,8 +132,8 @@ minojev evaluate  --checkpoint runs/synth-calibrated --input data/test.jsonl
 
 Both bundled models are 547k-parameter transformers trained from scratch on
 CPU. "Teacher top-set" counts a decision as correct when the prediction is
-among the teacher's best (important for grid moves, where two directions often
-tie). Regenerate everything with `scripts/build_results.sh`.
+among the teacher's best — important for grid moves, where two directions
+often tie. Regenerate everything with `scripts/build_results.sh`.
 
 | Run | Questions | Accuracy | Teacher top-set | Dist. error | Decode steps |
 |---|---:|---:|---:|---:|---:|
@@ -228,7 +254,7 @@ src/minojev/
   cli.py         synth / train / calibrate / bench / score / evaluate / demo / maze
 tests/           41 tests: contract, equivalence, calibration, training, maze, CLI
 web/             landing page, decision console, maze replay
-assets/          banner and logo
+assets/          banner, logo, explainer
 ```
 
 ## Tests

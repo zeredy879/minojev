@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/banner.svg" alt="minojev — 决策，而非 token" width="960"></p>
 
 <p align="center">
-  <b>简体中文</b> · <a href="README.md">English</a>
+  <b>简体中文</b> · <a href="README.md">English</a> · <a href="https://zeredy879.github.io/minojev/">在线 Demo</a> · <a href="https://huggingface.co/zeredy879/minojev">模型权重</a>
 </p>
 
 <p align="center">
@@ -12,30 +12,55 @@
   <img alt="parameters" src="https://img.shields.io/badge/parameters-547k-8d9bb3">
 </p>
 
-**minojev 在一次前向传播中，把运行时定义的判断问题变成带类型的概率分布。**
-状态与问题输入，完整分布输出，全程不生成任何输出 token。数据生成、训练、
-校准、推理与评估的完整流水线都可以在笔记本 CPU 上离线运行。
+> **决策不是句子。** 当模型读完你的问题，它心里已经有答案了。minojev 直接
+> 读出这个答案，而不是让模型把它"写"出来。
 
-## 为什么是"决策，而非 token"？
+## 30 秒理解核心思路
 
-聊天模型回答一个路由问题时，需要生成一句话，软件再把它解析回一个 `if`
-语句：既消耗输出 token、增加延迟，也可能产生幻觉。minojev 直接把决策交给
-软件——针对声明的候选集，从隐藏状态中读出经过校准的概率分布，永不采样。
+问聊天模型："这张工单该进哪个队列？"它会写一段话。你的程序再把这段话解析成
+一个标签和一个置信度。那段话从来都不是答案本身，而是包装——你为它付出了延迟
+（逐 token 生成）、成本（输出 token 更贵）和格式风险（生成的内容可能无法解析）。
 
-|  |  |
-|---|---|
-| **三种原语** | `choice`（2–255 个候选）、`boolean`（单个命题）、`score`（2–10 个有序等级 + 期望值） |
-| **零解码** | 不产生任何输出 token，每条记录都报告 `decode_steps: 0` |
-| **并行判断** | 多个独立问题在一次前向中完成，问题之间没有交叉注意力 |
-| **状态复用** | 每个不同状态只做一次 KV 缓存预填充，再按问题与候选分支 |
-| **概率校准** | 在 dev 集上拟合温度，让置信度与准确率对齐，并报告 ECE |
-| **可审计** | teacher 目标由构造精确给出，按 dev 选择检查点，带置换等变测试 |
+minojev 去掉了这层包装：
+
+```
+状态 + 问题 + 候选  ──►  一次前向传播  ──►  {access: 0.79, deliverability: 0.14, billing: 0.07}
+```
+
+没有句子、没有解析、没有格式错误，只有软件可以直接分支判断的带类型概率分布。
+返回的每条记录都写着 `decode_steps: 0`——因为它从未生成任何输出 token。
+
+<img src="assets/explainer.svg" alt="聊天模型逐 token 生成再解析；minojev 一次前向传播直接读出分布" width="100%">
+
+## minojev 的与众不同
+
+| | 聊天模型 | minojev |
+|---|---|---|
+| 输出 | 一段待解析的文字 | 声明候选集上的带类型分布 |
+| 答案来源 | 逐 token 采样 | 从隐藏状态读出，零输出 token |
+| 成本主要来自 | 输出 token | 一次前向传播 |
+| 格式错误 | 可能发生 | 不可能——输出空间提前声明 |
+| 置信度 | 自我报告，常常过度自信 | dev 集校准，ECE 可测可查 |
+| 同状态多问题 | 每个问题生成一次 | 一次前向，共享 KV 前缀 |
+| 运行环境 | GPU 集群或 API | 笔记本 CPU；可选 Hugging Face 模型 |
+
+相比其它决策模型实验，这个项目还有这些特点：
+
+- **完全离线复现。** 内置 547k 参数模型在 CPU 上几分钟从零训练完成，不需要
+  下载、API key 或 GPU。
+- **每个结论都有产物。** 数据集、teacher 目标、逐题预测、指标和回放数据
+  全部提交在仓库里。
+- **校准是一等公民。** `--calibrate gold` 是默认行为——无法信任的概率比标签
+  更糟糕。
+- **双引擎。** 可训练决策头提供完全控制，原生 logits 路径支持预训练
+  Hugging Face 模型。
+- **双语 + 可视化。** 英文 / 简体中文文档、动态迷宫智能体和交互式决策控制台。
 
 ## 在线 Demo
 
 | [迷宫智能体回放](https://zeredy879.github.io/minojev/maze.html) | [并行决策控制台](https://zeredy879.github.io/minojev/console.html) |
 |---|---|
-| 每一步都展示移动分布、四个并行安全布尔判断，以及代码约束后的最终移动。**6 局解出 5 局。** | 单个状态下多个运行时问题一起打分，并叠加 teacher 分布进行对照。 |
+| 每一步都展示移动分布、四个并行安全布尔判断，以及代码约束后的最终移动。**6 局解出 5 局。** | 单个状态下多个运行时问题一起打分，并叠加 teacher 分布对照。 |
 
 ![迷宫回放预览](https://zeredy879.github.io/minojev/data/maze-preview.svg)
 
@@ -80,11 +105,11 @@ minojev maze-rollout --checkpoint runs/maze/checkpoint \
   --output web/data/maze.json --count 6 --seed 23
 ```
 
-## 概率校准
+## 概率校准：让置信度有意义
 
-训练只最小化分布损失，这本身并不能保证置信度有意义。`minojev calibrate`
-在 dev 集上为每种原语拟合一个温度（最小化负对数似然），写入检查点并在推理时
-自动应用。温度缩放不会改变任何预测结果。
+训练只最小化分布损失，这本身并不能保证置信度可信。`minojev calibrate` 在
+dev 集上为每种原语拟合一个温度，写入检查点并在推理时自动应用。温度始终为正，
+所以它永远不会改变模型的预测结果，只会改变模型的"确信程度"。
 
 | 内置模型 | 准确率 | 校准前 ECE | 校准后 ECE | 平均置信度 |
 |---|---:|---:|---:|---:|
@@ -100,8 +125,8 @@ minojev evaluate  --checkpoint runs/synth-calibrated --input data/test.jsonl
 ## 结果
 
 两个内置模型都是从零训练的 547k 参数 Transformer，全程在 CPU 上完成。
-"Teacher top-set" 指预测命中 teacher 的最优候选集合（在网格移动中两个方向
-经常并列，这一指标更公平）。运行 `scripts/build_results.sh` 可复现全部数字。
+"Teacher top-set" 指预测命中 teacher 的最优候选集合——在网格移动中两个方向
+经常并列，这一指标更公平。运行 `scripts/build_results.sh` 可复现全部数字。
 
 | 任务 | 问题数 | 准确率 | Teacher 最优集 | 分布误差 | 解码步数 |
 |---|---:|---:|---:|---:|---:|
@@ -120,8 +145,7 @@ minojev evaluate  --checkpoint runs/synth-calibrated --input data/test.jsonl
 | 迷宫 | fresh | 23.6 ms | 27.0 ms | 198 |
 | 迷宫 | reuse | **17.1 ms** | **18.0 ms** | **366** |
 
-一个决策对应一个问题；一个请求可以包含多个问题。使用 `minojev bench`
-复现。
+一个决策对应一个问题；一个请求可以包含多个问题。使用 `minojev bench` 复现。
 
 原始指标和逐题预测提交在 [`results/`](results) 下；回放数据在
 [`web/data/`](web/data) 下。
@@ -188,7 +212,7 @@ print(record["candidate_ids"], record["probabilities"], record["decode_steps"])
 ## 原生 logits 引擎（预训练模型）
 
 对于预训练的 Hugging Face 因果语言模型，`minojev.logits` 直接读取固定答案槽
-位置的 next-token logits，为声明的候选打分。当候选数超过 16 个字母槽时，
+位置的 next-token logits 为声明的候选打分。当候选数超过 16 个字母槽时，
 两阶段路径会逐个候选独立打分（yes/no log-odds 后归一化）：
 
 ```python
@@ -221,7 +245,7 @@ src/minojev/
   cli.py         synth / train / calibrate / bench / score / evaluate / demo / maze
 tests/           41 个测试：契约、等价性、校准、训练、迷宫、CLI
 web/             主页、决策控制台、迷宫回放
-assets/          banner 与 logo
+assets/          banner、logo、原理图
 ```
 
 ## 测试
