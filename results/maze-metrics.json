@@ -1,0 +1,33 @@
+{
+  "questions": 1536,
+  "labelled": 1536,
+  "accuracy": 0.837890625,
+  "accuracy_by_type": {
+    "boolean": 0.87793,
+    "choice": 0.539062,
+    "score": 0.976562
+  },
+  "accuracy_by_family": {
+    "boolean": 0.87793,
+    "choice": 0.539062,
+    "score": 0.976562
+  },
+  "gold_nll": 0.3913888879558383,
+  "teacher_scored": 1536,
+  "teacher_ce": 0.5360507742074337,
+  "distribution_error": 0.11271299483995167,
+  "brier": 0.11271299483995167,
+  "teacher_argmax_accuracy": 0.8287760416666666,
+  "teacher_topset_accuracy": 0.89453125,
+  "teacher_argmax_by_family": {
+    "boolean": 0.87793,
+    "choice": 0.484375,
+    "score": 0.976562
+  },
+  "teacher_topset_by_family": {
+    "boolean": 0.87793,
+    "choice": 0.878906,
+    "score": 0.976562
+  },
+  "decode_steps": 0
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>minojev · generation-free decisions</title>
+<style>
+  :root {
+    --bg: #0a0d14;
+    --panel: #131927;
+    --panel-2: #1a2235;
+    --ink: #e8edf7;
+    --muted: #8d9bb3;
+    --accent: #59d3a8;
+    --accent-2: #6ea8fe;
+    --warn: #f0b06a;
+    --line: #25304a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: var(--accent-2); }
+  header.hero {
+    padding: 64px 24px 40px;
+    background:
+      radial-gradient(900px 400px at 15% -10%, rgba(89,211,168,.14), transparent 60%),
+      radial-gradient(700px 360px at 85% -20%, rgba(110,168,254,.16), transparent 60%),
+      var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  .kicker { color: var(--accent); letter-spacing: 2px; text-transform: uppercase; font-size: 12px; }
+  h1 { font-size: 42px; margin: 8px 0 10px; letter-spacing: -0.5px; }
+  h1 span { color: var(--accent); }
+  .tagline { color: var(--muted); font-size: 18px; max-width: 720px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; }
+  .badge { border: 1px solid var(--line); background: rgba(19,25,39,.8); color: var(--muted);
+    border-radius: 999px; padding: 6px 12px; font-size: 12.5px; }
+  .badge b { color: var(--ink); font-weight: 600; }
+  main { max-width: 1080px; margin: 0 auto; padding: 34px 20px 40px; }
+  h2 { font-size: 20px; margin: 34px 0 12px; }
+  .demos { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+  .card { display: block; background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px 18px 16px; text-decoration: none; color: inherit; transition: transform .15s ease, border-color .15s ease; }
+  .card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0 0 14px; color: var(--muted); font-size: 13.5px; }
+  .card .stat { color: var(--accent); font-size: 13px; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .feature { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .feature h3 { margin: 0 0 6px; font-size: 14px; color: var(--accent); }
+  .feature p { margin: 0; color: var(--muted); font-size: 13px; }
+  pre { background: #0d1220; border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+    overflow-x: auto; font: 12.5px/1.6 ui-monospace, Menlo, monospace; color: #cfe1ff; }
+  .bars { display: grid; gap: 6px; margin-top: 26px; max-width: 520px; }
+  .bar { display: grid; grid-template-columns: 90px 1fr 52px; gap: 10px; align-items: center; }
+  .bar small { color: var(--muted); font-size: 12px; }
+  .track { height: 10px; background: #0d1320; border-radius: 5px; overflow: hidden; }
+  .fill { height: 100%; width: 0; border-radius: 5px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); animation: grow 1.6s ease forwards; }
+  .bar:nth-child(2) .fill { animation-delay: .1s; }
+  .bar:nth-child(3) .fill { animation-delay: .2s; }
+  .bar:nth-child(4) .fill { animation-delay: .3s; }
+  @keyframes grow { to { width: var(--w); } }
+  footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 12.5px; }
+  footer .wrap { padding: 20px 20px 40px; }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">system-one decision model</div>
+    <h1>mino<span>jev</span></h1>
+    <p class="tagline">
+      States and questions in, complete probability distributions out — with zero
+      output-token decoding. Runtime-defined choices, booleans, and ordered scores
+      are all read from hidden states in a single forward pass.
+    </p>
+    <div class="badges">
+      <span class="badge"><b>choice</b> 2–255 candidates</span>
+      <span class="badge"><b>boolean</b> one proposition</span>
+      <span class="badge"><b>score</b> 2–10 levels</span>
+      <span class="badge"><b>0</b> decode steps</span>
+      <span class="badge">parallel questions</span>
+      <span class="badge">shared-state KV reuse</span>
+      <span class="badge">trains offline on CPU</span>
+    </div>
+    <div class="bars">
+      <div class="bar"><small>route access</small><div class="track"><div class="fill" style="--w:82%"></div></div><small>0.82</small></div>
+      <div class="bar"><small>route billing</small><div class="track"><div class="fill" style="--w:6%"></div></div><small>0.06</small></div>
+      <div class="bar"><small>route email</small><div class="track"><div class="fill" style="--w:12%"></div></div><small>0.12</small></div>
+      <div class="bar"><small>urgent</small><div class="track"><div class="fill" style="--w:76%"></div></div><small>0.76</small></div>
+    </div>
+  </div>
+</header>
+<main>
+  <h2>Live demos</h2>
+  <div class="demos">
+    <a class="card" href="maze.html">
+      <h3>Maze agent replay</h3>
+      <p>Watch the model steer an agent through a grid. Every step shows the move
+      distribution, four parallel safety judgments, and the masked final choice.</p>
+      <div class="stat" id="maze-stat">loading…</div>
+    </a>
+    <a class="card" href="console.html">
+      <h3>Parallel decision console</h3>
+      <p>One state, many runtime questions: choices, booleans, and scores scored
+      together, with teacher distributions for comparison.</p>
+      <div class="stat" id="console-stat">loading…</div>
+    </a>
+  </div>
+
+  <h2>What minojev does</h2>
+  <div class="grid">
+    <div class="feature"><h3>Typed primitives</h3><p>Choice, boolean, and score questions return distributions with stable semantics and validation limits.</p></div>
+    <div class="feature"><h3>Dynamic candidates</h3><p>The same head handles 2 to 255 options supplied at request time.</p></div>
+    <div class="feature"><h3>Zero decoding</h3><p>Decisions come from one forward pass; every record reports zero generated tokens.</p></div>
+    <div class="feature"><h3>Parallel judgment</h3><p>Independent questions over shared state are batched without cross-question attention.</p></div>
+    <div class="feature"><h3>Shared-state reuse</h3><p>One KV-cache prefill per distinct state, then branches for every question and candidate.</p></div>
+    <div class="feature"><h3>Offline reproduction</h3><p>A built-in tiny backbone and byte tokenizer train from scratch on a laptop CPU with exact teacher targets.</p></div>
+  </div>
+
+  <h2>Quickstart</h2>
+  <pre>minojev synth --out data/train.jsonl --count 512 --seed 17 --split train
+minojev train --train data/train.jsonl --dev data/dev.jsonl \
+  --output-dir runs/synth --steps 800 --device cpu
+minojev score --checkpoint runs/synth/checkpoint \
+  --input examples/decisions.jsonl --output results.jsonl --mode reuse</pre>
+</main>
+<footer>
+  <div class="wrap">
+    <a href="https://github.com/zeredy879/minojev">minojev on GitHub</a> · MIT License ·
+    generation-free decisions
+  </div>
+</footer>
+<script>
+function load(url) {
+  return fetch(url).then((response) => (response.ok ? response.json() : null)).catch(() => null);
+}
+load("data/maze.json").then((bundle) => {
+  const node = document.getElementById("maze-stat");
+  if (!bundle || !bundle.summary) { node.textContent = "run `minojev maze-rollout` to generate"; return; }
+  const s = bundle.summary;
+  node.textContent = `${s.successes}/${s.mazes} mazes solved · ${s.total_steps} steps · ${s.forced_moves} forced moves`;
+});
+load("data/demo.json").then((bundle) => {
+  const node = document.getElementById("console-stat");
+  if (!bundle || !bundle.summary) { node.textContent = "run `minojev demo` to generate"; return; }
+  const s = bundle.summary;
+  const accuracy = s.accuracy === undefined ? "" : ` · ${(100 * s.accuracy).toFixed(1)}% accuracy`;
+  node.textContent = `${s.questions} questions · ${s.decode_steps} decode steps${accuracy}`;
+});
+</script>
+</body>
+</html>

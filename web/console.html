@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>minojev · parallel decision console</title>
+<style>
+  :root {
+    --bg: #0b0e14;
+    --panel: #141925;
+    --panel-2: #1b2233;
+    --ink: #e7ecf5;
+    --muted: #93a0b4;
+    --accent: #59d3a8;
+    --accent-2: #6ea8fe;
+    --warn: #f0b06a;
+    --line: #26304a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  header {
+    padding: 28px 24px 18px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #101627, var(--bg));
+  }
+  h1 { margin: 0 0 4px; font-size: 22px; letter-spacing: 0.2px; }
+  h1 span { color: var(--accent); }
+  header p { margin: 0; color: var(--muted); max-width: 860px; }
+  main { max-width: 1080px; margin: 0 auto; padding: 22px 20px 80px; }
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin: 18px 0 26px;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .stat b { display: block; font-size: 20px; color: var(--accent); }
+  .stat small { color: var(--muted); }
+  .record {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    margin: 0 0 14px;
+    overflow: hidden;
+  }
+  .record > header {
+    padding: 12px 16px;
+    background: var(--panel-2);
+    border-bottom: 1px solid var(--line);
+    display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+  }
+  .record > header strong { font-size: 14px; }
+  .record > header code { color: var(--muted); font-size: 12px; }
+  .state {
+    margin: 0; padding: 12px 16px;
+    border-bottom: 1px dashed var(--line);
+    color: var(--muted); font-size: 13px;
+    white-space: pre-wrap; font-family: ui-monospace, Menlo, monospace;
+  }
+  .question { padding: 12px 16px 6px; }
+  .question h3 { margin: 0 0 2px; font-size: 14px; font-weight: 600; }
+  .question .type {
+    display: inline-block; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.6px; color: var(--accent-2); margin-right: 8px;
+  }
+  .verdict { float: right; font-size: 12px; font-weight: 600; }
+  .ok { color: var(--accent); }
+  .bad { color: #ef7b8b; }
+  .expected { color: var(--warn); float: right; font-size: 12px; }
+  .bars { padding: 6px 16px 14px; display: grid; gap: 6px; }
+  .bar { display: grid; grid-template-columns: minmax(120px, 240px) 1fr 56px; gap: 10px; align-items: center; }
+  .bar label { color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .track { height: 12px; background: #0e1320; border-radius: 6px; overflow: hidden; }
+  .fill { height: 100%; background: linear-gradient(90deg, var(--accent-2), var(--accent)); border-radius: 6px; }
+  .fill.gold { outline: 1px solid var(--accent); }
+  .pct { text-align: right; font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
+  .teacher { padding: 0 16px 12px; color: var(--muted); font-size: 12px; }
+  .teacher code { color: var(--warn); }
+  footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 60px; color: var(--muted); font-size: 12px; }
+  #error { color: #ef7b8b; }
+</style>
+</head>
+<body>
+<header>
+  <p style="margin:0 0 10px"><a href="index.html" style="color:var(--accent);text-decoration:none">← all demos</a></p>
+  <h1>Parallel decision <span>console</span></h1>
+  <p>
+    Every question below was scored in a single forward pass over the shared state. The bars
+    are complete distributions over the declared candidates; no output token was generated
+    (<span id="decode-steps">0</span> decode steps in this bundle).
+  </p>
+</header>
+<main>
+  <div class="summary" id="summary"></div>
+  <div id="records"><p id="error">Loading data/demo.json …</p></div>
+</main>
+<footer>
+  Generate this bundle with <code>minojev demo --checkpoint &lt;dir&gt; --output web/data/demo.json</code>.
+</footer>
+<script>
+const fmt = (x, digits = 3) => Number(x).toFixed(digits);
+const pct = (x) => (100 * x).toFixed(1) + "%";
+
+function stat(label, value) {
+  const node = document.createElement("div");
+  node.className = "stat";
+  const big = document.createElement("b");
+  big.textContent = value;
+  const small = document.createElement("small");
+  small.textContent = label;
+  node.append(big, small);
+  return node;
+}
+
+function renderSummary(summary) {
+  const box = document.getElementById("summary");
+  box.append(stat("questions", summary.questions ?? "—"));
+  if (summary.accuracy !== undefined) box.append(stat("accuracy vs gold", pct(summary.accuracy)));
+  if (summary.teacher_ce !== undefined) box.append(stat("CE vs teacher", fmt(summary.teacher_ce)));
+  if (summary.distribution_error !== undefined) box.append(stat("dist. error", fmt(summary.distribution_error)));
+  if (summary.decode_steps !== undefined) document.getElementById("decode-steps").textContent = summary.decode_steps;
+}
+
+function renderRecord(record) {
+  const card = document.createElement("section");
+  card.className = "record";
+  const head = document.createElement("header");
+  const title = document.createElement("strong");
+  title.textContent = record.id;
+  const qid = document.createElement("code");
+  qid.textContent = record.qid;
+  head.append(title, qid);
+  if (record.correct !== undefined) {
+    const verdict = document.createElement("span");
+    verdict.className = "verdict " + (record.correct ? "ok" : "bad");
+    verdict.textContent = record.correct ? "correct" : "miss";
+    head.append(verdict);
+  }
+  card.append(head);
+
+  const state = document.createElement("pre");
+  state.className = "state";
+  state.textContent = typeof record.state === "string" ? record.state : JSON.stringify(record.state, null, 2);
+  card.append(state);
+
+  const question = document.createElement("div");
+  question.className = "question";
+  const h3 = document.createElement("h3");
+  const type = document.createElement("span");
+  type.className = "type";
+  type.textContent = record.type;
+  h3.append(type, document.createTextNode(record.instructions));
+  question.append(h3);
+  if (record.expected !== undefined) {
+    const expected = document.createElement("span");
+    expected.className = "expected";
+    expected.textContent = "expected level " + fmt(record.expected, 3);
+    question.append(expected);
+  }
+  card.append(question);
+
+  const bars = document.createElement("div");
+  bars.className = "bars";
+  const max = Math.max(...record.probabilities);
+  record.probabilities.forEach((probability, index) => {
+    const row = document.createElement("div");
+    row.className = "bar";
+    const label = document.createElement("label");
+    label.textContent = record.candidate_ids[index];
+    const track = document.createElement("div");
+    track.className = "track";
+    const fill = document.createElement("div");
+    fill.className = "fill" + (probability === max ? " gold" : "");
+    fill.style.width = (100 * probability).toFixed(2) + "%";
+    track.append(fill);
+    const value = document.createElement("div");
+    value.className = "pct";
+    value.textContent = pct(probability);
+    row.append(label, track, value);
+    bars.append(row);
+  });
+  card.append(bars);
+
+  if (record.teacher) {
+    const teacher = document.createElement("div");
+    teacher.className = "teacher";
+    const parts = Object.entries(record.teacher).map(([key, value]) => key + ": " + fmt(value, 3));
+    teacher.innerHTML = "teacher distribution — <code>" + parts.join(" · ") + "</code>";
+    card.append(teacher);
+  }
+  return card;
+}
+
+fetch("data/demo.json")
+  .then((response) => {
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    return response.json();
+  })
+  .then((bundle) => {
+    const records = document.getElementById("records");
+    records.textContent = "";
+    renderSummary(bundle.summary || {});
+    (bundle.records || []).forEach((record) => records.append(renderRecord(record)));
+    if (!bundle.records || !bundle.records.length) {
+      records.innerHTML = "<p id='error'>No records in bundle.</p>";
+    }
+  })
+  .catch((error) => {
+    document.getElementById("error").textContent =
+      "Could not load data/demo.json (" + error.message + "). Run `minojev demo` first and serve this folder over HTTP.";
+  });
+</script>
+</body>
+</html>

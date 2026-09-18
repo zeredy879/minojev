@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minojev"
+version = "0.1.0"
+description = "A minimal generation-free decision model: typed probability distributions from a single forward pass."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "zeredy879" }]
+keywords = ["decision-model", "jev", "structured-output", "llm", "no-decoding"]
+dependencies = [
+    "torch>=2.2",
+    "safetensors>=0.4",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+hf = ["transformers>=4.40"]
+test = ["pytest>=8"]
+
+[project.scripts]
+minojev = "minojev.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = ["slow: end-to-end training tests"]
