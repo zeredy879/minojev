@@ -68,12 +68,13 @@
 <body>
 <header class="hero">
   <div class="wrap">
-    <div class="kicker">system-one decision model</div>
+    <div class="kicker">decisions, not tokens</div>
     <h1>mino<span>jev</span></h1>
     <p class="tagline">
       States and questions in, complete probability distributions out — with zero
       output-token decoding. Runtime-defined choices, booleans, and ordered scores
-      are all read from hidden states in a single forward pass.
+      are all read from hidden states in a single forward pass, calibrated so
+      confidence tracks accuracy.
     </p>
     <div class="badges">
       <span class="badge"><b>choice</b> 2–255 candidates</span>
@@ -128,8 +129,11 @@ minojev score --checkpoint runs/synth/checkpoint \
 </main>
 <footer>
   <div class="wrap">
-    <a href="https://github.com/zeredy879/minojev">minojev on GitHub</a> · MIT License ·
-    generation-free decisions
+    <a href="https://github.com/zeredy879/minojev">GitHub</a> ·
+    <a href="https://huggingface.co/zeredy879/minojev">Hugging Face</a> ·
+    <a href="https://github.com/zeredy879/minojev/blob/main/README.md">English README</a> ·
+    <a href="https://github.com/zeredy879/minojev/blob/main/README.zh-CN.md">简体中文</a> ·
+    MIT License
   </div>
 </footer>
 <script>

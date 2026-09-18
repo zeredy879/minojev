@@ -1,6 +1,6 @@
 {
   "model": {
-    "checkpoint": "runs/synth/checkpoint",
+    "checkpoint": "runs/synth-calibrated",
     "config": {
       "format": "minojev-checkpoint",
       "version": 1,
@@ -39,6 +39,13 @@
         "distribution_error": 0.2041439754674587,
         "brier": 0.2041439754674587,
         "decode_steps": 0
+      },
+      "calibration": {
+        "temperatures": {
+          "choice": 0.5463,
+          "boolean": 0.9812,
+          "score": 0.2019
+        }
       }
     },
     "parameters": 547586
@@ -57,11 +64,13 @@
       "choice-lookup": 0.777778,
       "score-support": 0.333333
     },
-    "gold_nll": 0.6719065091328741,
+    "gold_nll": 0.6018213668603484,
+    "mean_confidence": 0.7434339884000001,
+    "expected_calibration_error": 0.23903732040000003,
     "teacher_scored": 25,
-    "teacher_ce": 0.8401734492923073,
-    "distribution_error": 0.19423213622745364,
-    "brier": 0.19423213622745364,
+    "teacher_ce": 1.1065570706992136,
+    "distribution_error": 0.26045904327608116,
+    "brier": 0.26045904327608116,
     "teacher_argmax_accuracy": 0.68,
     "teacher_topset_accuracy": 0.68,
     "teacher_argmax_by_family": {
@@ -92,16 +101,16 @@
         "true"
       ],
       "probabilities": [
-        0.30981278,
-        0.69018716
+        0.30654076,
+        0.69345933
       ],
       "logits": [
-        -0.06442875,
-        0.73656589
+        -0.06566322,
+        0.75067866
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": true,
       "correct": true,
@@ -126,18 +135,18 @@
         "tiny"
       ],
       "probabilities": [
-        0.36915845,
-        0.0726304,
-        0.55821121
+        0.31419712,
+        0.01602136,
+        0.66978157
       ],
       "logits": [
-        -0.88204241,
-        -2.50788474,
-        -0.46853095
+        -1.61457515,
+        -4.59067297,
+        -0.85764408
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "choice-lookup",
       "gold": "tiny",
       "correct": true,
@@ -163,18 +172,18 @@
         "huge"
       ],
       "probabilities": [
-        0.25381264,
-        0.62381291,
-        0.12237451
+        0.15504654,
+        0.80416662,
+        0.04078684
       ],
       "logits": [
-        -0.95286548,
-        -0.05361134,
-        -1.68237579
+        -1.74421656,
+        -0.09813534,
+        -3.07958221
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "choice-lookup",
       "gold": "square",
       "correct": true,
@@ -199,16 +208,16 @@
         "true"
       ],
       "probabilities": [
-        0.49759576,
-        0.50240421
+        0.49754968,
+        0.50245029
       ],
       "logits": [
-        0.66091657,
-        0.67053354
+        0.67357987,
+        0.68338114
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": true,
       "correct": true,
@@ -232,16 +241,16 @@
         "true"
       ],
       "probabilities": [
-        0.8057797,
-        0.19422036
+        0.81001049,
+        0.18998948
       ],
       "logits": [
-        -0.38514471,
-        -1.8079617
+        -0.39252418,
+        -1.84260261
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": true,
       "correct": false,
@@ -268,24 +277,24 @@
         "4"
       ],
       "probabilities": [
-        0.39380592,
-        0.12468369,
-        0.07215725,
-        0.11165227,
-        0.29770082
+        0.79638171,
+        0.00267461,
+        0.00017815,
+        0.00154812,
+        0.19921738
       ],
       "logits": [
-        1.66672575,
-        0.51664758,
-        -0.03028481,
-        0.40625688,
-        1.38695657
+        8.2552042,
+        2.55892801,
+        -0.14999908,
+        2.01216865,
+        6.86952209
       ],
-      "expected": 1.79475832,
+      "expected": 0.80454481,
       "level": 0,
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "score-support",
       "gold": 4,
       "correct": false,
@@ -313,18 +322,18 @@
         "eager"
       ],
       "probabilities": [
-        0.13291179,
-        0.79524684,
-        0.07184134
+        0.03602371,
+        0.95229471,
+        0.01168154
       ],
       "logits": [
-        -1.72637296,
-        0.062594,
-        -2.34159851
+        -3.16011906,
+        0.11457807,
+        -4.28628683
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "choice-lookup",
       "gold": "square",
       "correct": true,
@@ -349,16 +358,16 @@
         "true"
       ],
       "probabilities": [
-        0.57734668,
-        0.42265338
+        0.57880419,
+        0.42119581
       ],
       "logits": [
-        0.53415024,
-        0.22225973
+        0.54438466,
+        0.22651827
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": true,
       "correct": false,
@@ -385,24 +394,24 @@
         "4"
       ],
       "probabilities": [
-        0.34272364,
-        0.1786941,
-        0.07828457,
-        0.11226703,
-        0.28803062
+        0.68163204,
+        0.02708251,
+        0.00045434,
+        0.00270955,
+        0.28812161
       ],
       "logits": [
-        0.93751484,
-        0.28626582,
-        -0.53905898,
-        -0.17852935,
-        0.76365727
+        4.64346123,
+        1.41785944,
+        -2.66993046,
+        -0.88424641,
+        3.78235388
       ],
-      "expected": 1.8241868,
+      "expected": 1.18860638,
       "level": 0,
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "score-support",
       "gold": 0,
       "correct": true,
@@ -429,16 +438,16 @@
         "true"
       ],
       "probabilities": [
-        0.05715559,
-        0.94284439
+        0.05432921,
+        0.94567084
       ],
       "logits": [
-        -1.72533143,
-        1.07779241
+        -1.75838923,
+        1.09844315
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": true,
       "correct": true,
@@ -462,16 +471,16 @@
         "tired"
       ],
       "probabilities": [
-        0.29947346,
-        0.70052654
+        0.17428364,
+        0.82571638
       ],
       "logits": [
-        -1.11722136,
-        -0.26741493
+        -2.04506922,
+        -0.48950198
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "choice-lookup",
       "gold": "large",
       "correct": false,
@@ -498,24 +507,24 @@
         "4"
       ],
       "probabilities": [
-        0.27988175,
-        0.17612863,
-        0.07935577,
-        0.17244709,
-        0.2921868
+        0.41132456,
+        0.04148832,
+        0.00079976,
+        0.03736689,
+        0.50902051
       ],
       "logits": [
-        1.20313966,
-        0.73998696,
-        -0.05728633,
-        0.71886283,
-        1.24616575
+        5.95908689,
+        3.66511607,
+        -0.28373614,
+        3.56048942,
+        6.17219257
       ],
-      "expected": 2.02092862,
+      "expected": 2.19127059,
       "level": 4,
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "score-support",
       "gold": 0,
       "correct": false,
@@ -542,16 +551,16 @@
         "large"
       ],
       "probabilities": [
-        0.87442607,
-        0.12557393
+        0.9721424,
+        0.02785765
       ],
       "logits": [
-        -0.6142351,
-        -2.55490828
+        -1.12435496,
+        -4.67674971
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "choice-lookup",
       "gold": "tiny",
       "correct": true,
@@ -575,16 +584,16 @@
         "true"
       ],
       "probabilities": [
-        0.69306868,
-        0.30693135
+        0.69637841,
+        0.30362159
       ],
       "logits": [
-        -0.03563933,
-        -0.85014433
+        -0.03632219,
+        -0.86643326
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": false,
       "correct": true,
@@ -608,16 +617,16 @@
         "true"
       ],
       "probabilities": [
-        0.78502727,
-        0.21497279
+        0.78918558,
+        0.21081439
       ],
       "logits": [
-        -0.19740348,
-        -1.49261045
+        -0.20118578,
+        -1.52120924
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": false,
       "correct": true,
@@ -644,24 +653,24 @@
         "4"
       ],
       "probabilities": [
-        0.27723956,
-        0.1695343,
-        0.06461195,
-        0.16854335,
-        0.32007077
+        0.3114894,
+        0.02725872,
+        0.00022935,
+        0.02647864,
+        0.6345439
       ],
       "logits": [
-        0.43196815,
-        -0.05985858,
-        -1.02451444,
-        -0.06572078,
-        0.57562834
+        2.1395154,
+        -0.29647633,
+        -5.07436562,
+        -0.32551154,
+        2.85105658
       ],
-      "expected": 2.0846715,
+      "expected": 2.64532876,
       "level": 4,
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "score-support",
       "gold": 4,
       "correct": true,
@@ -691,24 +700,24 @@
         "4"
       ],
       "probabilities": [
-        0.2741175,
-        0.16381174,
-        0.10796674,
-        0.16859959,
-        0.28550449
+        0.4164249,
+        0.03251614,
+        0.00412423,
+        0.0375031,
+        0.50943166
       ],
       "logits": [
-        1.44607556,
-        0.93123662,
-        0.51434189,
-        0.96004528,
-        1.48677647
+        7.1623354,
+        4.61236572,
+        2.547508,
+        4.75505304,
+        7.36392498
       ],
-      "expected": 2.0275619,
+      "expected": 2.1910007,
       "level": 4,
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "score-support",
       "gold": 0,
       "correct": false,
@@ -735,16 +744,16 @@
         "true"
       ],
       "probabilities": [
-        0.86561632,
-        0.13438369
+        0.86971408,
+        0.13028592
       ],
       "logits": [
-        1.39734757,
-        -0.46539503
+        1.42412102,
+        -0.4743121
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": false,
       "correct": true,
@@ -768,16 +777,16 @@
         "star"
       ],
       "probabilities": [
-        0.92232728,
-        0.07767272
+        0.98932767,
+        0.01067231
       ],
       "logits": [
-        0.1991919,
-        -2.27520418
+        0.36462,
+        -4.16475248
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "choice-lookup",
       "gold": "blue",
       "correct": true,
@@ -804,24 +813,24 @@
         "4"
       ],
       "probabilities": [
-        0.25718325,
-        0.16970232,
-        0.05667375,
-        0.14400963,
-        0.3724311
+        0.13435628,
+        0.01713874,
+        7.497e-05,
+        0.00760068,
+        0.84082937
       ],
       "logits": [
-        0.73497528,
-        0.3192322,
-        -0.7775026,
-        0.15506664,
-        1.10523844
+        3.6402936,
+        1.58114016,
+        -3.85092902,
+        0.76803684,
+        5.47418737
       ],
-      "expected": 2.20480299,
+      "expected": 3.40340829,
       "level": 4,
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "score-support",
       "gold": 0,
       "correct": false,
@@ -848,16 +857,16 @@
         "star"
       ],
       "probabilities": [
-        0.29030189,
-        0.70969814
+        0.16296723,
+        0.83703274
       ],
       "logits": [
-        -1.90058637,
-        -1.00666797
+        -3.47901583,
+        -1.84270179
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "choice-lookup",
       "gold": "star",
       "correct": true,
@@ -881,16 +890,16 @@
         "green"
       ],
       "probabilities": [
-        0.48325801,
-        0.51674199
+        0.46938071,
+        0.53061926
       ],
       "logits": [
-        -2.03780198,
-        -1.97080898
+        -3.73018861,
+        -3.60755801
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "choice-lookup",
       "gold": "huge",
       "correct": false,
@@ -914,16 +923,16 @@
         "true"
       ],
       "probabilities": [
-        0.90971839,
-        0.09028162
+        0.91328853,
+        0.08671151
       ],
       "logits": [
-        0.38795671,
-        -1.92224455
+        0.39539006,
+        -1.95907521
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": false,
       "correct": true,
@@ -949,20 +958,20 @@
         "round"
       ],
       "probabilities": [
-        0.45621124,
-        0.0546983,
-        0.33872241,
-        0.15036799
+        0.57752848,
+        0.01189419,
+        0.33484963,
+        0.07572771
       ],
       "logits": [
-        -0.17564911,
-        -2.29677248,
-        -0.47342417,
-        -1.2855196
+        -0.32152501,
+        -4.20423317,
+        -0.86660111,
+        -2.35313869
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "choice-lookup",
       "gold": "eager",
       "correct": true,
@@ -988,16 +997,16 @@
         "true"
       ],
       "probabilities": [
-        0.34631145,
-        0.65368855
+        0.34356102,
+        0.65643895
       ],
       "logits": [
-        -0.44848782,
-        0.18680474
+        -0.45708096,
+        0.19038397
       ],
       "decode_steps": 0,
       "mode": "fresh",
-      "forward_seconds": 0.14533158,
+      "forward_seconds": 0.11997025,
       "family": "boolean-match",
       "gold": true,
       "correct": true,
