@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>minojev · maze agent replay</title>
+<title>minojev · 迷宫智能体回放</title>
 <style>
   :root {
     --bg: #0a0d14;
@@ -19,7 +19,7 @@
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink);
-    font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    font: 15px/1.7 ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
   a { color: var(--accent-2); }
   header { padding: 20px 24px 16px; border-bottom: 1px solid var(--line); background: linear-gradient(180deg,#101627,var(--bg)); }
   header h1 { margin: 6px 0 4px; font-size: 21px; }
@@ -74,35 +74,34 @@
 <body>
 <header>
   <p style="margin:0 0 10px;display:flex;gap:14px;flex-wrap:wrap">
-    <a href="index.html" style="text-decoration:none">← all demos</a>
-    <a href="console.html" style="color:var(--muted);text-decoration:none">Decision console</a>
+    <a href="zh.html" style="text-decoration:none">← 全部 Demo</a>
+    <a href="zh-console.html" style="color:var(--muted);text-decoration:none">决策控制台</a>
     <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
-    <a href="https://huggingface.co/zeredy879/minojev" style="color:var(--muted);text-decoration:none">Models</a>
-    <a href="zh-maze.html" style="color:var(--muted);text-decoration:none">中文</a>
+    <a href="https://huggingface.co/zeredy879/minojev" style="color:var(--muted);text-decoration:none">模型</a>
+    <a href="maze.html" style="color:var(--muted);text-decoration:none">English</a>
   </p>
-  <h1>Maze agent · <span>decision replay</span></h1>
+  <h1>迷宫智能体 · <span>决策回放</span></h1>
   <p>
-    At each step the model answers nine questions in one forward pass: one choice over four
-    moves, four parallel safety booleans, and one distance score. Code multiplies the move
-    distribution by the safety probabilities, blocks wall moves, and takes the survivor.
+    每一步，模型都在一次前向里回答九个问题：一个四选一的移动选择、四个并行的安全布尔判断、
+    一个距离评分。代码把移动概率乘以安全概率、剔除撞墙的走法，然后取剩下的最大值。
   </p>
 </header>
 <main>
   <aside class="panel">
-    <h3>Runs</h3>
+    <h3>运行记录</h3>
     <div class="runs" id="runs"></div>
     <div class="note" id="run-note"></div>
   </aside>
 
   <section class="stage">
     <div class="svg-box">
-      <svg id="grid" viewBox="0 0 240 240" role="img" aria-label="maze"></svg>
+      <svg id="grid" viewBox="0 0 240 240" role="img" aria-label="迷宫"></svg>
     </div>
     <div class="panel controls">
-      <button id="prev">◀ step</button>
-      <button id="play" class="primary">▶ play</button>
-      <button id="next">step ▶</button>
-      <button id="reset">reset</button>
+      <button id="prev">◀ 后退</button>
+      <button id="play" class="primary">▶ 播放</button>
+      <button id="next">前进 ▶</button>
+      <button id="reset">重置</button>
       <select id="speed">
         <option value="900">0.5×</option>
         <option value="450" selected>1×</option>
@@ -114,23 +113,24 @@
   </section>
 
   <aside class="panel">
-    <h3>Step detail</h3>
+    <h3>步骤详情</h3>
     <div id="detail"></div>
     <hr class="divider" />
-    <h3>Move distribution</h3>
+    <h3>移动分布</h3>
     <div class="bars" id="move-bars"></div>
     <hr class="divider" />
-    <h3>Safety judgments (parallel)</h3>
+    <h3>安全判断（并行）</h3>
     <div class="bars" id="safe-bars"></div>
     <hr class="divider" />
-    <h3>Combined choice</h3>
+    <h3>综合选择</h3>
     <div class="bars" id="combined-bars"></div>
-    <div class="note">combined = move probability × P(safe); blocked moves are removed by code before the argmax.</div>
+    <div class="note">综合 = 移动概率 × P(安全)；撞墙的移动会先被代码剔除，再取最大值。</div>
   </aside>
 </main>
 <script>
 const cell = 40;
 const DIRECTIONS = ["up", "down", "left", "right"];
+const DIRECTION_LABELS = { up: "上", down: "下", left: "左", right: "右" };
 const state = { bundle: null, runIndex: 0, frame: 0, playing: false, timer: null };
 const $ = (id) => document.getElementById(id);
 const fmt = (x) => Number(x).toFixed(3);
@@ -149,13 +149,13 @@ function renderRunList() {
     name.textContent = run.id;
     const tag = document.createElement("span");
     tag.className = "tag " + (run.success ? "ok" : "bad");
-    tag.textContent = run.success ? `${run.steps} steps` : "unfinished";
+    tag.textContent = run.success ? `${run.steps} 步` : "未完成";
     button.append(name, tag);
     button.onclick = () => { selectRun(index); };
     box.append(button);
   });
   const run = currentRun();
-  $("run-note").textContent = `optimal path: ${run.optimal_steps} steps · walls: ${run.walls.length} · forced moves: ${run.frames.filter((f) => f.forced).length}`;
+  $("run-note").textContent = `最优路径 ${run.optimal_steps} 步 · 墙 ${run.walls.length} 面 · 强制移动 ${run.frames.filter((f) => f.forced).length} 次`;
 }
 
 function selectRun(index) {
@@ -238,7 +238,7 @@ function renderBars(containerId, values, chosen, blocked) {
     const row = document.createElement("div");
     row.className = "bar";
     const label = document.createElement("label");
-    label.textContent = direction;
+    label.textContent = DIRECTION_LABELS[direction];
     const track = document.createElement("div");
     track.className = "track";
     const fill = document.createElement("div");
@@ -258,14 +258,14 @@ function renderBars(containerId, values, chosen, blocked) {
 
 function renderDetail(frame) {
   const box = $("detail");
-  if (!frame) { box.innerHTML = "<p class='note'>No frames recorded.</p>"; return; }
+  if (!frame) { box.innerHTML = "<p class='note'>还没有记录帧。</p>"; return; }
   const run = currentRun();
   const rows = [
-    ["step", `${state.frame} / ${run.frames.length}`],
-    ["agent", `(${frame.agent[0]}, ${frame.agent[1]})`],
-    ["move taken", frame.move + (frame.forced ? " (forced)" : "")],
-    ["distance now", frame.distance],
-    ["expected distance", Number(frame.distance_expected).toFixed(2)],
+    ["步", `${state.frame} / ${run.frames.length}`],
+    ["智能体", `(${frame.agent[0]}, ${frame.agent[1]})`],
+    ["采取的移动", DIRECTION_LABELS[frame.move] + (frame.forced ? "（强制）" : "")],
+    ["当前距离", frame.distance],
+    ["预期距离", Number(frame.distance_expected).toFixed(2)],
   ];
   box.innerHTML = "";
   const table = document.createElement("div");
@@ -286,14 +286,14 @@ function renderStatus() {
   const node = $("status");
   node.textContent = "";
   const parts = [
-    `frame ${state.frame}/${run.frames.length}`,
-    run.success ? `solved in ${run.steps} (optimal ${run.optimal_steps})` : `unfinished (optimal ${run.optimal_steps})`,
+    `第 ${state.frame}/${run.frames.length} 帧`,
+    run.success ? `解出，用 ${run.steps} 步（最优 ${run.optimal_steps}）` : `未完成（最优 ${run.optimal_steps}）`,
   ];
-  if (frame && frame.forced) parts.push("forced move");
-  if (done && run.success) parts.push("goal reached");
+  if (frame && frame.forced) parts.push("强制移动");
+  if (done && run.success) parts.push("已到终点");
   for (const part of parts) {
     const span = document.createElement("span");
-    span.className = "badge" + (part === "forced move" ? " warn" : "");
+    span.className = "badge" + (part === "强制移动" ? " warn" : "");
     span.textContent = part;
     node.append(span);
   }
@@ -315,14 +315,14 @@ function stop() {
   state.playing = false;
   if (state.timer) clearInterval(state.timer);
   state.timer = null;
-  $("play").textContent = "▶ play";
+  $("play").textContent = "▶ 播放";
 }
 
 function play() {
   if (state.playing) { stop(); return; }
   if (state.frame >= maxFrame()) state.frame = 0;
   state.playing = true;
-  $("play").textContent = "❚❚ pause";
+  $("play").textContent = "❚❚ 暂停";
   state.timer = setInterval(() => {
     if (state.frame >= maxFrame()) { stop(); return; }
     state.frame += 1;
@@ -351,8 +351,8 @@ fetch("data/maze.json")
   })
   .catch((error) => {
     document.querySelector("main").innerHTML =
-      "<p id='error' style='padding:20px'>Could not load data/maze.json (" + error.message +
-      "). Run `minojev maze-rollout` and serve this folder over HTTP.</p>";
+      "<p id='error' style='padding:20px'>无法加载 data/maze.json（" + error.message +
+      "）。请先运行 `minojev maze-rollout`，再用 HTTP 方式打开本目录。</p>";
   });
 </script>
 </body>

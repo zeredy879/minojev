@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/banner.svg" alt="minojev — 决策，而非 token" width="960"></p>
 
 <p align="center">
-  <b>简体中文</b> · <a href="README.md">English</a> · <a href="https://zeredy879.github.io/minojev/">在线 Demo</a> · <a href="https://huggingface.co/zeredy879/minojev">模型</a> · <a href="https://huggingface.co/datasets/zeredy879/minojev-data">数据</a>
+  <b>简体中文</b> · <a href="README.md">English</a> · <a href="https://zeredy879.github.io/minojev/zh.html">在线 Demo</a> · <a href="https://huggingface.co/zeredy879/minojev">模型</a> · <a href="https://huggingface.co/datasets/zeredy879/minojev-data">数据</a>
 </p>
 
 <p align="center">
@@ -49,11 +49,11 @@ minojev 不要这句话，只要那个决定：
 
 ### 打开就能玩
 
-打开 **[在线 Demo](https://zeredy879.github.io/minojev/)**：
+打开 **[在线 Demo](https://zeredy879.github.io/minojev/zh.html)**：
 
-- **[迷宫智能体](https://zeredy879.github.io/minojev/maze.html)**——看模型带着
+- **[迷宫智能体](https://zeredy879.github.io/minojev/zh-maze.html)**——看模型带着
   智能体穿过网格，每一步都展示它的移动分布和四个并行安全判断。
-- **[决策控制台](https://zeredy879.github.io/minojev/console.html)**——一个状态、
+- **[决策控制台](https://zeredy879.github.io/minojev/zh-console.html)**——一个状态、
   多个问题一起打分，并叠加 teacher 分布对照。
 
 ## minojev 的与众不同
