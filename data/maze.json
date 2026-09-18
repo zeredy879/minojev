@@ -1,0 +1,3976 @@
+{
+  "runs": [
+    {
+      "size": 6,
+      "walls": [
+        [
+          0,
+          4
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        5,
+        5
+      ],
+      "success": true,
+      "steps": 18,
+      "optimal_steps": 10,
+      "final": [
+        5,
+        5
+      ],
+      "frames": [
+        {
+          "step": 0,
+          "agent": [
+            0,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 10,
+          "move_probabilities": {
+            "up": 0.004427,
+            "down": 0.521431,
+            "left": 0.008125,
+            "right": 0.466017
+          },
+          "safety": {
+            "up": 0.084881,
+            "down": 0.798288,
+            "left": 0.100316,
+            "right": 0.713025
+          },
+          "combined": {
+            "up": 0.000376,
+            "down": 0.416252,
+            "left": 0.000815,
+            "right": 0.332282
+          },
+          "distance_expected": 2.68512535
+        },
+        {
+          "step": 1,
+          "agent": [
+            1,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 9,
+          "move_probabilities": {
+            "up": 0.021552,
+            "down": 0.507282,
+            "left": 0.015504,
+            "right": 0.455662
+          },
+          "safety": {
+            "up": 0.89864,
+            "down": 0.711038,
+            "left": 0.057743,
+            "right": 0.498908
+          },
+          "combined": {
+            "up": 0.019368,
+            "down": 0.360697,
+            "left": 0.000895,
+            "right": 0.227333
+          },
+          "distance_expected": 2.57559013
+        },
+        {
+          "step": 2,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.014828,
+            "down": 0.490898,
+            "left": 0.007029,
+            "right": 0.487245
+          },
+          "safety": {
+            "up": 0.896119,
+            "down": 0.74867,
+            "left": 0.071255,
+            "right": 0.552174
+          },
+          "combined": {
+            "up": 0.013288,
+            "down": 0.367521,
+            "left": 0.000501,
+            "right": 0.269044
+          },
+          "distance_expected": 2.6790421
+        },
+        {
+          "step": 3,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.006597,
+            "down": 0.495794,
+            "left": 0.004502,
+            "right": 0.493107
+          },
+          "safety": {
+            "up": 0.818937,
+            "down": 0.824412,
+            "left": 0.074163,
+            "right": 0.76358
+          },
+          "combined": {
+            "up": 0.005403,
+            "down": 0.408738,
+            "left": 0.000334,
+            "right": 0.376527
+          },
+          "distance_expected": 2.7085228
+        },
+        {
+          "step": 4,
+          "agent": [
+            4,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 6,
+          "move_probabilities": {
+            "up": 0.034455,
+            "down": 0.4655,
+            "left": 0.01476,
+            "right": 0.485285
+          },
+          "safety": {
+            "up": 0.913001,
+            "down": 0.755908,
+            "left": 0.123236,
+            "right": 0.644852
+          },
+          "combined": {
+            "up": 0.031457,
+            "down": 0.351875,
+            "left": 0.001819,
+            "right": 0.312937
+          },
+          "distance_expected": 1.92117548
+        },
+        {
+          "step": 5,
+          "agent": [
+            5,
+            0
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 5,
+          "move_probabilities": {
+            "up": 0.039681,
+            "down": 0.466149,
+            "left": 0.018219,
+            "right": 0.475951
+          },
+          "safety": {
+            "up": 0.905795,
+            "down": 0.692222,
+            "left": 0.13672,
+            "right": 0.589384
+          },
+          "combined": {
+            "up": 0.035943,
+            "down": 0.322679,
+            "left": 0.002491,
+            "right": 0.280518
+          },
+          "distance_expected": 1.87551975
+        },
+        {
+          "step": 6,
+          "agent": [
+            5,
+            1
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.078759,
+            "down": 0.42761,
+            "left": 0.071894,
+            "right": 0.421737
+          },
+          "safety": {
+            "up": 0.637782,
+            "down": 0.623902,
+            "left": 0.671072,
+            "right": 0.591812
+          },
+          "combined": {
+            "up": 0.050231,
+            "down": 0.266786,
+            "left": 0.048246,
+            "right": 0.249589
+          },
+          "distance_expected": 1.87485301
+        },
+        {
+          "step": 7,
+          "agent": [
+            4,
+            1
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 5,
+          "move_probabilities": {
+            "up": 0.052968,
+            "down": 0.446267,
+            "left": 0.056158,
+            "right": 0.444607
+          },
+          "safety": {
+            "up": 0.6021,
+            "down": 0.610363,
+            "left": 0.643976,
+            "right": 0.592341
+          },
+          "combined": {
+            "up": 0.031892,
+            "down": 0.272385,
+            "left": 0.036165,
+            "right": 0.263359
+          },
+          "distance_expected": 1.96708798
+        },
+        {
+          "step": 8,
+          "agent": [
+            5,
+            1
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.077791,
+            "down": 0.425719,
+            "left": 0.071214,
+            "right": 0.425276
+          },
+          "safety": {
+            "up": 0.643554,
+            "down": 0.622211,
+            "left": 0.668889,
+            "right": 0.601257
+          },
+          "combined": {
+            "up": 0.050063,
+            "down": 0.264887,
+            "left": 0.047634,
+            "right": 0.2557
+          },
+          "distance_expected": 1.87361932
+        },
+        {
+          "step": 9,
+          "agent": [
+            4,
+            1
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 5,
+          "move_probabilities": {
+            "up": 0.054787,
+            "down": 0.446889,
+            "left": 0.054503,
+            "right": 0.443822
+          },
+          "safety": {
+            "up": 0.60436,
+            "down": 0.606906,
+            "left": 0.645537,
+            "right": 0.59273
+          },
+          "combined": {
+            "up": 0.033111,
+            "down": 0.271219,
+            "left": 0.035184,
+            "right": 0.263066
+          },
+          "distance_expected": 1.96901619
+        },
+        {
+          "step": 10,
+          "agent": [
+            5,
+            1
+          ],
+          "move": "left",
+          "forced": true,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.066764,
+            "down": 0.418628,
+            "left": 0.081038,
+            "right": 0.43357
+          },
+          "safety": {
+            "up": 0.612298,
+            "down": 0.636453,
+            "left": 0.61552,
+            "right": 0.622129
+          },
+          "combined": {
+            "up": 0.04088,
+            "down": 0.266437,
+            "left": 0.049881,
+            "right": 0.269736
+          },
+          "distance_expected": 1.90606141
+        },
+        {
+          "step": 11,
+          "agent": [
+            5,
+            0
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 5,
+          "move_probabilities": {
+            "up": 0.018756,
+            "down": 0.468751,
+            "left": 0.031282,
+            "right": 0.48121
+          },
+          "safety": {
+            "up": 0.865756,
+            "down": 0.650763,
+            "left": 0.103849,
+            "right": 0.581837
+          },
+          "combined": {
+            "up": 0.016239,
+            "down": 0.305046,
+            "left": 0.003249,
+            "right": 0.279986
+          },
+          "distance_expected": 1.95028877
+        },
+        {
+          "step": 12,
+          "agent": [
+            5,
+            1
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.083016,
+            "down": 0.411981,
+            "left": 0.082681,
+            "right": 0.422322
+          },
+          "safety": {
+            "up": 0.620878,
+            "down": 0.601873,
+            "left": 0.605835,
+            "right": 0.615239
+          },
+          "combined": {
+            "up": 0.051542,
+            "down": 0.24796,
+            "left": 0.050091,
+            "right": 0.259829
+          },
+          "distance_expected": 1.89563966
+        },
+        {
+          "step": 13,
+          "agent": [
+            4,
+            1
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 5,
+          "move_probabilities": {
+            "up": 0.048105,
+            "down": 0.443745,
+            "left": 0.05404,
+            "right": 0.454111
+          },
+          "safety": {
+            "up": 0.617306,
+            "down": 0.624164,
+            "left": 0.643258,
+            "right": 0.618576
+          },
+          "combined": {
+            "up": 0.029695,
+            "down": 0.27697,
+            "left": 0.034761,
+            "right": 0.280902
+          },
+          "distance_expected": 1.96882415
+        },
+        {
+          "step": 14,
+          "agent": [
+            4,
+            2
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.068322,
+            "down": 0.434059,
+            "left": 0.063624,
+            "right": 0.433995
+          },
+          "safety": {
+            "up": 0.652425,
+            "down": 0.646847,
+            "left": 0.655977,
+            "right": 0.622297
+          },
+          "combined": {
+            "up": 0.044575,
+            "down": 0.28077,
+            "left": 0.041736,
+            "right": 0.270074
+          },
+          "distance_expected": 1.88514376
+        },
+        {
+          "step": 15,
+          "agent": [
+            4,
+            3
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 3,
+          "move_probabilities": {
+            "up": 0.061504,
+            "down": 0.464047,
+            "left": 0.054547,
+            "right": 0.419903
+          },
+          "safety": {
+            "up": 0.715462,
+            "down": 0.626949,
+            "left": 0.812683,
+            "right": 0.549331
+          },
+          "combined": {
+            "up": 0.044004,
+            "down": 0.290934,
+            "left": 0.044329,
+            "right": 0.230666
+          },
+          "distance_expected": 1.1452868
+        },
+        {
+          "step": 16,
+          "agent": [
+            5,
+            3
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 2,
+          "move_probabilities": {
+            "up": 0.056911,
+            "down": 0.462966,
+            "left": 0.053698,
+            "right": 0.426425
+          },
+          "safety": {
+            "up": 0.78356,
+            "down": 0.593707,
+            "left": 0.832636,
+            "right": 0.547953
+          },
+          "combined": {
+            "up": 0.044593,
+            "down": 0.274866,
+            "left": 0.044711,
+            "right": 0.233661
+          },
+          "distance_expected": 1.05509388
+        },
+        {
+          "step": 17,
+          "agent": [
+            5,
+            4
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 1,
+          "move_probabilities": {
+            "up": 0.066976,
+            "down": 0.447487,
+            "left": 0.059392,
+            "right": 0.426145
+          },
+          "safety": {
+            "up": 0.765966,
+            "down": 0.602254,
+            "left": 0.797875,
+            "right": 0.562284
+          },
+          "combined": {
+            "up": 0.051301,
+            "down": 0.269501,
+            "left": 0.047387,
+            "right": 0.239614
+          },
+          "distance_expected": 1.16158724
+        }
+      ],
+      "id": "maze-0"
+    },
+    {
+      "size": 6,
+      "walls": [
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        5,
+        5
+      ],
+      "success": true,
+      "steps": 14,
+      "optimal_steps": 10,
+      "final": [
+        5,
+        5
+      ],
+      "frames": [
+        {
+          "step": 0,
+          "agent": [
+            0,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 10,
+          "move_probabilities": {
+            "up": 0.003567,
+            "down": 0.515981,
+            "left": 0.00529,
+            "right": 0.475161
+          },
+          "safety": {
+            "up": 0.086407,
+            "down": 0.861284,
+            "left": 0.077876,
+            "right": 0.805939
+          },
+          "combined": {
+            "up": 0.000308,
+            "down": 0.444406,
+            "left": 0.000412,
+            "right": 0.382951
+          },
+          "distance_expected": 2.77208209
+        },
+        {
+          "step": 1,
+          "agent": [
+            1,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 9,
+          "move_probabilities": {
+            "up": 0.014497,
+            "down": 0.483541,
+            "left": 0.007154,
+            "right": 0.494807
+          },
+          "safety": {
+            "up": 0.923515,
+            "down": 0.761708,
+            "left": 0.068659,
+            "right": 0.661002
+          },
+          "combined": {
+            "up": 0.013388,
+            "down": 0.368317,
+            "left": 0.000491,
+            "right": 0.327069
+          },
+          "distance_expected": 2.78459358
+        },
+        {
+          "step": 2,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.009811,
+            "down": 0.486217,
+            "left": 0.004578,
+            "right": 0.499394
+          },
+          "safety": {
+            "up": 0.905297,
+            "down": 0.860243,
+            "left": 0.080601,
+            "right": 0.818996
+          },
+          "combined": {
+            "up": 0.008882,
+            "down": 0.418265,
+            "left": 0.000369,
+            "right": 0.409001
+          },
+          "distance_expected": 2.78630233
+        },
+        {
+          "step": 3,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.00463,
+            "down": 0.501193,
+            "left": 0.003585,
+            "right": 0.490592
+          },
+          "safety": {
+            "up": 0.856657,
+            "down": 0.856037,
+            "left": 0.074498,
+            "right": 0.840117
+          },
+          "combined": {
+            "up": 0.003966,
+            "down": 0.42904,
+            "left": 0.000267,
+            "right": 0.412155
+          },
+          "distance_expected": 2.76491714
+        },
+        {
+          "step": 4,
+          "agent": [
+            4,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 6,
+          "move_probabilities": {
+            "up": 0.027155,
+            "down": 0.473798,
+            "left": 0.014306,
+            "right": 0.484741
+          },
+          "safety": {
+            "up": 0.933096,
+            "down": 0.722309,
+            "left": 0.145759,
+            "right": 0.696402
+          },
+          "combined": {
+            "up": 0.025338,
+            "down": 0.342228,
+            "left": 0.002085,
+            "right": 0.337575
+          },
+          "distance_expected": 1.89358473
+        },
+        {
+          "step": 5,
+          "agent": [
+            5,
+            0
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 5,
+          "move_probabilities": {
+            "up": 0.039897,
+            "down": 0.465018,
+            "left": 0.023508,
+            "right": 0.471576
+          },
+          "safety": {
+            "up": 0.910245,
+            "down": 0.629279,
+            "left": 0.157782,
+            "right": 0.59494
+          },
+          "combined": {
+            "up": 0.036316,
+            "down": 0.292626,
+            "left": 0.003709,
+            "right": 0.280559
+          },
+          "distance_expected": 1.81955385
+        },
+        {
+          "step": 6,
+          "agent": [
+            5,
+            1
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.073108,
+            "down": 0.44586,
+            "left": 0.054904,
+            "right": 0.426128
+          },
+          "safety": {
+            "up": 0.790037,
+            "down": 0.638121,
+            "left": 0.754907,
+            "right": 0.633375
+          },
+          "combined": {
+            "up": 0.057758,
+            "down": 0.284513,
+            "left": 0.041447,
+            "right": 0.269899
+          },
+          "distance_expected": 1.84234262
+        },
+        {
+          "step": 7,
+          "agent": [
+            5,
+            2
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 3,
+          "move_probabilities": {
+            "up": 0.068736,
+            "down": 0.45248,
+            "left": 0.058599,
+            "right": 0.420184
+          },
+          "safety": {
+            "up": 0.80591,
+            "down": 0.606704,
+            "left": 0.83141,
+            "right": 0.566965
+          },
+          "combined": {
+            "up": 0.055395,
+            "down": 0.274522,
+            "left": 0.04872,
+            "right": 0.23823
+          },
+          "distance_expected": 1.17917013
+        },
+        {
+          "step": 8,
+          "agent": [
+            4,
+            2
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.061526,
+            "down": 0.44586,
+            "left": 0.051162,
+            "right": 0.441452
+          },
+          "safety": {
+            "up": 0.79367,
+            "down": 0.654499,
+            "left": 0.751655,
+            "right": 0.638861
+          },
+          "combined": {
+            "up": 0.048832,
+            "down": 0.291815,
+            "left": 0.038456,
+            "right": 0.282026
+          },
+          "distance_expected": 1.82585299
+        },
+        {
+          "step": 9,
+          "agent": [
+            5,
+            2
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 3,
+          "move_probabilities": {
+            "up": 0.071075,
+            "down": 0.449796,
+            "left": 0.060664,
+            "right": 0.418465
+          },
+          "safety": {
+            "up": 0.806887,
+            "down": 0.606917,
+            "left": 0.832898,
+            "right": 0.566064
+          },
+          "combined": {
+            "up": 0.057349,
+            "down": 0.272989,
+            "left": 0.050527,
+            "right": 0.236878
+          },
+          "distance_expected": 1.18455553
+        },
+        {
+          "step": 10,
+          "agent": [
+            4,
+            2
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.042182,
+            "down": 0.444446,
+            "left": 0.039913,
+            "right": 0.47346
+          },
+          "safety": {
+            "up": 0.784811,
+            "down": 0.715695,
+            "left": 0.741249,
+            "right": 0.6887
+          },
+          "combined": {
+            "up": 0.033105,
+            "down": 0.318088,
+            "left": 0.029585,
+            "right": 0.326072
+          },
+          "distance_expected": 1.92228031
+        },
+        {
+          "step": 11,
+          "agent": [
+            4,
+            3
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 3,
+          "move_probabilities": {
+            "up": 0.053259,
+            "down": 0.460965,
+            "left": 0.047265,
+            "right": 0.438511
+          },
+          "safety": {
+            "up": 0.806731,
+            "down": 0.638632,
+            "left": 0.830214,
+            "right": 0.578355
+          },
+          "combined": {
+            "up": 0.042966,
+            "down": 0.294387,
+            "left": 0.03924,
+            "right": 0.253615
+          },
+          "distance_expected": 1.17803574
+        },
+        {
+          "step": 12,
+          "agent": [
+            4,
+            4
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 2,
+          "move_probabilities": {
+            "up": 0.064931,
+            "down": 0.445536,
+            "left": 0.056654,
+            "right": 0.432878
+          },
+          "safety": {
+            "up": 0.803923,
+            "down": 0.622101,
+            "left": 0.790226,
+            "right": 0.579622
+          },
+          "combined": {
+            "up": 0.0522,
+            "down": 0.277169,
+            "left": 0.04477,
+            "right": 0.250906
+          },
+          "distance_expected": 1.31474185
+        },
+        {
+          "step": 13,
+          "agent": [
+            5,
+            4
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 1,
+          "move_probabilities": {
+            "up": 0.093711,
+            "down": 0.416082,
+            "left": 0.080369,
+            "right": 0.409838
+          },
+          "safety": {
+            "up": 0.781319,
+            "down": 0.530259,
+            "left": 0.817162,
+            "right": 0.535452
+          },
+          "combined": {
+            "up": 0.073218,
+            "down": 0.220631,
+            "left": 0.065675,
+            "right": 0.219448
+          },
+          "distance_expected": 1.23847032
+        }
+      ],
+      "id": "maze-1"
+    },
+    {
+      "size": 6,
+      "walls": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        5,
+        5
+      ],
+      "success": true,
+      "steps": 10,
+      "optimal_steps": 10,
+      "final": [
+        5,
+        5
+      ],
+      "frames": [
+        {
+          "step": 0,
+          "agent": [
+            0,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 10,
+          "move_probabilities": {
+            "up": 0.003376,
+            "down": 0.511811,
+            "left": 0.005218,
+            "right": 0.479595
+          },
+          "safety": {
+            "up": 0.089285,
+            "down": 0.853098,
+            "left": 0.081073,
+            "right": 0.780884
+          },
+          "combined": {
+            "up": 0.000301,
+            "down": 0.436625,
+            "left": 0.000423,
+            "right": 0.374508
+          },
+          "distance_expected": 2.7750001
+        },
+        {
+          "step": 1,
+          "agent": [
+            1,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 9,
+          "move_probabilities": {
+            "up": 0.007621,
+            "down": 0.480276,
+            "left": 0.008488,
+            "right": 0.503614
+          },
+          "safety": {
+            "up": 0.924242,
+            "down": 0.769563,
+            "left": 0.051937,
+            "right": 0.671432
+          },
+          "combined": {
+            "up": 0.007044,
+            "down": 0.369603,
+            "left": 0.000441,
+            "right": 0.338142
+          },
+          "distance_expected": 2.79613185
+        },
+        {
+          "step": 2,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.004897,
+            "down": 0.472214,
+            "left": 0.005285,
+            "right": 0.517605
+          },
+          "safety": {
+            "up": 0.891793,
+            "down": 0.864698,
+            "left": 0.069047,
+            "right": 0.827532
+          },
+          "combined": {
+            "up": 0.004367,
+            "down": 0.408322,
+            "left": 0.000365,
+            "right": 0.428334
+          },
+          "distance_expected": 2.80200243
+        },
+        {
+          "step": 3,
+          "agent": [
+            2,
+            1
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.008035,
+            "down": 0.509512,
+            "left": 0.011033,
+            "right": 0.47142
+          },
+          "safety": {
+            "up": 0.823499,
+            "down": 0.827483,
+            "left": 0.911018,
+            "right": 0.761774
+          },
+          "combined": {
+            "up": 0.006617,
+            "down": 0.421613,
+            "left": 0.010052,
+            "right": 0.359115
+          },
+          "distance_expected": 2.8215127
+        },
+        {
+          "step": 4,
+          "agent": [
+            3,
+            1
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 6,
+          "move_probabilities": {
+            "up": 0.011906,
+            "down": 0.492142,
+            "left": 0.01755,
+            "right": 0.478402
+          },
+          "safety": {
+            "up": 0.736138,
+            "down": 0.860588,
+            "left": 0.869236,
+            "right": 0.835139
+          },
+          "combined": {
+            "up": 0.008765,
+            "down": 0.423532,
+            "left": 0.015255,
+            "right": 0.399532
+          },
+          "distance_expected": 2.00487542
+        },
+        {
+          "step": 5,
+          "agent": [
+            4,
+            1
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 5,
+          "move_probabilities": {
+            "up": 0.021286,
+            "down": 0.472106,
+            "left": 0.024983,
+            "right": 0.481625
+          },
+          "safety": {
+            "up": 0.821518,
+            "down": 0.801094,
+            "left": 0.809652,
+            "right": 0.794027
+          },
+          "combined": {
+            "up": 0.017487,
+            "down": 0.378201,
+            "left": 0.020228,
+            "right": 0.382423
+          },
+          "distance_expected": 1.96419692
+        },
+        {
+          "step": 6,
+          "agent": [
+            4,
+            2
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.030513,
+            "down": 0.465747,
+            "left": 0.036116,
+            "right": 0.467624
+          },
+          "safety": {
+            "up": 0.816023,
+            "down": 0.748566,
+            "left": 0.801246,
+            "right": 0.727379
+          },
+          "combined": {
+            "up": 0.024899,
+            "down": 0.348642,
+            "left": 0.028938,
+            "right": 0.34014
+          },
+          "distance_expected": 1.89942503
+        },
+        {
+          "step": 7,
+          "agent": [
+            5,
+            2
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 3,
+          "move_probabilities": {
+            "up": 0.030767,
+            "down": 0.483324,
+            "left": 0.03753,
+            "right": 0.448379
+          },
+          "safety": {
+            "up": 0.83252,
+            "down": 0.676974,
+            "left": 0.862481,
+            "right": 0.636012
+          },
+          "combined": {
+            "up": 0.025614,
+            "down": 0.327197,
+            "left": 0.032369,
+            "right": 0.285174
+          },
+          "distance_expected": 1.15487838
+        },
+        {
+          "step": 8,
+          "agent": [
+            5,
+            3
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 2,
+          "move_probabilities": {
+            "up": 0.031894,
+            "down": 0.467671,
+            "left": 0.04391,
+            "right": 0.456525
+          },
+          "safety": {
+            "up": 0.899863,
+            "down": 0.53883,
+            "left": 0.902822,
+            "right": 0.528573
+          },
+          "combined": {
+            "up": 0.0287,
+            "down": 0.251995,
+            "left": 0.039643,
+            "right": 0.241307
+          },
+          "distance_expected": 1.05215657
+        },
+        {
+          "step": 9,
+          "agent": [
+            5,
+            4
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 1,
+          "move_probabilities": {
+            "up": 0.041414,
+            "down": 0.462048,
+            "left": 0.051975,
+            "right": 0.444562
+          },
+          "safety": {
+            "up": 0.859867,
+            "down": 0.554526,
+            "left": 0.877203,
+            "right": 0.539197
+          },
+          "combined": {
+            "up": 0.035611,
+            "down": 0.256218,
+            "left": 0.045593,
+            "right": 0.239707
+          },
+          "distance_expected": 1.11803973
+        }
+      ],
+      "id": "maze-2"
+    },
+    {
+      "size": 6,
+      "walls": [
+        [
+          1,
+          5
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        5,
+        5
+      ],
+      "success": true,
+      "steps": 12,
+      "optimal_steps": 10,
+      "final": [
+        5,
+        5
+      ],
+      "frames": [
+        {
+          "step": 0,
+          "agent": [
+            0,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 10,
+          "move_probabilities": {
+            "up": 0.003414,
+            "down": 0.499783,
+            "left": 0.004448,
+            "right": 0.492355
+          },
+          "safety": {
+            "up": 0.073986,
+            "down": 0.883115,
+            "left": 0.080087,
+            "right": 0.882521
+          },
+          "combined": {
+            "up": 0.000253,
+            "down": 0.441366,
+            "left": 0.000356,
+            "right": 0.434514
+          },
+          "distance_expected": 2.76693153
+        },
+        {
+          "step": 1,
+          "agent": [
+            1,
+            0
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 9,
+          "move_probabilities": {
+            "up": 0.00915,
+            "down": 0.455375,
+            "left": 0.004445,
+            "right": 0.531031
+          },
+          "safety": {
+            "up": 0.913493,
+            "down": 0.844398,
+            "left": 0.069763,
+            "right": 0.851399
+          },
+          "combined": {
+            "up": 0.008358,
+            "down": 0.384517,
+            "left": 0.00031,
+            "right": 0.452119
+          },
+          "distance_expected": 2.79854822
+        },
+        {
+          "step": 2,
+          "agent": [
+            1,
+            1
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.013786,
+            "down": 0.448371,
+            "left": 0.010267,
+            "right": 0.527575
+          },
+          "safety": {
+            "up": 0.850843,
+            "down": 0.77023,
+            "left": 0.806033,
+            "right": 0.797964
+          },
+          "combined": {
+            "up": 0.01173,
+            "down": 0.345349,
+            "left": 0.008276,
+            "right": 0.420986
+          },
+          "distance_expected": 2.77862334
+        },
+        {
+          "step": 3,
+          "agent": [
+            1,
+            2
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.00681,
+            "down": 0.463655,
+            "left": 0.005201,
+            "right": 0.524334
+          },
+          "safety": {
+            "up": 0.901571,
+            "down": 0.859096,
+            "left": 0.895202,
+            "right": 0.865731
+          },
+          "combined": {
+            "up": 0.00614,
+            "down": 0.398324,
+            "left": 0.004656,
+            "right": 0.453932
+          },
+          "distance_expected": 2.84161592
+        },
+        {
+          "step": 4,
+          "agent": [
+            1,
+            3
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 6,
+          "move_probabilities": {
+            "up": 0.015799,
+            "down": 0.463421,
+            "left": 0.014356,
+            "right": 0.506424
+          },
+          "safety": {
+            "up": 0.834736,
+            "down": 0.796519,
+            "left": 0.805196,
+            "right": 0.809689
+          },
+          "combined": {
+            "up": 0.013188,
+            "down": 0.369124,
+            "left": 0.011559,
+            "right": 0.410046
+          },
+          "distance_expected": 1.95433235
+        },
+        {
+          "step": 5,
+          "agent": [
+            1,
+            4
+          ],
+          "move": "down",
+          "forced": true,
+          "distance": 5,
+          "move_probabilities": {
+            "up": 0.027946,
+            "down": 0.457,
+            "left": 0.02343,
+            "right": 0.491624
+          },
+          "safety": {
+            "up": 0.816134,
+            "down": 0.755044,
+            "left": 0.785593,
+            "right": 0.762914
+          },
+          "combined": {
+            "up": 0.022808,
+            "down": 0.345055,
+            "left": 0.018407,
+            "right": 0.375067
+          },
+          "distance_expected": 1.91597283
+        },
+        {
+          "step": 6,
+          "agent": [
+            2,
+            4
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.047409,
+            "down": 0.442892,
+            "left": 0.043002,
+            "right": 0.466698
+          },
+          "safety": {
+            "up": 0.784377,
+            "down": 0.69711,
+            "left": 0.768151,
+            "right": 0.670056
+          },
+          "combined": {
+            "up": 0.037186,
+            "down": 0.308744,
+            "left": 0.033032,
+            "right": 0.312714
+          },
+          "distance_expected": 1.83468056
+        },
+        {
+          "step": 7,
+          "agent": [
+            2,
+            5
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 3,
+          "move_probabilities": {
+            "up": 0.04872,
+            "down": 0.451222,
+            "left": 0.050865,
+            "right": 0.449193
+          },
+          "safety": {
+            "up": 0.788863,
+            "down": 0.648191,
+            "left": 0.84151,
+            "right": 0.581079
+          },
+          "combined": {
+            "up": 0.038433,
+            "down": 0.292478,
+            "left": 0.042803,
+            "right": 0.261017
+          },
+          "distance_expected": 1.19980061
+        },
+        {
+          "step": 8,
+          "agent": [
+            3,
+            5
+          ],
+          "move": "left",
+          "forced": true,
+          "distance": 2,
+          "move_probabilities": {
+            "up": 0.056128,
+            "down": 0.434476,
+            "left": 0.079274,
+            "right": 0.430121
+          },
+          "safety": {
+            "up": 0.739612,
+            "down": 0.524318,
+            "left": 0.893062,
+            "right": 0.516136
+          },
+          "combined": {
+            "up": 0.041513,
+            "down": 0.227804,
+            "left": 0.070797,
+            "right": 0.222001
+          },
+          "distance_expected": 1.13895178
+        },
+        {
+          "step": 9,
+          "agent": [
+            3,
+            4
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 3,
+          "move_probabilities": {
+            "up": 0.039513,
+            "down": 0.463316,
+            "left": 0.047499,
+            "right": 0.449672
+          },
+          "safety": {
+            "up": 0.699351,
+            "down": 0.620761,
+            "left": 0.864784,
+            "right": 0.55959
+          },
+          "combined": {
+            "up": 0.027634,
+            "down": 0.287608,
+            "left": 0.041076,
+            "right": 0.251632
+          },
+          "distance_expected": 1.08952153
+        },
+        {
+          "step": 10,
+          "agent": [
+            4,
+            4
+          ],
+          "move": "down",
+          "forced": true,
+          "distance": 2,
+          "move_probabilities": {
+            "up": 0.043702,
+            "down": 0.447735,
+            "left": 0.046593,
+            "right": 0.46197
+          },
+          "safety": {
+            "up": 0.818799,
+            "down": 0.606807,
+            "left": 0.798712,
+            "right": 0.596251
+          },
+          "combined": {
+            "up": 0.035784,
+            "down": 0.271689,
+            "left": 0.037214,
+            "right": 0.27545
+          },
+          "distance_expected": 1.18938375
+        },
+        {
+          "step": 11,
+          "agent": [
+            5,
+            4
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 1,
+          "move_probabilities": {
+            "up": 0.071704,
+            "down": 0.431148,
+            "left": 0.059978,
+            "right": 0.437171
+          },
+          "safety": {
+            "up": 0.82702,
+            "down": 0.537863,
+            "left": 0.814678,
+            "right": 0.548342
+          },
+          "combined": {
+            "up": 0.0593,
+            "down": 0.231898,
+            "left": 0.048862,
+            "right": 0.239719
+          },
+          "distance_expected": 1.20186174
+        }
+      ],
+      "id": "maze-3"
+    },
+    {
+      "size": 6,
+      "walls": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        5,
+        5
+      ],
+      "success": true,
+      "steps": 10,
+      "optimal_steps": 10,
+      "final": [
+        5,
+        5
+      ],
+      "frames": [
+        {
+          "step": 0,
+          "agent": [
+            0,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 10,
+          "move_probabilities": {
+            "up": 0.00321,
+            "down": 0.527932,
+            "left": 0.004494,
+            "right": 0.464365
+          },
+          "safety": {
+            "up": 0.079961,
+            "down": 0.87549,
+            "left": 0.074403,
+            "right": 0.8074
+          },
+          "combined": {
+            "up": 0.000257,
+            "down": 0.462199,
+            "left": 0.000334,
+            "right": 0.374928
+          },
+          "distance_expected": 2.77243567
+        },
+        {
+          "step": 1,
+          "agent": [
+            1,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 9,
+          "move_probabilities": {
+            "up": 0.00731,
+            "down": 0.491844,
+            "left": 0.00638,
+            "right": 0.494465
+          },
+          "safety": {
+            "up": 0.917971,
+            "down": 0.798407,
+            "left": 0.059056,
+            "right": 0.699642
+          },
+          "combined": {
+            "up": 0.006711,
+            "down": 0.392692,
+            "left": 0.000377,
+            "right": 0.345949
+          },
+          "distance_expected": 2.79320621
+        },
+        {
+          "step": 2,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "right",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.005065,
+            "down": 0.482955,
+            "left": 0.004387,
+            "right": 0.507593
+          },
+          "safety": {
+            "up": 0.887397,
+            "down": 0.882601,
+            "left": 0.072022,
+            "right": 0.849593
+          },
+          "combined": {
+            "up": 0.004494,
+            "down": 0.426257,
+            "left": 0.000316,
+            "right": 0.431248
+          },
+          "distance_expected": 2.78246212
+        },
+        {
+          "step": 3,
+          "agent": [
+            2,
+            1
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.006859,
+            "down": 0.517712,
+            "left": 0.007234,
+            "right": 0.468195
+          },
+          "safety": {
+            "up": 0.840829,
+            "down": 0.852175,
+            "left": 0.924124,
+            "right": 0.801761
+          },
+          "combined": {
+            "up": 0.005767,
+            "down": 0.441181,
+            "left": 0.006685,
+            "right": 0.37538
+          },
+          "distance_expected": 2.82290673
+        },
+        {
+          "step": 4,
+          "agent": [
+            3,
+            1
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 6,
+          "move_probabilities": {
+            "up": 0.012893,
+            "down": 0.503144,
+            "left": 0.015714,
+            "right": 0.468249
+          },
+          "safety": {
+            "up": 0.746313,
+            "down": 0.848314,
+            "left": 0.873062,
+            "right": 0.821865
+          },
+          "combined": {
+            "up": 0.009622,
+            "down": 0.426824,
+            "left": 0.013719,
+            "right": 0.384837
+          },
+          "distance_expected": 1.98427927
+        },
+        {
+          "step": 5,
+          "agent": [
+            4,
+            1
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 5,
+          "move_probabilities": {
+            "up": 0.025247,
+            "down": 0.480857,
+            "left": 0.026396,
+            "right": 0.4675
+          },
+          "safety": {
+            "up": 0.816676,
+            "down": 0.77852,
+            "left": 0.808122,
+            "right": 0.769192
+          },
+          "combined": {
+            "up": 0.020619,
+            "down": 0.374357,
+            "left": 0.021331,
+            "right": 0.359597
+          },
+          "distance_expected": 1.94353485
+        },
+        {
+          "step": 6,
+          "agent": [
+            4,
+            2
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 4,
+          "move_probabilities": {
+            "up": 0.035833,
+            "down": 0.47257,
+            "left": 0.039263,
+            "right": 0.452334
+          },
+          "safety": {
+            "up": 0.805532,
+            "down": 0.72275,
+            "left": 0.797823,
+            "right": 0.697562
+          },
+          "combined": {
+            "up": 0.028865,
+            "down": 0.34155,
+            "left": 0.031325,
+            "right": 0.315531
+          },
+          "distance_expected": 1.84136212
+        },
+        {
+          "step": 7,
+          "agent": [
+            5,
+            2
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 3,
+          "move_probabilities": {
+            "up": 0.038804,
+            "down": 0.483761,
+            "left": 0.044417,
+            "right": 0.433017
+          },
+          "safety": {
+            "up": 0.824289,
+            "down": 0.645273,
+            "left": 0.861498,
+            "right": 0.607368
+          },
+          "combined": {
+            "up": 0.031986,
+            "down": 0.312158,
+            "left": 0.038265,
+            "right": 0.263001
+          },
+          "distance_expected": 1.1463089
+        },
+        {
+          "step": 8,
+          "agent": [
+            5,
+            3
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 2,
+          "move_probabilities": {
+            "up": 0.046054,
+            "down": 0.454715,
+            "left": 0.061561,
+            "right": 0.43767
+          },
+          "safety": {
+            "up": 0.878169,
+            "down": 0.524769,
+            "left": 0.908062,
+            "right": 0.523476
+          },
+          "combined": {
+            "up": 0.040444,
+            "down": 0.23862,
+            "left": 0.055901,
+            "right": 0.22911
+          },
+          "distance_expected": 1.15798807
+        },
+        {
+          "step": 9,
+          "agent": [
+            5,
+            4
+          ],
+          "move": "right",
+          "forced": true,
+          "distance": 1,
+          "move_probabilities": {
+            "up": 0.057198,
+            "down": 0.449287,
+            "left": 0.067013,
+            "right": 0.426502
+          },
+          "safety": {
+            "up": 0.837443,
+            "down": 0.54166,
+            "left": 0.867359,
+            "right": 0.534368
+          },
+          "combined": {
+            "up": 0.0479,
+            "down": 0.243361,
+            "left": 0.058125,
+            "right": 0.227909
+          },
+          "distance_expected": 1.19424236
+        }
+      ],
+      "id": "maze-4"
+    },
+    {
+      "size": 6,
+      "walls": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        5,
+        5
+      ],
+      "success": false,
+      "steps": 64,
+      "optimal_steps": 10,
+      "final": [
+        2,
+        0
+      ],
+      "frames": [
+        {
+          "step": 0,
+          "agent": [
+            0,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 10,
+          "move_probabilities": {
+            "up": 0.00445,
+            "down": 0.519092,
+            "left": 0.006635,
+            "right": 0.469823
+          },
+          "safety": {
+            "up": 0.077462,
+            "down": 0.847814,
+            "left": 0.096466,
+            "right": 0.743188
+          },
+          "combined": {
+            "up": 0.000345,
+            "down": 0.440093,
+            "left": 0.00064,
+            "right": 0.349167
+          },
+          "distance_expected": 2.68149018
+        },
+        {
+          "step": 1,
+          "agent": [
+            1,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 9,
+          "move_probabilities": {
+            "up": 0.017773,
+            "down": 0.549022,
+            "left": 0.015884,
+            "right": 0.417321
+          },
+          "safety": {
+            "up": 0.847582,
+            "down": 0.777845,
+            "left": 0.062978,
+            "right": 0.423309
+          },
+          "combined": {
+            "up": 0.015064,
+            "down": 0.427054,
+            "left": 0.001,
+            "right": 0.176656
+          },
+          "distance_expected": 2.6135323
+        },
+        {
+          "step": 2,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.01309,
+            "down": 0.513404,
+            "left": 0.008805,
+            "right": 0.464701
+          },
+          "safety": {
+            "up": 0.867871,
+            "down": 0.807709,
+            "left": 0.082234,
+            "right": 0.500791
+          },
+          "combined": {
+            "up": 0.01136,
+            "down": 0.414681,
+            "left": 0.000724,
+            "right": 0.232718
+          },
+          "distance_expected": 2.67853451
+        },
+        {
+          "step": 3,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.006328,
+            "down": 0.504666,
+            "left": 0.005346,
+            "right": 0.483661
+          },
+          "safety": {
+            "up": 0.744326,
+            "down": 0.847032,
+            "left": 0.080186,
+            "right": 0.750584
+          },
+          "combined": {
+            "up": 0.00471,
+            "down": 0.427469,
+            "left": 0.000429,
+            "right": 0.363028
+          },
+          "distance_expected": 2.69704485
+        },
+        {
+          "step": 4,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.012616,
+            "down": 0.507324,
+            "left": 0.00812,
+            "right": 0.47194
+          },
+          "safety": {
+            "up": 0.85956,
+            "down": 0.824318,
+            "left": 0.09276,
+            "right": 0.555841
+          },
+          "combined": {
+            "up": 0.010844,
+            "down": 0.418197,
+            "left": 0.000753,
+            "right": 0.262324
+          },
+          "distance_expected": 2.65210819
+        },
+        {
+          "step": 5,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.007161,
+            "down": 0.506041,
+            "left": 0.006244,
+            "right": 0.480553
+          },
+          "safety": {
+            "up": 0.763397,
+            "down": 0.846407,
+            "left": 0.088915,
+            "right": 0.753884
+          },
+          "combined": {
+            "up": 0.005467,
+            "down": 0.428317,
+            "left": 0.000555,
+            "right": 0.362281
+          },
+          "distance_expected": 2.61083651
+        },
+        {
+          "step": 6,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.01262,
+            "down": 0.51399,
+            "left": 0.00829,
+            "right": 0.4651
+          },
+          "safety": {
+            "up": 0.860231,
+            "down": 0.816774,
+            "left": 0.086382,
+            "right": 0.520636
+          },
+          "combined": {
+            "up": 0.010856,
+            "down": 0.419814,
+            "left": 0.000716,
+            "right": 0.242148
+          },
+          "distance_expected": 2.67589951
+        },
+        {
+          "step": 7,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.006702,
+            "down": 0.509149,
+            "left": 0.005613,
+            "right": 0.478536
+          },
+          "safety": {
+            "up": 0.761509,
+            "down": 0.838784,
+            "left": 0.079612,
+            "right": 0.705939
+          },
+          "combined": {
+            "up": 0.005103,
+            "down": 0.427067,
+            "left": 0.000447,
+            "right": 0.337817
+          },
+          "distance_expected": 2.68640733
+        },
+        {
+          "step": 8,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.01235,
+            "down": 0.508015,
+            "left": 0.00819,
+            "right": 0.471445
+          },
+          "safety": {
+            "up": 0.861393,
+            "down": 0.810391,
+            "left": 0.086042,
+            "right": 0.543357
+          },
+          "combined": {
+            "up": 0.010638,
+            "down": 0.411691,
+            "left": 0.000705,
+            "right": 0.256163
+          },
+          "distance_expected": 2.68019819
+        },
+        {
+          "step": 9,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.006864,
+            "down": 0.510143,
+            "left": 0.005892,
+            "right": 0.477101
+          },
+          "safety": {
+            "up": 0.779415,
+            "down": 0.838321,
+            "left": 0.082037,
+            "right": 0.69399
+          },
+          "combined": {
+            "up": 0.00535,
+            "down": 0.427664,
+            "left": 0.000483,
+            "right": 0.331103
+          },
+          "distance_expected": 2.68255925
+        },
+        {
+          "step": 10,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.005449,
+            "down": 0.509231,
+            "left": 0.019657,
+            "right": 0.465663
+          },
+          "safety": {
+            "up": 0.898886,
+            "down": 0.800985,
+            "left": 0.066504,
+            "right": 0.52423
+          },
+          "combined": {
+            "up": 0.004898,
+            "down": 0.407887,
+            "left": 0.001307,
+            "right": 0.244114
+          },
+          "distance_expected": 2.67428565
+        },
+        {
+          "step": 11,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.005003,
+            "down": 0.526246,
+            "left": 0.015149,
+            "right": 0.453602
+          },
+          "safety": {
+            "up": 0.86951,
+            "down": 0.813051,
+            "left": 0.074021,
+            "right": 0.525594
+          },
+          "combined": {
+            "up": 0.00435,
+            "down": 0.427865,
+            "left": 0.001121,
+            "right": 0.23841
+          },
+          "distance_expected": 2.67347097
+        },
+        {
+          "step": 12,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.007264,
+            "down": 0.515303,
+            "left": 0.021758,
+            "right": 0.455674
+          },
+          "safety": {
+            "up": 0.907399,
+            "down": 0.76228,
+            "left": 0.071333,
+            "right": 0.448947
+          },
+          "combined": {
+            "up": 0.006592,
+            "down": 0.392805,
+            "left": 0.001552,
+            "right": 0.204573
+          },
+          "distance_expected": 2.66119528
+        },
+        {
+          "step": 13,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004726,
+            "down": 0.512775,
+            "left": 0.011122,
+            "right": 0.471378
+          },
+          "safety": {
+            "up": 0.84388,
+            "down": 0.843439,
+            "left": 0.079339,
+            "right": 0.671183
+          },
+          "combined": {
+            "up": 0.003988,
+            "down": 0.432494,
+            "left": 0.000882,
+            "right": 0.316381
+          },
+          "distance_expected": 2.69301939
+        },
+        {
+          "step": 14,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006839,
+            "down": 0.509926,
+            "left": 0.019201,
+            "right": 0.464034
+          },
+          "safety": {
+            "up": 0.89844,
+            "down": 0.779102,
+            "left": 0.082307,
+            "right": 0.484857
+          },
+          "combined": {
+            "up": 0.006145,
+            "down": 0.397284,
+            "left": 0.00158,
+            "right": 0.22499
+          },
+          "distance_expected": 2.6644454
+        },
+        {
+          "step": 15,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.005445,
+            "down": 0.513833,
+            "left": 0.012116,
+            "right": 0.468605
+          },
+          "safety": {
+            "up": 0.844836,
+            "down": 0.844271,
+            "left": 0.088756,
+            "right": 0.673778
+          },
+          "combined": {
+            "up": 0.0046,
+            "down": 0.433815,
+            "left": 0.001075,
+            "right": 0.315736
+          },
+          "distance_expected": 2.62776089
+        },
+        {
+          "step": 16,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006997,
+            "down": 0.517133,
+            "left": 0.020733,
+            "right": 0.455137
+          },
+          "safety": {
+            "up": 0.901596,
+            "down": 0.776325,
+            "left": 0.07548,
+            "right": 0.462007
+          },
+          "combined": {
+            "up": 0.006308,
+            "down": 0.401464,
+            "left": 0.001565,
+            "right": 0.210277
+          },
+          "distance_expected": 2.66775537
+        },
+        {
+          "step": 17,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004851,
+            "down": 0.519505,
+            "left": 0.013362,
+            "right": 0.462282
+          },
+          "safety": {
+            "up": 0.851328,
+            "down": 0.828897,
+            "left": 0.076278,
+            "right": 0.602275
+          },
+          "combined": {
+            "up": 0.00413,
+            "down": 0.430616,
+            "left": 0.001019,
+            "right": 0.278421
+          },
+          "distance_expected": 2.68308687
+        },
+        {
+          "step": 18,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006952,
+            "down": 0.513016,
+            "left": 0.020457,
+            "right": 0.459575
+          },
+          "safety": {
+            "up": 0.902014,
+            "down": 0.766522,
+            "left": 0.075278,
+            "right": 0.476535
+          },
+          "combined": {
+            "up": 0.006271,
+            "down": 0.393238,
+            "left": 0.00154,
+            "right": 0.219004
+          },
+          "distance_expected": 2.67331409
+        },
+        {
+          "step": 19,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004905,
+            "down": 0.519608,
+            "left": 0.013117,
+            "right": 0.46237
+          },
+          "safety": {
+            "up": 0.859883,
+            "down": 0.825469,
+            "left": 0.07743,
+            "right": 0.574174
+          },
+          "combined": {
+            "up": 0.004218,
+            "down": 0.42892,
+            "left": 0.001016,
+            "right": 0.265481
+          },
+          "distance_expected": 2.6810205
+        },
+        {
+          "step": 20,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.004895,
+            "down": 0.498974,
+            "left": 0.016858,
+            "right": 0.479274
+          },
+          "safety": {
+            "up": 0.89374,
+            "down": 0.809643,
+            "left": 0.070364,
+            "right": 0.569709
+          },
+          "combined": {
+            "up": 0.004375,
+            "down": 0.403991,
+            "left": 0.001186,
+            "right": 0.273046
+          },
+          "distance_expected": 2.69762039
+        },
+        {
+          "step": 21,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004786,
+            "down": 0.516862,
+            "left": 0.013252,
+            "right": 0.4651
+          },
+          "safety": {
+            "up": 0.861299,
+            "down": 0.826886,
+            "left": 0.077934,
+            "right": 0.589549
+          },
+          "combined": {
+            "up": 0.004122,
+            "down": 0.427386,
+            "left": 0.001033,
+            "right": 0.2742
+          },
+          "distance_expected": 2.68689036
+        },
+        {
+          "step": 22,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006385,
+            "down": 0.504284,
+            "left": 0.01833,
+            "right": 0.471001
+          },
+          "safety": {
+            "up": 0.903984,
+            "down": 0.773941,
+            "left": 0.075521,
+            "right": 0.483648
+          },
+          "combined": {
+            "up": 0.005772,
+            "down": 0.390286,
+            "left": 0.001384,
+            "right": 0.227799
+          },
+          "distance_expected": 2.68884015
+        },
+        {
+          "step": 23,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004549,
+            "down": 0.503236,
+            "left": 0.010018,
+            "right": 0.482198
+          },
+          "safety": {
+            "up": 0.838028,
+            "down": 0.849803,
+            "left": 0.080106,
+            "right": 0.728445
+          },
+          "combined": {
+            "up": 0.003812,
+            "down": 0.427651,
+            "left": 0.000802,
+            "right": 0.351255
+          },
+          "distance_expected": 2.70544982
+        },
+        {
+          "step": 24,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006265,
+            "down": 0.499108,
+            "left": 0.016117,
+            "right": 0.47851
+          },
+          "safety": {
+            "up": 0.894526,
+            "down": 0.791898,
+            "left": 0.088183,
+            "right": 0.540385
+          },
+          "combined": {
+            "up": 0.005604,
+            "down": 0.395243,
+            "left": 0.001421,
+            "right": 0.25858
+          },
+          "distance_expected": 2.67776752
+        },
+        {
+          "step": 25,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.005248,
+            "down": 0.503879,
+            "left": 0.010956,
+            "right": 0.479917
+          },
+          "safety": {
+            "up": 0.840365,
+            "down": 0.849356,
+            "left": 0.090331,
+            "right": 0.726726
+          },
+          "combined": {
+            "up": 0.00441,
+            "down": 0.427973,
+            "left": 0.00099,
+            "right": 0.348768
+          },
+          "distance_expected": 2.63351822
+        },
+        {
+          "step": 26,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006211,
+            "down": 0.505992,
+            "left": 0.017783,
+            "right": 0.470014
+          },
+          "safety": {
+            "up": 0.897553,
+            "down": 0.786508,
+            "left": 0.080028,
+            "right": 0.504012
+          },
+          "combined": {
+            "up": 0.005575,
+            "down": 0.397967,
+            "left": 0.001423,
+            "right": 0.236893
+          },
+          "distance_expected": 2.69045782
+        },
+        {
+          "step": 27,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004707,
+            "down": 0.510414,
+            "left": 0.01196,
+            "right": 0.472919
+          },
+          "safety": {
+            "up": 0.843482,
+            "down": 0.840119,
+            "left": 0.078384,
+            "right": 0.671775
+          },
+          "combined": {
+            "up": 0.003971,
+            "down": 0.428809,
+            "left": 0.000937,
+            "right": 0.317695
+          },
+          "distance_expected": 2.69536996
+        },
+        {
+          "step": 28,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006207,
+            "down": 0.501516,
+            "left": 0.017702,
+            "right": 0.474574
+          },
+          "safety": {
+            "up": 0.897816,
+            "down": 0.77767,
+            "left": 0.079847,
+            "right": 0.52352
+          },
+          "combined": {
+            "up": 0.005573,
+            "down": 0.390014,
+            "left": 0.001413,
+            "right": 0.248449
+          },
+          "distance_expected": 2.69547725
+        },
+        {
+          "step": 29,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004749,
+            "down": 0.509802,
+            "left": 0.011621,
+            "right": 0.473828
+          },
+          "safety": {
+            "up": 0.851861,
+            "down": 0.837626,
+            "left": 0.080369,
+            "right": 0.646685
+          },
+          "combined": {
+            "up": 0.004046,
+            "down": 0.427023,
+            "left": 0.000934,
+            "right": 0.306417
+          },
+          "distance_expected": 2.69240379
+        },
+        {
+          "step": 30,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.004508,
+            "down": 0.495048,
+            "left": 0.013003,
+            "right": 0.487441
+          },
+          "safety": {
+            "up": 0.881358,
+            "down": 0.823747,
+            "left": 0.073725,
+            "right": 0.640082
+          },
+          "combined": {
+            "up": 0.003973,
+            "down": 0.407794,
+            "left": 0.000959,
+            "right": 0.312002
+          },
+          "distance_expected": 2.71605849
+        },
+        {
+          "step": 31,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004646,
+            "down": 0.513009,
+            "left": 0.011163,
+            "right": 0.471182
+          },
+          "safety": {
+            "up": 0.845403,
+            "down": 0.842838,
+            "left": 0.079153,
+            "right": 0.673378
+          },
+          "combined": {
+            "up": 0.003928,
+            "down": 0.432383,
+            "left": 0.000884,
+            "right": 0.317284
+          },
+          "distance_expected": 2.69609189
+        },
+        {
+          "step": 32,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.005791,
+            "down": 0.499538,
+            "left": 0.015016,
+            "right": 0.479655
+          },
+          "safety": {
+            "up": 0.894186,
+            "down": 0.794479,
+            "left": 0.081692,
+            "right": 0.548421
+          },
+          "combined": {
+            "up": 0.005179,
+            "down": 0.396872,
+            "left": 0.001227,
+            "right": 0.263053
+          },
+          "distance_expected": 2.70864367
+        },
+        {
+          "step": 33,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004291,
+            "down": 0.499621,
+            "left": 0.008549,
+            "right": 0.487539
+          },
+          "safety": {
+            "up": 0.827712,
+            "down": 0.853039,
+            "left": 0.077686,
+            "right": 0.769083
+          },
+          "combined": {
+            "up": 0.003552,
+            "down": 0.426196,
+            "left": 0.000664,
+            "right": 0.374958
+          },
+          "distance_expected": 2.72193718
+        },
+        {
+          "step": 34,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.00596,
+            "down": 0.494918,
+            "left": 0.013421,
+            "right": 0.485701
+          },
+          "safety": {
+            "up": 0.8863,
+            "down": 0.813049,
+            "left": 0.09336,
+            "right": 0.6232
+          },
+          "combined": {
+            "up": 0.005282,
+            "down": 0.402392,
+            "left": 0.001253,
+            "right": 0.302689
+          },
+          "distance_expected": 2.6815815
+        },
+        {
+          "step": 35,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004951,
+            "down": 0.501161,
+            "left": 0.009663,
+            "right": 0.484224
+          },
+          "safety": {
+            "up": 0.833916,
+            "down": 0.849266,
+            "left": 0.090031,
+            "right": 0.76014
+          },
+          "combined": {
+            "up": 0.004129,
+            "down": 0.425619,
+            "left": 0.00087,
+            "right": 0.368078
+          },
+          "distance_expected": 2.6471622
+        },
+        {
+          "step": 36,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.00575,
+            "down": 0.500689,
+            "left": 0.014364,
+            "right": 0.479197
+          },
+          "safety": {
+            "up": 0.887209,
+            "down": 0.803422,
+            "left": 0.086489,
+            "right": 0.581801
+          },
+          "combined": {
+            "up": 0.005102,
+            "down": 0.402265,
+            "left": 0.001242,
+            "right": 0.278797
+          },
+          "distance_expected": 2.70558882
+        },
+        {
+          "step": 37,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004506,
+            "down": 0.506572,
+            "left": 0.010089,
+            "right": 0.478834
+          },
+          "safety": {
+            "up": 0.829187,
+            "down": 0.849112,
+            "left": 0.076902,
+            "right": 0.734282
+          },
+          "combined": {
+            "up": 0.003736,
+            "down": 0.430136,
+            "left": 0.000776,
+            "right": 0.351599
+          },
+          "distance_expected": 2.70844936
+        },
+        {
+          "step": 38,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.005753,
+            "down": 0.496414,
+            "left": 0.014248,
+            "right": 0.483585
+          },
+          "safety": {
+            "up": 0.887825,
+            "down": 0.798569,
+            "left": 0.085804,
+            "right": 0.60263
+          },
+          "combined": {
+            "up": 0.005108,
+            "down": 0.396421,
+            "left": 0.001223,
+            "right": 0.291423
+          },
+          "distance_expected": 2.70950556
+        },
+        {
+          "step": 39,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004573,
+            "down": 0.505848,
+            "left": 0.009881,
+            "right": 0.479698
+          },
+          "safety": {
+            "up": 0.837389,
+            "down": 0.848886,
+            "left": 0.079864,
+            "right": 0.719344
+          },
+          "combined": {
+            "up": 0.003829,
+            "down": 0.429407,
+            "left": 0.000789,
+            "right": 0.345068
+          },
+          "distance_expected": 2.70375395
+        },
+        {
+          "step": 40,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.00504,
+            "down": 0.496412,
+            "left": 0.015969,
+            "right": 0.482579
+          },
+          "safety": {
+            "up": 0.883917,
+            "down": 0.822234,
+            "left": 0.0825,
+            "right": 0.614231
+          },
+          "combined": {
+            "up": 0.004455,
+            "down": 0.408167,
+            "left": 0.001317,
+            "right": 0.296415
+          },
+          "distance_expected": 2.68602467
+        },
+        {
+          "step": 41,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.005068,
+            "down": 0.513953,
+            "left": 0.012381,
+            "right": 0.468598
+          },
+          "safety": {
+            "up": 0.848863,
+            "down": 0.843186,
+            "left": 0.086025,
+            "right": 0.662641
+          },
+          "combined": {
+            "up": 0.004302,
+            "down": 0.433359,
+            "left": 0.001065,
+            "right": 0.310512
+          },
+          "distance_expected": 2.65215826
+        },
+        {
+          "step": 42,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006293,
+            "down": 0.499394,
+            "left": 0.016034,
+            "right": 0.478279
+          },
+          "safety": {
+            "up": 0.894333,
+            "down": 0.791191,
+            "left": 0.088357,
+            "right": 0.538115
+          },
+          "combined": {
+            "up": 0.005628,
+            "down": 0.395116,
+            "left": 0.001417,
+            "right": 0.257369
+          },
+          "distance_expected": 2.67849398
+        },
+        {
+          "step": 43,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004731,
+            "down": 0.501296,
+            "left": 0.009782,
+            "right": 0.484191
+          },
+          "safety": {
+            "up": 0.831023,
+            "down": 0.854901,
+            "left": 0.08619,
+            "right": 0.761611
+          },
+          "combined": {
+            "up": 0.003932,
+            "down": 0.428559,
+            "left": 0.000843,
+            "right": 0.368765
+          },
+          "distance_expected": 2.66992903
+        },
+        {
+          "step": 44,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006594,
+            "down": 0.494746,
+            "left": 0.014077,
+            "right": 0.484583
+          },
+          "safety": {
+            "up": 0.887757,
+            "down": 0.809519,
+            "left": 0.099606,
+            "right": 0.617754
+          },
+          "combined": {
+            "up": 0.005854,
+            "down": 0.400507,
+            "left": 0.001402,
+            "right": 0.299353
+          },
+          "distance_expected": 2.63536525
+        },
+        {
+          "step": 45,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.005563,
+            "down": 0.502023,
+            "left": 0.01057,
+            "right": 0.481844
+          },
+          "safety": {
+            "up": 0.838412,
+            "down": 0.845487,
+            "left": 0.099194,
+            "right": 0.744789
+          },
+          "combined": {
+            "up": 0.004664,
+            "down": 0.424454,
+            "left": 0.001048,
+            "right": 0.358872
+          },
+          "distance_expected": 2.54910231
+        },
+        {
+          "step": 46,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006319,
+            "down": 0.500788,
+            "left": 0.015555,
+            "right": 0.477337
+          },
+          "safety": {
+            "up": 0.88799,
+            "down": 0.801443,
+            "left": 0.093471,
+            "right": 0.569924
+          },
+          "combined": {
+            "up": 0.005612,
+            "down": 0.401353,
+            "left": 0.001454,
+            "right": 0.272046
+          },
+          "distance_expected": 2.66944408
+        },
+        {
+          "step": 47,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004932,
+            "down": 0.508586,
+            "left": 0.01161,
+            "right": 0.474872
+          },
+          "safety": {
+            "up": 0.832421,
+            "down": 0.851931,
+            "left": 0.084915,
+            "right": 0.725299
+          },
+          "combined": {
+            "up": 0.004105,
+            "down": 0.43328,
+            "left": 0.000986,
+            "right": 0.344424
+          },
+          "distance_expected": 2.66252494
+        },
+        {
+          "step": 48,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006324,
+            "down": 0.496701,
+            "left": 0.015516,
+            "right": 0.48146
+          },
+          "safety": {
+            "up": 0.888643,
+            "down": 0.796936,
+            "left": 0.092845,
+            "right": 0.589295
+          },
+          "combined": {
+            "up": 0.005619,
+            "down": 0.395839,
+            "left": 0.001441,
+            "right": 0.283722
+          },
+          "distance_expected": 2.67195678
+        },
+        {
+          "step": 49,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.005021,
+            "down": 0.506821,
+            "left": 0.011064,
+            "right": 0.477093
+          },
+          "safety": {
+            "up": 0.840441,
+            "down": 0.850197,
+            "left": 0.08746,
+            "right": 0.710664
+          },
+          "combined": {
+            "up": 0.00422,
+            "down": 0.430898,
+            "left": 0.000968,
+            "right": 0.339053
+          },
+          "distance_expected": 2.65423679
+        },
+        {
+          "step": 50,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.005251,
+            "down": 0.49632,
+            "left": 0.015253,
+            "right": 0.483175
+          },
+          "safety": {
+            "up": 0.88098,
+            "down": 0.823797,
+            "left": 0.084338,
+            "right": 0.627903
+          },
+          "combined": {
+            "up": 0.004626,
+            "down": 0.408867,
+            "left": 0.001286,
+            "right": 0.303387
+          },
+          "distance_expected": 2.67940784
+        },
+        {
+          "step": 51,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.005406,
+            "down": 0.513109,
+            "left": 0.012143,
+            "right": 0.469342
+          },
+          "safety": {
+            "up": 0.845398,
+            "down": 0.84355,
+            "left": 0.089594,
+            "right": 0.676406
+          },
+          "combined": {
+            "up": 0.00457,
+            "down": 0.432833,
+            "left": 0.001088,
+            "right": 0.317465
+          },
+          "distance_expected": 2.62451553
+        },
+        {
+          "step": 52,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.00673,
+            "down": 0.499041,
+            "left": 0.015281,
+            "right": 0.478948
+          },
+          "safety": {
+            "up": 0.89109,
+            "down": 0.794524,
+            "left": 0.091437,
+            "right": 0.548842
+          },
+          "combined": {
+            "up": 0.005997,
+            "down": 0.3965,
+            "left": 0.001397,
+            "right": 0.262867
+          },
+          "distance_expected": 2.66751885
+        },
+        {
+          "step": 53,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004984,
+            "down": 0.500861,
+            "left": 0.009584,
+            "right": 0.484571
+          },
+          "safety": {
+            "up": 0.833681,
+            "down": 0.849782,
+            "left": 0.090381,
+            "right": 0.760213
+          },
+          "combined": {
+            "up": 0.004155,
+            "down": 0.425622,
+            "left": 0.000866,
+            "right": 0.368377
+          },
+          "distance_expected": 2.64451504
+        },
+        {
+          "step": 54,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.007134,
+            "down": 0.494679,
+            "left": 0.013631,
+            "right": 0.484556
+          },
+          "safety": {
+            "up": 0.885261,
+            "down": 0.812126,
+            "left": 0.102996,
+            "right": 0.629285
+          },
+          "combined": {
+            "up": 0.006315,
+            "down": 0.401742,
+            "left": 0.001404,
+            "right": 0.304924
+          },
+          "distance_expected": 2.60622621
+        },
+        {
+          "step": 55,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.006074,
+            "down": 0.50216,
+            "left": 0.010623,
+            "right": 0.481142
+          },
+          "safety": {
+            "up": 0.84335,
+            "down": 0.832021,
+            "left": 0.106323,
+            "right": 0.728932
+          },
+          "combined": {
+            "up": 0.005123,
+            "down": 0.417808,
+            "left": 0.001129,
+            "right": 0.35072
+          },
+          "distance_expected": 2.45307255
+        },
+        {
+          "step": 56,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006812,
+            "down": 0.499661,
+            "left": 0.014899,
+            "right": 0.478628
+          },
+          "safety": {
+            "up": 0.884674,
+            "down": 0.803088,
+            "left": 0.096882,
+            "right": 0.586544
+          },
+          "combined": {
+            "up": 0.006026,
+            "down": 0.401272,
+            "left": 0.001443,
+            "right": 0.280737
+          },
+          "distance_expected": 2.65243888
+        },
+        {
+          "step": 57,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.005161,
+            "down": 0.507561,
+            "left": 0.011363,
+            "right": 0.475915
+          },
+          "safety": {
+            "up": 0.831136,
+            "down": 0.850968,
+            "left": 0.088154,
+            "right": 0.732828
+          },
+          "combined": {
+            "up": 0.00429,
+            "down": 0.431918,
+            "left": 0.001002,
+            "right": 0.348764
+          },
+          "distance_expected": 2.64119935
+        },
+        {
+          "step": 58,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006774,
+            "down": 0.495711,
+            "left": 0.014871,
+            "right": 0.482644
+          },
+          "safety": {
+            "up": 0.885518,
+            "down": 0.800488,
+            "left": 0.095997,
+            "right": 0.604958
+          },
+          "combined": {
+            "up": 0.005999,
+            "down": 0.396811,
+            "left": 0.001428,
+            "right": 0.291979
+          },
+          "distance_expected": 2.65387511
+        },
+        {
+          "step": 59,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.005336,
+            "down": 0.505975,
+            "left": 0.01086,
+            "right": 0.477829
+          },
+          "safety": {
+            "up": 0.838637,
+            "down": 0.849054,
+            "left": 0.091302,
+            "right": 0.719054
+          },
+          "combined": {
+            "up": 0.004475,
+            "down": 0.4296,
+            "left": 0.000992,
+            "right": 0.343585
+          },
+          "distance_expected": 2.62423277
+        },
+        {
+          "step": 60,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.004836,
+            "down": 0.500811,
+            "left": 0.015908,
+            "right": 0.478445
+          },
+          "safety": {
+            "up": 0.885669,
+            "down": 0.816043,
+            "left": 0.073692,
+            "right": 0.592186
+          },
+          "combined": {
+            "up": 0.004283,
+            "down": 0.408683,
+            "left": 0.001172,
+            "right": 0.283328
+          },
+          "distance_expected": 2.70031929
+        },
+        {
+          "step": 61,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004903,
+            "down": 0.518028,
+            "left": 0.012825,
+            "right": 0.464244
+          },
+          "safety": {
+            "up": 0.851064,
+            "down": 0.833675,
+            "left": 0.080696,
+            "right": 0.623001
+          },
+          "combined": {
+            "up": 0.004173,
+            "down": 0.431867,
+            "left": 0.001035,
+            "right": 0.289224
+          },
+          "distance_expected": 2.6816535
+        },
+        {
+          "step": 62,
+          "agent": [
+            2,
+            0
+          ],
+          "move": "down",
+          "forced": false,
+          "distance": 8,
+          "move_probabilities": {
+            "up": 0.006222,
+            "down": 0.505675,
+            "left": 0.017844,
+            "right": 0.470259
+          },
+          "safety": {
+            "up": 0.897336,
+            "down": 0.783915,
+            "left": 0.080122,
+            "right": 0.500111
+          },
+          "combined": {
+            "up": 0.005583,
+            "down": 0.396406,
+            "left": 0.00143,
+            "right": 0.235182
+          },
+          "distance_expected": 2.69249701
+        },
+        {
+          "step": 63,
+          "agent": [
+            3,
+            0
+          ],
+          "move": "up",
+          "forced": true,
+          "distance": 7,
+          "move_probabilities": {
+            "up": 0.004609,
+            "down": 0.50442,
+            "left": 0.009839,
+            "right": 0.481132
+          },
+          "safety": {
+            "up": 0.830279,
+            "down": 0.851097,
+            "left": 0.081068,
+            "right": 0.744326
+          },
+          "combined": {
+            "up": 0.003826,
+            "down": 0.42931,
+            "left": 0.000798,
+            "right": 0.358119
+          },
+          "distance_expected": 2.70237827
+        }
+      ],
+      "id": "maze-5"
+    }
+  ],
+  "summary": {
+    "mazes": 6,
+    "successes": 5,
+    "total_steps": 128,
+    "forced_moves": 53
+  }
+}
