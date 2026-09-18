@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/banner.svg" alt="minojev — decisions, not tokens" width="960"></p>
 
 <p align="center">
-  <a href="README.zh-CN.md">简体中文</a> · <b>English</b> · <a href="https://zeredy879.github.io/minojev/">Live demos</a> · <a href="https://huggingface.co/zeredy879/minojev">Models</a>
+  <a href="README.zh-CN.md">简体中文</a> · <b>English</b> · <a href="https://zeredy879.github.io/minojev/">Live demos</a> · <a href="https://huggingface.co/zeredy879/minojev">Models</a> · <a href="https://huggingface.co/datasets/zeredy879/minojev-data">Data</a>
 </p>
 
 <p align="center">
@@ -12,40 +12,65 @@
   <img alt="parameters" src="https://img.shields.io/badge/parameters-547k-8d9bb3">
 </p>
 
-> **A decision is not a sentence.** By the time a model has read your question,
-> it has already formed an opinion. minojev reads that opinion directly instead
-> of making the model write it out.
+> **The one-sentence version.** A chat model answers by *writing* text; minojev
+> answers by *reading* probabilities — so software gets a decision in one pass,
+> with no sentence to parse and no output tokens to pay for.
 
-## The idea in 30 seconds
+## Start here (no ML background needed)
 
-Ask a chat model *"Which queue should this ticket go to?"* and it answers with
-a paragraph. Your code then parses the paragraph back into a label and a
-confidence number. The paragraph was never the answer — it was packaging, and
-you paid for it in latency, money, and format risk.
+Imagine you ask an AI: **"Which queue should this support ticket go to?"**
 
-minojev removes the packaging:
+A chat model answers with a sentence:
+
+> *"Based on the customer's message, this looks like an access issue, so I would
+> route it to the account access team."*
+
+Now your program has to read that sentence and guess what it meant. That costs
+time (the model writes word by word), money (you pay for every written word),
+and luck (the wording can change, drift, or break your parser).
+
+minojev throws away the sentence and keeps only the decision:
 
 ```
-state + question + candidates  ──►  one forward pass  ──►  {access: 0.79, deliverability: 0.14, billing: 0.07}
+"Which queue?" ──►  access 0.79 · deliverability 0.14 · billing 0.07
 ```
 
-No sentence. No parsing. No format errors. Just a typed probability
-distribution your software can branch on. Every record it returns says
-`decode_steps: 0`, because no output token was ever generated.
+One read of the input, one batch of numbers out. The numbers form a real
+probability distribution, calibrated so 0.79 means close to "79% likely", and
+every record says `decode_steps: 0` because nothing was ever written.
 
-<img src="assets/explainer.svg" alt="Chat model: generate token by token, then parse. minojev: one forward pass, read the distribution." width="100%">
+<img src="assets/explainer.svg" alt="A chat model generates tokens then parses text; minojev reads the distribution in one forward pass" width="100%">
+
+### A 30-second glossary
+
+| Word | Plain meaning |
+|---|---|
+| **token** | a small piece of text; chat models produce them one at a time |
+| **forward pass** | one trip through the model; minojev needs exactly one |
+| **calibrated** | if it says 0.8, it should be right about 80% of the time — we measure the gap (ECE) and report it |
+| **choice / boolean / score** | pick one of N options / yes–no / rate on a scale |
+
+### Try it right now (no install)
+
+Open the **[live demos](https://zeredy879.github.io/minojev/)**:
+
+- **[Maze agent](https://zeredy879.github.io/minojev/maze.html)** — watch the
+  model steer an agent through a grid while every step shows its move
+  distribution and four parallel safety judgments.
+- **[Decision console](https://zeredy879.github.io/minojev/console.html)** —
+  one state, many questions scored together with their teacher distributions.
 
 ## What makes minojev different
 
 | | A chat model | minojev |
 |---|---|---|
-| Output | a sentence to parse | typed distribution over declared candidates |
-| Where the answer comes from | token-by-token sampling | read from hidden states, zero output tokens |
-| Cost driver | output tokens | one forward pass |
-| Format errors | possible | impossible — the output space is declared up front |
-| Confidence | self-reported, often overconfident | dev-calibrated; ECE measured and reported |
+| What comes out | a sentence to parse | a typed distribution over declared candidates |
+| Where the answer comes from | token-by-token writing | read from hidden states, zero output tokens |
+| What you pay for | output tokens | one forward pass |
+| Broken output | possible | impossible — the output space is declared up front |
+| Confidence | self-reported, often overconfident | fitted on held-out data; ECE measured |
 | Many questions, one state | one generation each | one pass, shared KV prefix |
-| Runs on | GPU cluster or API | a laptop CPU; Hugging Face backbones optional |
+| Where it runs | GPU cluster or API | a laptop CPU; Hugging Face backbones optional |
 
 What sets **this** project apart from other decision-model experiments:
 
@@ -54,24 +79,11 @@ What sets **this** project apart from other decision-model experiments:
 - **Every claim has an artifact.** Datasets, teacher targets, per-question
   predictions, metrics, and replay bundles are committed in the repo.
 - **Calibration is first-class.** `--calibrate gold` is the default, because a
-  probability you cannot trust is worse than a label.
+  probability you cannot trust is worse than a plain label.
 - **Two engines.** Trained decision heads for full control, plus a
   native-logits route for pretrained Hugging Face models.
 - **Bilingual and visual.** English + 简体中文 docs, an animated maze agent, and
   an interactive decision console.
-
-## Live demos
-
-| [Maze agent replay](https://zeredy879.github.io/minojev/maze.html) | [Parallel decision console](https://zeredy879.github.io/minojev/console.html) |
-|---|---|
-| Watch an agent navigate a grid while every step shows the move distribution, four parallel safety booleans, and the code-enforced final move. **5/6 mazes solved.** | One state, many runtime questions scored together, with teacher distributions overlaid. |
-
-![Maze replay preview](https://zeredy879.github.io/minojev/data/maze-preview.svg)
-
-```bash
-python3 -m http.server 8080 --bind 127.0.0.1 --directory web
-# http://127.0.0.1:8080
-```
 
 ## Install
 
@@ -153,17 +165,13 @@ score 97.7%**, **move choice 87.9%**.
 | Maze | reuse | **17.1 ms** | **18.0 ms** | **366** |
 
 One decision is one question; a request may carry several. Reproduce with
-`minojev bench`.
-
-Raw metrics and per-question predictions are committed under
+`minojev bench`. Raw metrics and per-question predictions are committed under
 [`results/`](results); replay bundles live in [`web/data/`](web/data).
 
 ## Models and datasets on Hugging Face
 
-The trained and calibrated checkpoints are published at
-[`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev), and the exact
-request datasets with teacher distributions at
-[`zeredy879/minojev-data`](https://huggingface.co/datasets/zeredy879/minojev-data).
+- Checkpoints (trained + calibrated): [`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev)
+- Request datasets with teacher distributions: [`zeredy879/minojev-data`](https://huggingface.co/datasets/zeredy879/minojev-data)
 
 ```python
 from huggingface_hub import snapshot_download

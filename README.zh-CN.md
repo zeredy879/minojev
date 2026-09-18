@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/banner.svg" alt="minojev — 决策，而非 token" width="960"></p>
 
 <p align="center">
-  <b>简体中文</b> · <a href="README.md">English</a> · <a href="https://zeredy879.github.io/minojev/">在线 Demo</a> · <a href="https://huggingface.co/zeredy879/minojev">模型权重</a>
+  <b>简体中文</b> · <a href="README.md">English</a> · <a href="https://zeredy879.github.io/minojev/">在线 Demo</a> · <a href="https://huggingface.co/zeredy879/minojev">模型</a> · <a href="https://huggingface.co/datasets/zeredy879/minojev-data">数据</a>
 </p>
 
 <p align="center">
@@ -12,35 +12,58 @@
   <img alt="parameters" src="https://img.shields.io/badge/parameters-547k-8d9bb3">
 </p>
 
-> **决策不是句子。** 当模型读完你的问题，它心里已经有答案了。minojev 直接
-> 读出这个答案，而不是让模型把它"写"出来。
+> **一句话版本：** 聊天模型靠"写"文字回答，minojev 靠"读"概率回答——软件因此
+> 一次前向就能拿到决策，没有句子要解析，也没有输出 token 要付费。
 
-## 30 秒理解核心思路
+## 从这里开始（不需要机器学习背景）
 
-问聊天模型："这张工单该进哪个队列？"它会写一段话。你的程序再把这段话解析成
-一个标签和一个置信度。那段话从来都不是答案本身，而是包装——你为它付出了延迟
-（逐 token 生成）、成本（输出 token 更贵）和格式风险（生成的内容可能无法解析）。
+想象你问 AI：**"这张支持工单该进哪个队列？"**
 
-minojev 去掉了这层包装：
+聊天模型会写一句话回答：
+
+> *"根据客户的消息，这看起来是账号访问问题，我建议转给账号访问团队。"*
+
+然后你的程序得读懂这句话、猜出它的意思。这要付出时间（模型一个词一个词地写）、
+金钱（每个写出的词都要付费）和运气（措辞可能变化，解析器可能崩溃）。
+
+minojev 扔掉句子，只留下决策：
 
 ```
-状态 + 问题 + 候选  ──►  一次前向传播  ──►  {access: 0.79, deliverability: 0.14, billing: 0.07}
+"该进哪个队列？" ──►  access 0.79 · deliverability 0.14 · billing 0.07
 ```
 
-没有句子、没有解析、没有格式错误，只有软件可以直接分支判断的带类型概率分布。
-返回的每条记录都写着 `decode_steps: 0`——因为它从未生成任何输出 token。
+输入只读一次，一批数字直接输出。这些数字是真正的概率分布，并经过校准，0.79
+接近"大约 79% 可能"的含义；每条记录都写着 `decode_steps: 0`，因为什么都没写。
 
-<img src="assets/explainer.svg" alt="聊天模型逐 token 生成再解析；minojev 一次前向传播直接读出分布" width="100%">
+<img src="assets/explainer.svg" alt="聊天模型逐 token 生成再解析；minojev 一次前向直接读出分布" width="100%">
+
+### 30 秒术语表
+
+| 术语 | 通俗解释 |
+|---|---|
+| **token** | 一小段文本；聊天模型一次只写一个 |
+| **forward pass（前向传播）** | 把数据过一遍模型；minojev 只需要一次 |
+| **calibrated（已校准）** | 说 0.8 就应该大约 80% 的时候是对的——我们测量这个差距（ECE）并公开 |
+| **choice / boolean / score** | N 选一 / 是或否 / 按等级打分 |
+
+### 现在就能试（无需安装）
+
+打开 **[在线 Demo](https://zeredy879.github.io/minojev/)**：
+
+- **[迷宫智能体](https://zeredy879.github.io/minojev/maze.html)**——看模型带着
+  智能体穿过网格，每一步都展示它的移动分布和四个并行安全判断。
+- **[决策控制台](https://zeredy879.github.io/minojev/console.html)**——一个状态、
+  多个问题一起打分，并叠加 teacher 分布对照。
 
 ## minojev 的与众不同
 
 | | 聊天模型 | minojev |
 |---|---|---|
-| 输出 | 一段待解析的文字 | 声明候选集上的带类型分布 |
-| 答案来源 | 逐 token 采样 | 从隐藏状态读出，零输出 token |
-| 成本主要来自 | 输出 token | 一次前向传播 |
-| 格式错误 | 可能发生 | 不可能——输出空间提前声明 |
-| 置信度 | 自我报告，常常过度自信 | dev 集校准，ECE 可测可查 |
+| 输出什么 | 一段需要解析的文字 | 声明候选集上的带类型分布 |
+| 答案从哪来 | 逐 token 写出 | 从隐藏状态读出，零输出 token |
+| 你为谁付费 | 输出 token | 一次前向传播 |
+| 输出损坏 | 可能发生 | 不可能——输出空间提前声明 |
+| 置信度 | 自我报告，常常过度自信 | 在留出集上拟合；ECE 可测可查 |
 | 同状态多问题 | 每个问题生成一次 | 一次前向，共享 KV 前缀 |
 | 运行环境 | GPU 集群或 API | 笔记本 CPU；可选 Hugging Face 模型 |
 
@@ -55,19 +78,6 @@ minojev 去掉了这层包装：
 - **双引擎。** 可训练决策头提供完全控制，原生 logits 路径支持预训练
   Hugging Face 模型。
 - **双语 + 可视化。** 英文 / 简体中文文档、动态迷宫智能体和交互式决策控制台。
-
-## 在线 Demo
-
-| [迷宫智能体回放](https://zeredy879.github.io/minojev/maze.html) | [并行决策控制台](https://zeredy879.github.io/minojev/console.html) |
-|---|---|
-| 每一步都展示移动分布、四个并行安全布尔判断，以及代码约束后的最终移动。**6 局解出 5 局。** | 单个状态下多个运行时问题一起打分，并叠加 teacher 分布对照。 |
-
-![迷宫回放预览](https://zeredy879.github.io/minojev/data/maze-preview.svg)
-
-```bash
-python3 -m http.server 8080 --bind 127.0.0.1 --directory web
-# http://127.0.0.1:8080
-```
 
 ## 安装
 
@@ -146,16 +156,13 @@ minojev evaluate  --checkpoint runs/synth-calibrated --input data/test.jsonl
 | 迷宫 | reuse | **17.1 ms** | **18.0 ms** | **366** |
 
 一个决策对应一个问题；一个请求可以包含多个问题。使用 `minojev bench` 复现。
-
 原始指标和逐题预测提交在 [`results/`](results) 下；回放数据在
 [`web/data/`](web/data) 下。
 
 ## Hugging Face 模型与数据集
 
-训练并校准后的检查点发布在
-[`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev)，带 teacher
-分布的完整请求数据集发布在
-[`zeredy879/minojev-data`](https://huggingface.co/datasets/zeredy879/minojev-data)。
+- 检查点（训练 + 校准）：[`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev)
+- 带 teacher 分布的请求数据集：[`zeredy879/minojev-data`](https://huggingface.co/datasets/zeredy879/minojev-data)
 
 ```python
 from huggingface_hub import snapshot_download
