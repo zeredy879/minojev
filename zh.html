@@ -133,7 +133,7 @@
       mino<em>jev</em>
     </a>
     <span class="spacer"></span>
-    <a class="link" href="zh-maze.html">迷宫 Demo</a>
+    <a class="link" href="zh-maze.html">迷宫演示</a>
     <a class="link" href="zh-console.html">决策控制台</a>
     <a class="link" href="https://github.com/zeredy879/minojev">GitHub</a>
     <a class="link" href="https://huggingface.co/zeredy879/minojev">模型</a>
@@ -146,9 +146,9 @@
     <div class="kicker">决策，而非 TOKEN</div>
     <h1>模型早就定了。<br>minojev 只是把它<span>读出来</span>。</h1>
     <p class="lead">
-      问聊天模型一个路由问题，它会写一段话给你——你的程序再把这段话解析回一个标签。
-      <b>minojev 跳过了这段废话。</b>一次前向传播，直接返回带类型、经过校准的概率分布，
-      <b>零输出 token</b>。
+      问聊天模型一个分流问题，它会先写出一段话，你的程序再费劲地把这段话解析回一个标签。
+      <b>minojev 直接跳过这一步：</b>一次前向传播，就返回一组带类型、经过校准的概率，
+      <b>不生成任何 token</b>。
     </p>
     <div class="cta">
       <a class="btn primary" href="zh-maze.html">看迷宫智能体 →</a>
@@ -189,8 +189,8 @@
   <div class="wrap">
     <h2>整个思路，一句话说清</h2>
     <p class="sub">
-      模型读完你的问题，心里已经有答案了。让它把这个答案"写"成一段文字，是听到答案最慢的方式。
-      minojev 直接从隐藏状态里读，把它变成一组你事先声明好的候选上的概率。
+      模型读完你的问题，心里其实已经有答案了。让它把这个答案"写"出来，是拿到答案最绕也最贵的一条路。
+      minojev 直接从模型的隐藏状态里读出答案，变成一组你事先选好的选项上的概率。
     </p>
     <div class="statline">
       <div class="stat"><b>0</b><small>每个决策的输出 token 数</small></div>
@@ -204,19 +204,19 @@
 <section>
   <div class="wrap">
     <h2>它是怎么工作的</h2>
-    <p class="sub">三步，没有生成循环，也没有输出解析器。</p>
+    <p class="sub">三步搞定，没有生成循环，也不用写解析器。</p>
     <div class="steps">
       <div class="step">
-        <h3>拼出候选路径</h3>
-        <p>每个候选变成一条路径：状态 + 问题 + 该候选。同一状态下的问题共享前缀。</p>
+        <h3>拼接候选</h3>
+        <p>每个候选拼成一条输入：状态 + 问题 + 这个候选。同一个状态下的所有问题共用前缀。</p>
       </div>
       <div class="step">
-        <h3>一次前向传播</h3>
-        <p>所有路径一起过主干网络，决策头只读隐藏状态。自始至终不采样任何 token。</p>
+        <h3>跑一遍模型</h3>
+        <p>所有候选一起送进模型跑一遍，决策头只读取隐藏状态，全程不生成任何 token。</p>
       </div>
       <div class="step">
         <h3>读出并校准</h3>
-        <p>choice、boolean、score 返回概率分布；dev 集拟合的温度让置信度保持诚实。</p>
+        <p>选择、判断、打分三类问题都返回概率分布；用验证集拟合的温度让置信度保持真实。</p>
       </div>
     </div>
   </div>
@@ -224,15 +224,15 @@
 
 <section>
   <div class="wrap">
-    <h2>生而不同</h2>
-    <p class="sub">它不只是个演示，这些是它的底气。</p>
+    <h2>哪里不一样</h2>
+    <p class="sub">它不只是一个演示，这些是它的底气。</p>
     <div class="diff">
-      <div class="card"><h3>离线，从零跑通</h3><p>547k 参数的 Transformer 加字节分词器，在笔记本 CPU 上几分钟训练完成——不下载模型，不要 API key，不用 GPU。</p></div>
-      <div class="card"><h3>每个结论都能查证</h3><p>数据集、teacher 目标、逐题预测、指标、回放数据，全部提交在仓库里。</p></div>
-      <div class="card"><h3>校准是默认动作</h3><p>温度在 dev 集上拟合并写入检查点；ECE 校准前后都公开。</p></div>
-      <div class="card"><h3>两种引擎</h3><p>可以从零训练决策头，也可以零训练直接读取预训练 Hugging Face 模型的原生 logits。</p></div>
-      <div class="card"><h3>并行 + 状态复用</h3><p>一个状态下的多个问题一次算完；每个状态只预填充一次 KV，然后廉价分支。</p></div>
-      <div class="card"><h3>小到能读完</h3><p>模型、训练器、校准和演示，一个下午就能读完。文档中英双语。</p></div>
+      <div class="card"><h3>完全离线，从零训练</h3><p>547k 参数的模型和字节分词器，在笔记本 CPU 上几分钟就能训完：不用下载模型、不用 API key、不用 GPU。</p></div>
+      <div class="card"><h3>每个结论都能复查</h3><p>数据集、参考分布、逐题预测、指标、回放数据，全部随仓库一起提交。</p></div>
+      <div class="card"><h3>校准默认就做</h3><p>温度在验证集上拟合并写进模型文件，校准前后的误差（ECE）都公开。</p></div>
+      <div class="card"><h3>两种引擎</h3><p>既可以自己从零训练决策头，也可以跳过训练，直接读取 Hugging Face 预训练模型的原生 logits。</p></div>
+      <div class="card"><h3>多问题并行，状态复用</h3><p>同一个状态下的多个问题一次算完；每个状态只预填充一次缓存，后面都是便宜的支线计算。</p></div>
+      <div class="card"><h3>小到一下午读完</h3><p>模型、训练、校准、演示全部加起来，一个下午就能读完。文档中英双语。</p></div>
     </div>
   </div>
 </section>
@@ -244,12 +244,12 @@
     <div class="demos">
       <a class="demo" href="zh-maze.html">
         <h3>迷宫智能体回放</h3>
-        <p>每一步都展示移动分布、四个并行安全布尔判断，以及代码约束后的最终移动。从零训练只用了几分钟。</p>
+        <p>每一步都能看到走法概率、四道并行的安全判断，以及代码把关后真正走出的那一步。训练只花了几分钟。</p>
         <div class="live" id="maze-stat">加载中…</div>
       </a>
       <a class="demo" href="zh-console.html">
         <h3>并行决策控制台</h3>
-        <p>一个状态、多个运行时问题——choice、boolean、score 一起打分，并叠加 teacher 分布对照。</p>
+        <p>同一个状态下的多个问题——选择、判断、打分——一次全部算完，并叠上参考分布做对照。</p>
         <div class="live" id="console-stat">加载中…</div>
       </a>
     </div>
@@ -258,22 +258,22 @@
 
 <section>
   <div class="wrap">
-    <h2>留出集实测</h2>
+    <h2>留出集上的真实成绩</h2>
     <p class="sub">547k 参数，纯 CPU，用 <code style="color:#cfe1ff">scripts/build_results.sh</code> 可完整复现。</p>
     <div class="results">
-      <div class="result"><b>83.8%</b><small>迷宫准确率 · <span class="tag">teacher 最优集 89.5%</span></small></div>
-      <div class="result"><b>97.7%</b><small>距离评分 top-set</small></div>
-      <div class="result"><b>0.016</b><small>校准后迷宫 ECE（原 0.090）</small></div>
-      <div class="result"><b>366/秒</b><small>状态复用下的决策吞吐</small></div>
-      <div class="result"><b>5/6</b><small>智能体解出的迷宫数</small></div>
-      <div class="result"><b>41</b><small>离线通过的测试数</small></div>
+      <div class="result"><b>83.8%</b><small>迷宫准确率 · <span class="tag">命中参考最优 89.5%</span></small></div>
+      <div class="result"><b>97.7%</b><small>距离评分命中率</small></div>
+      <div class="result"><b>0.016</b><small>校准后迷宫误差（原 0.090）</small></div>
+      <div class="result"><b>366/秒</b><small>开启状态复用后每秒的决策数</small></div>
+      <div class="result"><b>5/6</b><small>智能体成功走出的迷宫数</small></div>
+      <div class="result"><b>41</b><small>离线跑通的测试数</small></div>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <h2>一分钟训练一个</h2>
+    <h2>一分钟训一个模型</h2>
     <pre>minojev synth  --out data/train.jsonl --count 512 --seed 17 --split train
 minojev train  --train data/train.jsonl --dev data/dev.jsonl \
   --output-dir runs/synth --steps 800 --calibrate gold --device cpu

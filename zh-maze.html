@@ -74,7 +74,7 @@
 <body>
 <header>
   <p style="margin:0 0 10px;display:flex;gap:14px;flex-wrap:wrap">
-    <a href="zh.html" style="text-decoration:none">← 全部 Demo</a>
+    <a href="zh.html" style="text-decoration:none">← 全部演示</a>
     <a href="zh-console.html" style="color:var(--muted);text-decoration:none">决策控制台</a>
     <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
     <a href="https://huggingface.co/zeredy879/minojev" style="color:var(--muted);text-decoration:none">模型</a>
@@ -82,8 +82,8 @@
   </p>
   <h1>迷宫智能体 · <span>决策回放</span></h1>
   <p>
-    每一步，模型都在一次前向里回答九个问题：一个四选一的移动选择、四个并行的安全布尔判断、
-    一个距离评分。代码把移动概率乘以安全概率、剔除撞墙的走法，然后取剩下的最大值。
+    每一步，模型都在一次前向传播里回答九道题：一道四选一的走法题、四道并行的安全判断题、
+    一道距离打分题。代码把走法概率乘以安全概率、剔除会撞墙的走法，再取剩下的最大值。
   </p>
 </header>
 <main>
@@ -116,15 +116,15 @@
     <h3>步骤详情</h3>
     <div id="detail"></div>
     <hr class="divider" />
-    <h3>移动分布</h3>
+    <h3>走法概率</h3>
     <div class="bars" id="move-bars"></div>
     <hr class="divider" />
     <h3>安全判断（并行）</h3>
     <div class="bars" id="safe-bars"></div>
     <hr class="divider" />
-    <h3>综合选择</h3>
+    <h3>综合后的选择</h3>
     <div class="bars" id="combined-bars"></div>
-    <div class="note">综合 = 移动概率 × P(安全)；撞墙的移动会先被代码剔除，再取最大值。</div>
+    <div class="note">综合分 = 走法概率 × 安全概率；会撞墙的走法先被代码剔除，再取最大值。</div>
   </aside>
 </main>
 <script>
@@ -155,7 +155,7 @@ function renderRunList() {
     box.append(button);
   });
   const run = currentRun();
-  $("run-note").textContent = `最优路径 ${run.optimal_steps} 步 · 墙 ${run.walls.length} 面 · 强制移动 ${run.frames.filter((f) => f.forced).length} 次`;
+  $("run-note").textContent = `最短路径 ${run.optimal_steps} 步 · 墙 ${run.walls.length} 面 · 代码强制 ${run.frames.filter((f) => f.forced).length} 次`;
 }
 
 function selectRun(index) {
@@ -258,14 +258,14 @@ function renderBars(containerId, values, chosen, blocked) {
 
 function renderDetail(frame) {
   const box = $("detail");
-  if (!frame) { box.innerHTML = "<p class='note'>还没有记录帧。</p>"; return; }
+  if (!frame) { box.innerHTML = "<p class='note'>还没有可以查看的步骤。</p>"; return; }
   const run = currentRun();
   const rows = [
-    ["步", `${state.frame} / ${run.frames.length}`],
-    ["智能体", `(${frame.agent[0]}, ${frame.agent[1]})`],
-    ["采取的移动", DIRECTION_LABELS[frame.move] + (frame.forced ? "（强制）" : "")],
-    ["当前距离", frame.distance],
-    ["预期距离", Number(frame.distance_expected).toFixed(2)],
+    ["第几步", `${state.frame} / ${run.frames.length}`],
+    ["智能体位置", `(${frame.agent[0]}, ${frame.agent[1]})`],
+    ["这一步走了", DIRECTION_LABELS[frame.move] + (frame.forced ? "（代码强制）" : "")],
+    ["离终点还有", frame.distance],
+    ["模型估计距离", Number(frame.distance_expected).toFixed(2)],
   ];
   box.innerHTML = "";
   const table = document.createElement("div");
@@ -286,14 +286,14 @@ function renderStatus() {
   const node = $("status");
   node.textContent = "";
   const parts = [
-    `第 ${state.frame}/${run.frames.length} 帧`,
-    run.success ? `解出，用 ${run.steps} 步（最优 ${run.optimal_steps}）` : `未完成（最优 ${run.optimal_steps}）`,
+    `第 ${state.frame}/${run.frames.length} 步`,
+    run.success ? `成功到达，共 ${run.steps} 步（最短 ${run.optimal_steps} 步）` : `没能到达（最短 ${run.optimal_steps} 步）`,
   ];
-  if (frame && frame.forced) parts.push("强制移动");
-  if (done && run.success) parts.push("已到终点");
+  if (frame && frame.forced) parts.push("代码强制");
+  if (done && run.success) parts.push("已到达终点");
   for (const part of parts) {
     const span = document.createElement("span");
-    span.className = "badge" + (part === "强制移动" ? " warn" : "");
+    span.className = "badge" + (part === "代码强制" ? " warn" : "");
     span.textContent = part;
     node.append(span);
   }

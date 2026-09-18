@@ -93,16 +93,16 @@
 <body>
 <header>
   <p style="margin:0 0 10px;display:flex;gap:14px;flex-wrap:wrap">
-    <a href="zh.html" style="color:var(--accent);text-decoration:none">← 全部 Demo</a>
-    <a href="zh-maze.html" style="color:var(--muted);text-decoration:none">迷宫 Demo</a>
+    <a href="zh.html" style="color:var(--accent);text-decoration:none">← 全部演示</a>
+    <a href="zh-maze.html" style="color:var(--muted);text-decoration:none">迷宫演示</a>
     <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
     <a href="https://huggingface.co/zeredy879/minojev" style="color:var(--muted);text-decoration:none">模型</a>
     <a href="console.html" style="color:var(--muted);text-decoration:none">English</a>
   </p>
   <h1>并行决策 <span>控制台</span></h1>
   <p>
-    下面每个问题，都是在共享状态上的一次前向传播里打分的。柱状图是模型对声明候选的完整分布，
-    没有生成任何输出 token（本数据包中共 <span id="decode-steps">0</span> 个解码步）。
+    下面每个问题，都在同一次前向传播里完成打分。柱状图就是模型给每个候选的完整概率，
+    全程没有生成任何 token（这个结果包里一共 <span id="decode-steps">0</span> 个解码步）。
   </p>
 </header>
 <main>
@@ -110,7 +110,7 @@
   <div id="records"><p id="error">正在加载 data/demo.json …</p></div>
 </main>
 <footer>
-  用 <code>minojev demo --checkpoint &lt;dir&gt; --output web/data/demo.json</code> 可重新生成该数据包。
+  运行 <code>minojev demo --checkpoint &lt;dir&gt; --output web/data/demo.json</code> 即可重新生成这个结果包。
 </footer>
 <script>
 const fmt = (x, digits = 3) => Number(x).toFixed(digits);
@@ -130,8 +130,8 @@ function stat(label, value) {
 function renderSummary(summary) {
   const box = document.getElementById("summary");
   box.append(stat("问题数", summary.questions ?? "—"));
-  if (summary.accuracy !== undefined) box.append(stat("与 gold 一致率", pct(summary.accuracy)));
-  if (summary.teacher_ce !== undefined) box.append(stat("与 teacher 交叉熵", fmt(summary.teacher_ce)));
+  if (summary.accuracy !== undefined) box.append(stat("答对率", pct(summary.accuracy)));
+  if (summary.teacher_ce !== undefined) box.append(stat("与参考分布的差距", fmt(summary.teacher_ce)));
   if (summary.distribution_error !== undefined) box.append(stat("分布误差", fmt(summary.distribution_error)));
   if (summary.decode_steps !== undefined) document.getElementById("decode-steps").textContent = summary.decode_steps;
 }
@@ -200,7 +200,7 @@ function renderRecord(record) {
     const teacher = document.createElement("div");
     teacher.className = "teacher";
     const parts = Object.entries(record.teacher).map(([key, value]) => key + ": " + fmt(value, 3));
-    teacher.innerHTML = "teacher 分布 — <code>" + parts.join(" · ") + "</code>";
+    teacher.innerHTML = "参考分布 — <code>" + parts.join(" · ") + "</code>";
     card.append(teacher);
   }
   return card;
@@ -222,7 +222,7 @@ fetch("data/demo.json")
   })
   .catch((error) => {
     document.getElementById("error").textContent =
-      "无法加载 data/demo.json（" + error.message + "）。请先运行 `minojev demo`，再用 HTTP 方式打开本目录。";
+      "无法加载 data/demo.json（" + error.message + "）。请先运行 `minojev demo`，再通过本地 HTTP 服务打开这个目录。";
   });
 </script>
 </body>
