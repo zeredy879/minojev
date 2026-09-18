@@ -1,0 +1,24 @@
+{
+  "checkpoint": "runs/maze-calibrated",
+  "target": "gold",
+  "questions": {
+    "choice": 128,
+    "boolean": 512,
+    "score": 128
+  },
+  "temperature": {
+    "choice": 1.0404,
+    "boolean": 0.5463,
+    "score": 0.2869
+  },
+  "nll_before": {
+    "choice": 0.865684,
+    "boolean": 0.359771,
+    "score": 0.209863
+  },
+  "nll_after": {
+    "choice": 0.865301,
+    "boolean": 0.313575,
+    "score": 0.035067
+  }
+}

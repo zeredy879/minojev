@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="minojev logo">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#131d31"/>
+      <stop offset="1" stop-color="#0b1220"/>
+    </linearGradient>
+    <linearGradient id="bars" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#6ea8fe"/>
+      <stop offset="1" stop-color="#59d3a8"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#tile)" stroke="#25304a" stroke-width="4"/>
+  <rect x="52" y="136" width="34" height="64" rx="10" fill="url(#bars)" opacity="0.6"/>
+  <rect x="111" y="104" width="34" height="96" rx="10" fill="url(#bars)" opacity="0.8"/>
+  <rect x="170" y="72" width="34" height="128" rx="10" fill="url(#bars)"/>
+  <circle cx="187" cy="184" r="17" fill="#0b1220" stroke="#59d3a8" stroke-width="7"/>
+</svg>

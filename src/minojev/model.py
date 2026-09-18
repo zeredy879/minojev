@@ -38,13 +38,23 @@ class ScoreOptions:
 
 
 class DecisionModel(torch.nn.Module):
-    def __init__(self, backbone, tokenizer, head: DecisionHead | None = None, config: dict | None = None) -> None:
+    def __init__(
+        self,
+        backbone,
+        tokenizer,
+        head: DecisionHead | None = None,
+        config: dict | None = None,
+        calibration: "Calibration | None" = None,
+    ) -> None:
         super().__init__()
+        from .calibrate import Calibration
+
         self.backbone = backbone
         self.tokenizer = tokenizer
         hidden = int(getattr(backbone, "hidden_size"))
         self.head = head if head is not None else DecisionHead(hidden)
         self.config = config or {}
+        self.calibration = calibration or Calibration()
 
     @classmethod
     def new(cls, tokenizer: ByteTokenizer | None = None, **overrides) -> "DecisionModel":
@@ -125,6 +135,8 @@ class DecisionModel(torch.nn.Module):
         return self.head(hidden, encoded.groups, [group.kind for group in encoded.groups])
 
     def score(self, requests: list[Request], options: ScoreOptions | None = None) -> list[dict]:
+        from .calibrate import apply_calibration
+
         options = options or ScoreOptions()
         self.eval_mode(options.device)
         records: list[dict] = []
@@ -135,6 +147,10 @@ class DecisionModel(torch.nn.Module):
                 encoded = self.encode(subset)
                 began = time.perf_counter()
                 outputs = self.run_encoded(encoded, options.mode)
+                outputs = [
+                    apply_calibration(output, group.kind, self.calibration)
+                    for output, group in zip(outputs, encoded.groups)
+                ]
                 elapsed = time.perf_counter() - began
                 records.extend(self._records(encoded, outputs, options.mode, elapsed))
         return records
@@ -188,6 +204,7 @@ class DecisionModel(torch.nn.Module):
             },
             "objective": self.config.get("objective"),
             "metrics": self.config.get("metrics"),
+            "calibration": self.calibration.to_dict(),
         }
         (directory / "config.json").write_text(json.dumps(config, ensure_ascii=False, indent=2) + "\n")
 
@@ -212,7 +229,9 @@ class DecisionModel(torch.nn.Module):
             num_heads=int(head_config.get("num_heads", 4)),
         )
         head.load_state_dict(load_file(str(directory / "head.safetensors")))
-        model = cls(backbone, tokenizer, head, config=config)
+        from .calibrate import Calibration
+
+        model = cls(backbone, tokenizer, head, config=config, calibration=Calibration.from_dict(config.get("calibration")))
         model.eval_mode(device)
         return model
 

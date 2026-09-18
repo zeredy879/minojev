@@ -1,0 +1,24 @@
+{
+  "checkpoint": "runs/synth-calibrated",
+  "target": "gold",
+  "questions": {
+    "choice": 110,
+    "boolean": 102,
+    "score": 109
+  },
+  "temperature": {
+    "choice": 0.5463,
+    "boolean": 0.9812,
+    "score": 0.2019
+  },
+  "nll_before": {
+    "choice": 0.628533,
+    "boolean": 0.528766,
+    "score": 1.140812
+  },
+  "nll_after": {
+    "choice": 0.559494,
+    "boolean": 0.528614,
+    "score": 0.722503
+  }
+}

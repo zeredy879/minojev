@@ -21,6 +21,7 @@ from .types import BOOLEAN, CHOICE, SCORE, Question, Request, serialize_state
 LETTERS = "ABCDEFGHIJKLMNOP"
 MAX_SLOTS = len(LETTERS)
 PROMPT_VERSION = "minojev-logits-v1"
+TWO_STAGE_PROMPT_VERSION = "minojev-logits-two-stage-v1"
 
 
 def letter_slot_ids(tokenizer) -> list[int]:
@@ -50,6 +51,97 @@ def build_prompt(request: Request, question: Question) -> str:
         lines.append(f"{LETTERS[index]}: {candidate.description}")
     lines.append("Answer with only the option letter.")
     return "\n".join(lines) + "\nAnswer:"
+
+
+def build_scoring_prompt(request: Request, question: Question, candidate_id: str, description: str) -> str:
+    lines = [
+        f"State:\n{serialize_state(request.state)}",
+        f"Question type: {question.kind}",
+        f"Question:\n{question.instructions}",
+        f"Candidate: {description}",
+        "Is this candidate a correct answer? A: yes. B: no.",
+    ]
+    return "\n".join(lines) + "\nAnswer:"
+
+
+def _record(request: Request, question: Question, logits: list[float], probabilities: list[float], mode: str, prompt_version: str) -> dict:
+    record = {
+        "id": request.id,
+        "qid": question.qid,
+        "type": question.kind,
+        "state": request.state,
+        "instructions": question.instructions,
+        "candidate_ids": question.candidate_ids,
+        "logits": [round(value, 8) for value in logits],
+        "probabilities": [round(value, 8) for value in probabilities],
+        "decode_steps": 0,
+        "mode": mode,
+        "prompt_version": prompt_version,
+    }
+    if question.qid in request.gold:
+        gold = request.gold[question.qid]
+        if question.kind == BOOLEAN:
+            index = 1 if gold is True or gold in (1, "true", "True") else 0
+        elif question.kind == SCORE:
+            index = int(gold)
+        else:
+            index = question.candidate_ids.index(gold)
+        record["gold"] = gold
+        record["correct"] = max(range(len(probabilities)), key=probabilities.__getitem__) == index
+    if question.qid in request.teacher:
+        record["teacher"] = request.teacher[question.qid]
+    return record
+
+
+@torch.inference_mode()
+def score_logits_two_stage(
+    backbone,
+    tokenizer,
+    requests: list[Request],
+    device: str = "auto",
+    max_tokens: int = 4096,
+    should_normalize: bool = True,
+) -> list[dict]:
+    """Score every candidate independently, then normalize.
+
+    Each candidate becomes its own yes/no proposition; the score is the
+    log-odds between the two declared answer slots. Normalizing the scores
+    turns them into a distribution over the candidate set. This route is meant
+    for candidate sets beyond the letter-slot limit, where one prompt per
+    candidate is more reliable than a single packed option list.
+    """
+    import torch
+
+    if isinstance(backbone, torch.nn.Module):
+        backbone.eval()
+        backbone.to(resolve_device(device))
+        target_device = next(backbone.parameters()).device
+    else:
+        backbone.model.eval()
+        target_device = next(backbone.model.parameters()).device
+    slots = letter_slot_ids(tokenizer)
+    yes_slot, no_slot = slots[0], slots[1]
+    records = []
+    for request in requests:
+        for question in request.questions:
+            started = time.perf_counter()
+            scores = []
+            for candidate in question.candidates:
+                prompt = build_scoring_prompt(request, question, candidate.candidate_id, candidate.description)
+                ids = tokenizer.encode(prompt)
+                if len(ids) > max_tokens:
+                    raise ValueError(f"{request.id}:{question.qid}: {len(ids)} tokens exceed limit {max_tokens}")
+                hidden, _ = backbone(input_ids=torch.tensor([ids], dtype=torch.long, device=target_device))
+                vocabulary = backbone.logits(hidden)[0, -1].float()
+                scores.append(float(vocabulary[yes_slot] - vocabulary[no_slot]))
+            if should_normalize:
+                probabilities = torch.softmax(torch.tensor(scores, dtype=torch.float32), dim=-1).tolist()
+            else:
+                probabilities = [float(value) for value in scores]
+            record = _record(request, question, scores, probabilities, "logits-two-stage", TWO_STAGE_PROMPT_VERSION)
+            record["forward_seconds"] = round(time.perf_counter() - started, 8)
+            records.append(record)
+    return records
 
 
 @torch.inference_mode()

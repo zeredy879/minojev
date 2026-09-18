@@ -12,11 +12,13 @@
     "choice-lookup": 0.704762,
     "score-support": 0.562814
   },
-  "gold_nll": 0.784905411068914,
+  "gold_nll": 0.6639459956614214,
+  "mean_confidence": 0.7223520387559809,
+  "expected_calibration_error": 0.07416372819776718,
   "teacher_scored": 627,
-  "teacher_ce": 0.9717273534789433,
-  "distribution_error": 0.22374276300490362,
-  "brier": 0.22374276300490362,
+  "teacher_ce": 1.327568756616558,
+  "distribution_error": 0.2879367368459215,
+  "brier": 0.2879367368459215,
   "teacher_argmax_accuracy": 0.6650717703349283,
   "teacher_topset_accuracy": 0.6650717703349283,
   "teacher_argmax_by_family": {

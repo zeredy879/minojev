@@ -21,6 +21,24 @@ def _teacher_vectors(record: dict) -> tuple[list[float], list[float]] | None:
     return [value / total for value in target], record["probabilities"]
 
 
+def _ece(confidences: list[float], hits: list[float], bins: int = 10) -> float:
+    total = len(confidences)
+    error = 0.0
+    for index in range(bins):
+        low, high = index / bins, (index + 1) / bins
+        members = [
+            (confidence, hit)
+            for confidence, hit in zip(confidences, hits)
+            if (low < confidence <= high) or (index == 0 and confidence <= high)
+        ]
+        if not members:
+            continue
+        average_confidence = sum(confidence for confidence, _ in members) / len(members)
+        average_accuracy = sum(hit for _, hit in members) / len(members)
+        error += (len(members) / total) * abs(average_confidence - average_accuracy)
+    return error
+
+
 def aggregate(records: list[dict]) -> dict:
     total = len(records)
     summary: dict = {"questions": total}
@@ -44,6 +62,8 @@ def aggregate(records: list[dict]) -> dict:
                 family: round(sum(values) / len(values), 6) for family, values in sorted(by_family.items())
             }
         nll_terms = []
+        confidences = []
+        hits = []
         for record in labelled:
             gold = record["gold"]
             probabilities = record["probabilities"]
@@ -54,7 +74,11 @@ def aggregate(records: list[dict]) -> dict:
             else:
                 index = record["candidate_ids"].index(gold)
             nll_terms.append(-math.log(max(probabilities[index], 1e-12)))
+            confidences.append(max(probabilities))
+            hits.append(1.0 if record["correct"] else 0.0)
         summary["gold_nll"] = sum(nll_terms) / len(nll_terms)
+        summary["mean_confidence"] = sum(confidences) / len(confidences)
+        summary["expected_calibration_error"] = _ece(confidences, hits)
     pairs = []
     for record in records:
         vectors = _teacher_vectors(record)

@@ -1,45 +1,46 @@
-# minojev
+<p align="center"><img src="assets/banner.svg" alt="minojev — decisions, not tokens" width="960"></p>
 
-**A minimal generation-free decision model.** States and questions in, complete
-probability distributions out — with zero output-token decoding.
+<p align="center">
+  <a href="README.zh-CN.md">简体中文</a> · <b>English</b>
+</p>
 
-minojev turns runtime-defined judgment problems into typed distributions in a
-single forward pass. Instead of generating an answer sentence and parsing it
-back, the model reads decisions directly from hidden states. The whole
-pipeline — training data, decision head, serving, and evaluation — runs
-offline on a laptop CPU.
+<p align="center">
+  <img alt="license" src="https://img.shields.io/badge/license-MIT-f0b06a">
+  <img alt="python" src="https://img.shields.io/badge/python-3.10%2B-6ea8fe">
+  <img alt="tests" src="https://img.shields.io/badge/tests-41%20passing-59d3a8">
+  <img alt="decode steps" src="https://img.shields.io/badge/decode__steps-0-6ea8fe">
+  <img alt="parameters" src="https://img.shields.io/badge/parameters-547k-8d9bb3">
+</p>
 
-## Features
+**minojev turns runtime-defined judgment problems into typed probability
+distributions in a single forward pass.** State and questions go in; complete
+distributions come out; no output token is ever generated. The whole pipeline —
+data generation, training, calibration, serving, and evaluation — runs offline
+on a laptop CPU.
 
-- **Three decision primitives.** `choice` (2–255 described candidates),
-  `boolean` (one proposition with optional true/false criteria), and `score`
-  (2–10 ordered levels with an expected value).
-- **Zero decoding.** Every record reports `decode_steps: 0`; decisions are
-  probabilities, not sampled tokens.
-- **Dynamic candidates.** The same head serves any candidate set supplied at
-  request time, and it is permutation-equivariant.
-- **Parallel judgment.** Independent questions over a shared state are scored
-  together without cross-question attention.
-- **Shared-state reuse.** Each distinct state is prefilled once; its KV cache
-  is replicated across every question and candidate branch.
-- **Trainable and auditable.** Cross-entropy, gold, and Brier objectives with
-  dev-selected checkpoints; teacher targets are exact by construction.
-- **Offline reproduction.** A built-in tiny transformer and byte tokenizer
-  train from scratch in minutes, with no model downloads.
-- **Native-logits engine.** Pretrained Hugging Face causal LMs can score
-  declared options directly from next-token logits without any training.
+## Why "decisions, not tokens"?
+
+A chat model answers a routing question by generating a sentence that software
+parses back into an `if` statement. That costs output tokens, adds latency, and
+can hallucinate. minojev gives software the decision directly: calibrated
+probabilities over declared candidates, read from hidden states, never sampled.
+
+|  |  |
+|---|---|
+| **Primitives** | `choice` (2–255 candidates), `boolean` (one proposition), `score` (2–10 ordered levels + expected value) |
+| **Decoding** | zero output tokens; every record reports `decode_steps: 0` |
+| **Parallelism** | many independent questions scored in one pass, no cross-question attention |
+| **Reuse** | one KV-cache prefill per distinct state, then a branch per question and candidate |
+| **Calibration** | dev-fitted temperatures make confidence track accuracy, with ECE reported |
+| **Auditable** | exact teacher targets by construction, dev-selected checkpoints, permutation-equivariance tests |
 
 ## Live demos
 
-- **[Maze agent replay](https://zeredy879.github.io/minojev/maze.html)** —
-  an animated grid run where every step shows a choice distribution, four
-  parallel safety booleans, and the code-enforced final move.
-- **[Parallel decision console](https://zeredy879.github.io/minojev/console.html)**
-  — one state, many runtime questions scored together with their teacher
-  distributions.
+| [Maze agent replay](https://zeredy879.github.io/minojev/maze.html) | [Parallel decision console](https://zeredy879.github.io/minojev/console.html) |
+|---|---|
+| An animated grid run where every step shows the move distribution, four parallel safety booleans, and the code-enforced final move. **5/6 mazes solved.** | One state, many runtime questions scored together, with teacher distributions overlaid for comparison. |
 
-Both pages are static and replay committed result bundles. To serve them
-locally:
+![Maze replay preview](https://zeredy879.github.io/minojev/data/maze-preview.svg)
 
 ```bash
 python3 -m http.server 8080 --bind 127.0.0.1 --directory web
@@ -62,9 +63,10 @@ uv pip install -e ".[hf]"
 minojev synth --out data/train.jsonl --count 512 --seed 17 --split train
 minojev synth --out data/dev.jsonl   --count 128 --seed 17 --split dev
 
-# 2. train the tiny backbone and decision head from scratch
+# 2. train + calibrate in one command
 minojev train --train data/train.jsonl --dev data/dev.jsonl \
-  --output-dir runs/synth --steps 800 --head-steps 30 --eval-every 100 --device cpu
+  --output-dir runs/synth --steps 800 --head-steps 30 --eval-every 100 \
+  --calibrate gold --device cpu
 
 # 3. score arbitrary requests
 minojev score --checkpoint runs/synth/checkpoint --input examples/decisions.jsonl \
@@ -79,6 +81,67 @@ minojev train --train data/maze-train.jsonl --dev data/maze-dev.jsonl \
   --output-dir runs/maze --steps 1500 --head-steps 40 --eval-every 100 --device cpu
 minojev maze-rollout --checkpoint runs/maze/checkpoint \
   --output web/data/maze.json --count 6 --seed 23
+```
+
+## Calibration
+
+Training minimizes distribution loss, which does not by itself make confidence
+meaningful. `minojev calibrate` fits one temperature per primitive on a dev
+split by minimizing negative log-likelihood, stored in the checkpoint and
+applied at serving time. Temperature scaling never changes the predicted
+candidate.
+
+| Bundled run | Accuracy | ECE before | ECE after | Mean confidence |
+|---|---:|---:|---:|---:|
+| Attribute decisions | 66.5% | 0.093 | **0.074** | 0.72 |
+| Maze decisions | 83.8% | 0.090 | **0.016** | 0.84 |
+
+```bash
+minojev calibrate --checkpoint runs/synth/checkpoint --input data/dev.jsonl \
+  --output runs/synth-calibrated --target gold
+minojev evaluate  --checkpoint runs/synth-calibrated --input data/test.jsonl
+```
+
+## Results
+
+Both bundled models are 547k-parameter transformers trained from scratch on
+CPU. "Teacher top-set" counts a decision as correct when the prediction is
+among the teacher's best (important for grid moves, where two directions often
+tie). Regenerate everything with `scripts/build_results.sh`.
+
+| Run | Questions | Accuracy | Teacher top-set | Dist. error | Decode steps |
+|---|---:|---:|---:|---:|---:|
+| Attribute decisions | 627 | 66.5% | 66.5% | 0.29 | 0 |
+| Maze decisions | 1,536 | 83.8% | 89.5% | 0.13 | 0 |
+
+Maze per-primitive top-set accuracy: **boolean safety 87.8%**, **distance
+score 97.7%**, **move choice 87.9%**.
+
+### Latency and throughput (laptop CPU, 547k params)
+
+| Run | Mode | p50 | p95 | Decisions/s |
+|---|---|---:|---:|---:|
+| Attribute | fresh | 13.1 ms | 16.3 ms | 198 |
+| Attribute | reuse | **11.8 ms** | **14.7 ms** | **233** |
+| Maze | fresh | 23.6 ms | 27.0 ms | 198 |
+| Maze | reuse | **17.1 ms** | **18.0 ms** | **366** |
+
+One decision is one question; a request may carry several. Reproduce with
+`minojev bench`.
+
+Raw metrics and per-question predictions are committed under
+[`results/`](results); replay bundles live in [`web/data/`](web/data).
+
+## Model weights
+
+The trained and calibrated checkpoints are published on Hugging Face:
+
+```python
+from huggingface_hub import snapshot_download
+from minojev import DecisionModel
+
+path = snapshot_download("zeredy879/minojev", allow_patterns=["maze/*"])
+model = DecisionModel.load(f"{path}/maze", device="cpu")
 ```
 
 ## Request format
@@ -117,7 +180,7 @@ Optional `gold` and `teacher` maps enable evaluation and supervised training.
 ```python
 from minojev import DecisionModel, Request, make_choice_question, ScoreOptions
 
-model = DecisionModel.load("runs/synth/checkpoint", device="cpu")
+model = DecisionModel.load("runs/synth-calibrated", device="cpu")
 request = Request(
     id="r1",
     state={"color": "blue", "shape": "round"},
@@ -131,60 +194,42 @@ print(record["candidate_ids"], record["probabilities"], record["decode_steps"])
 ## Native-logits engine (pretrained models)
 
 For a pretrained Hugging Face causal LM, `minojev.logits` scores declared
-options directly from next-token logits at fixed answer-slot tokens — the
-zero-training route:
+options directly from next-token logits at fixed answer-slot tokens. A
+two-stage route scores each candidate independently (yes/no log-odds, then
+normalization) for candidate sets beyond the 16 letter slots:
 
 ```python
 from minojev import load_hf_backbone
-from minojev.logits import score_logits
 from minojev.data import read_requests
+from minojev.logits import score_logits, score_logits_two_stage
 
 backbone = load_hf_backbone("Qwen/Qwen2.5-0.5B-Instruct")
-records = score_logits(backbone, backbone.tokenizer, read_requests("examples/decisions.jsonl"))
+requests = read_requests("examples/decisions.jsonl")
+records = score_logits(backbone, backbone.tokenizer, requests)
+wide = score_logits_two_stage(backbone, backbone.tokenizer, requests)
 ```
-
-The logits engine supports up to 16 letter slots; use the trained head engine
-for larger choice sets.
 
 ## Repository layout
 
 ```
 src/minojev/
-  types.py      request validation and primitives
-  encoding.py   candidate paths, shared state/suffix split
-  backbone.py   TinyLM (RoPE + KV cache) and HF adapter
-  heads.py      scalar scorer + set attention, primitive readouts
-  model.py      score modes, checkpoints
-  train.py      warmup, objectives, dev selection
-  synth.py      deterministic attribute decision families
-  maze.py       grid-world states, teachers, and agent rollout
-  logits.py     native-logits readout
-  metrics.py    accuracy, CE, distribution error, per-family splits
-  cli.py        synth / train / score / evaluate / demo / maze commands
-tests/          contract, equivalence, training, maze, CLI, logits tests
-web/            landing page, decision console, maze replay
+  types.py       request validation and primitives
+  encoding.py    candidate paths, shared state/suffix split
+  backbone.py    TinyLM (RoPE + KV cache) and HF adapter
+  heads.py       scalar scorer + set attention, primitive readouts
+  calibrate.py   temperature scaling per primitive
+  model.py       serving modes, checkpoints
+  train.py       warmup, objectives, dev selection
+  synth.py       attribute decision families
+  maze.py        grid-world states, teachers, agent rollout
+  logits.py      native-logits readout (single-pass and two-stage)
+  bench.py       latency and throughput measurement
+  metrics.py     accuracy, CE, ECE, per-family splits
+  cli.py         synth / train / calibrate / bench / score / evaluate / demo / maze
+tests/           41 tests: contract, equivalence, calibration, training, maze, CLI
+web/             landing page, decision console, maze replay
+assets/          banner and logo
 ```
-
-## Results
-
-Both bundled models are 547k-parameter transformers trained from scratch on
-CPU. "Teacher top-set" counts a decision as correct when the predicted
-candidate is among the teacher's best (important for grid moves, where two
-directions often tie). Regenerate everything with `scripts/build_results.sh`.
-
-| Run | Questions | Accuracy | Teacher top-set | CE vs teacher | Dist. error |
-|---|---:|---:|---:|---:|---:|
-| Attribute decisions | 627 | 66.5% | 66.5% | 0.972 | 0.224 |
-| Maze decisions | 1,536 | 83.8% | 89.5% | 0.536 | 0.113 |
-
-Maze per-primitive top-set accuracy: **boolean safety 87.8%**, **distance
-score 97.7%**, **move choice 87.9%**. The committed six-maze controller replay
-solves **5/6 mazes in 128 steps** with 53 code-forced moves.
-
-![Maze replay preview](https://zeredy879.github.io/minojev/data/maze-preview.svg)
-
-Raw metrics and per-question predictions are committed under
-[`results/`](results); replay bundles live in [`web/data/`](web/data).
 
 ## Tests
 
@@ -194,9 +239,10 @@ Raw metrics and per-question predictions are committed under
 
 The suite covers validation limits, path encoding, permutation equivariance,
 boolean and score readouts, fresh-vs-reuse equivalence, batch independence,
-checkpoint round trips, an end-to-end training convergence check, the maze
-task and rollout mechanics, the CLI, and the native-logits engine. It runs
-offline on CPU in a few minutes.
+checkpoint round trips, calibration invariance and fitting, expected
+calibration error, an end-to-end training convergence check, the maze task and
+rollout mechanics, benchmarking, the CLI, and both native-logits routes. It
+runs offline on CPU in a few minutes.
 
 ## License
 

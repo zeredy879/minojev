@@ -48,6 +48,12 @@ def build_parser() -> argparse.ArgumentParser:
     train_parser.add_argument("--learning-rate", type=float, default=2e-4)
     train_parser.add_argument("--head-lr", type=float, default=1e-3)
     train_parser.add_argument("--objective", choices=["teacher_ce", "gold_ce", "brier"], default="teacher_ce")
+    train_parser.add_argument(
+        "--calibrate",
+        choices=["gold", "teacher", "none"],
+        default="gold",
+        help="fit probability temperatures on the dev set after training",
+    )
     train_parser.add_argument("--train-count", type=int, default=256)
     train_parser.add_argument("--dev-count", type=int, default=64)
     train_parser.add_argument("--seed", type=int, default=17)
@@ -91,6 +97,24 @@ def build_parser() -> argparse.ArgumentParser:
     maze_rollout.add_argument("--size", type=int, default=6)
     maze_rollout.add_argument("--device", default="auto")
 
+    calibrate = subparsers.add_parser("calibrate", help="fit probability temperatures on a dev set and save a checkpoint")
+    calibrate.add_argument("--checkpoint", required=True)
+    calibrate.add_argument("--input", required=True)
+    calibrate.add_argument("--output", required=True)
+    calibrate.add_argument("--mode", choices=["fresh", "reuse"], default="fresh")
+    calibrate.add_argument("--target", choices=["gold", "teacher"], default="gold")
+    calibrate.add_argument("--device", default="auto")
+
+    bench = subparsers.add_parser("bench", help="measure latency and throughput for each serving mode")
+    bench.add_argument("--checkpoint", required=True)
+    bench.add_argument("--input", required=True)
+    bench.add_argument("--output", required=True)
+    bench.add_argument("--modes", default="fresh,reuse")
+    bench.add_argument("--repeats", type=int, default=3)
+    bench.add_argument("--max-latency-requests", type=int, default=64)
+    bench.add_argument("--batch-requests", type=int, default=16)
+    bench.add_argument("--device", default="auto")
+
     info = subparsers.add_parser("info", help="print checkpoint metadata")
     info.add_argument("--checkpoint", required=True)
     return parser
@@ -130,7 +154,19 @@ def _cmd_train(args) -> int:
         device=args.device,
     )
     summary = train(model, train_requests, dev_requests, config, args.output_dir)
-    print(json.dumps({"checkpoint": str(Path(args.output_dir) / "checkpoint"), **summary}))
+    checkpoint = str(Path(args.output_dir) / "checkpoint")
+    if args.calibrate != "none":
+        from .calibrate import fit_calibration
+
+        best = DecisionModel.load(checkpoint, device=args.device)
+        calibration, report = fit_calibration(best, dev_requests, target=args.calibrate, device=args.device)
+        best.calibration = calibration
+        best.config["calibration_report"] = report
+        best.save(checkpoint)
+        summary["calibration"] = report
+        summary_path = Path(args.output_dir) / "summary.json"
+        summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
+    print(json.dumps({"checkpoint": checkpoint, **summary}))
     return 0
 
 
@@ -198,6 +234,43 @@ def _cmd_maze_rollout(args) -> int:
     return 0
 
 
+def _cmd_calibrate(args) -> int:
+    from .calibrate import fit_calibration
+
+    model = DecisionModel.load(args.checkpoint, device=args.device)
+    requests = read_requests(args.input)
+    calibration, report = fit_calibration(model, requests, mode=args.mode, target=args.target, device=args.device)
+    model.calibration = calibration
+    model.config["calibration_report"] = report
+    model.save(args.output)
+    print(json.dumps({"checkpoint": args.output, **report}, ensure_ascii=False, indent=2))
+    return 0
+
+
+def _cmd_bench(args) -> int:
+    from .bench import BenchOptions, benchmark_model, compare_modes
+
+    model = DecisionModel.load(args.checkpoint, device=args.device)
+    requests = read_requests(args.input)
+    result = benchmark_model(
+        model,
+        requests,
+        BenchOptions(
+            modes=tuple(mode.strip() for mode in args.modes.split(",") if mode.strip()),
+            repeats=args.repeats,
+            max_latency_requests=args.max_latency_requests,
+            batch_requests=args.batch_requests,
+            device=args.device,
+        ),
+    )
+    result["comparison"] = compare_modes(result)
+    path = Path(args.output)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+    print(json.dumps({"output": args.output, **result}, ensure_ascii=False, indent=2))
+    return 0
+
+
 def _cmd_info(args) -> int:
     config = json.loads((Path(args.checkpoint) / "config.json").read_text())
     print(json.dumps(config, ensure_ascii=False, indent=2))
@@ -214,6 +287,8 @@ def main(argv: list[str] | None = None) -> int:
         "demo": _cmd_demo,
         "maze-data": _cmd_maze_data,
         "maze-rollout": _cmd_maze_rollout,
+        "calibrate": _cmd_calibrate,
+        "bench": _cmd_bench,
         "info": _cmd_info,
     }
     return handlers[args.command](args)

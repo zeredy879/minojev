@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" width="1280" height="360" role="img" aria-label="minojev — decisions, not tokens">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0d14"/>
+      <stop offset="0.55" stop-color="#0d1424"/>
+      <stop offset="1" stop-color="#0a0f1c"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#6ea8fe"/>
+      <stop offset="1" stop-color="#59d3a8"/>
+    </linearGradient>
+    <linearGradient id="chipa" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#132033"/>
+      <stop offset="1" stop-color="#101828"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.18" cy="0.1" r="0.9">
+      <stop offset="0" stop-color="#59d3a8" stop-opacity="0.16"/>
+      <stop offset="0.5" stop-color="#59d3a8" stop-opacity="0.03"/>
+      <stop offset="1" stop-color="#59d3a8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.95" cy="0.05" r="0.8">
+      <stop offset="0" stop-color="#6ea8fe" stop-opacity="0.2"/>
+      <stop offset="0.6" stop-color="#6ea8fe" stop-opacity="0.03"/>
+      <stop offset="1" stop-color="#6ea8fe" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1280" height="360" fill="url(#bg)"/>
+  <rect width="1280" height="360" fill="url(#glow)"/>
+  <rect width="1280" height="360" fill="url(#glow2)"/>
+
+  <!-- mark -->
+  <g transform="translate(72,84)">
+    <rect x="0" y="0" width="96" height="96" rx="22" fill="#111a2c" stroke="#25304a" stroke-width="2"/>
+    <rect x="18" y="52" width="14" height="26" rx="4" fill="url(#bar)" opacity="0.65"/>
+    <rect x="41" y="36" width="14" height="42" rx="4" fill="url(#bar)" opacity="0.85"/>
+    <rect x="64" y="22" width="14" height="56" rx="4" fill="url(#bar)"/>
+    <circle cx="71" cy="78" r="7" fill="#0a0d14" stroke="#59d3a8" stroke-width="3"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="196" y="146" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="72" font-weight="700" letter-spacing="-1">
+    <tspan fill="#e8edf7">mino</tspan><tspan fill="#59d3a8">jev</tspan>
+  </text>
+
+  <!-- slogan -->
+  <text x="199" y="196" font-family="ui-monospace, Menlo, monospace" font-size="25" letter-spacing="5" fill="#8d9bb3">DECISIONS, NOT TOKENS.</text>
+
+  <!-- feature lines -->
+  <text x="199" y="236" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="16" fill="#5f6d85">typed probabilities · zero output-token decoding</text>
+  <text x="199" y="260" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="16" fill="#5f6d85">parallel questions · shared-state reuse · dev-calibrated confidence</text>
+
+  <!-- decision card -->
+  <g transform="translate(916,64)">
+    <rect x="0" y="0" width="292" height="232" rx="18" fill="#121a2b" stroke="#25304a" stroke-width="2"/>
+    <text x="24" y="38" font-family="ui-monospace, Menlo, monospace" font-size="13" letter-spacing="2" fill="#6ea8fe">ONE FORWARD PASS</text>
+
+    <g font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#8d9bb3">
+      <text x="24" y="70">choice</text>
+      <rect x="88" y="59" width="150" height="12" rx="6" fill="#0d1320"/>
+      <rect x="88" y="59" width="122" height="12" rx="6" fill="url(#bar)"/>
+      <text x="248" y="70" fill="#e8edf7">.82</text>
+
+      <text x="24" y="102">boolean</text>
+      <rect x="88" y="91" width="150" height="12" rx="6" fill="#0d1320"/>
+      <rect x="88" y="91" width="108" height="12" rx="6" fill="url(#bar)"/>
+      <text x="248" y="102" fill="#e8edf7">.72</text>
+
+      <text x="24" y="134">score</text>
+      <rect x="88" y="123" width="150" height="12" rx="6" fill="#0d1320"/>
+      <rect x="88" y="123" width="66" height="12" rx="6" fill="url(#bar)"/>
+      <text x="248" y="134" fill="#e8edf7">.44</text>
+    </g>
+
+    <line x1="24" y1="154" x2="268" y2="154" stroke="#25304a" stroke-dasharray="4 6"/>
+    <text x="24" y="184" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#59d3a8">decode_steps = 0</text>
+    <text x="24" y="210" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#5f6d85">calibration: dev-fitted</text>
+  </g>
+
+  <rect x="0" y="357" width="1280" height="3" fill="url(#bar)" opacity="0.7"/>
+</svg>

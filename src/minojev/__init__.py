@@ -7,6 +7,8 @@ head, and a dependency-free tiny backbone for offline reproduction.
 """
 
 from .backbone import HFBackbone, TinyConfig, TinyLM, load_hf_backbone, resolve_device
+from .bench import BenchOptions, benchmark_model, compare_modes
+from .calibrate import Calibration, fit_calibration
 from .encoding import EncodedBatch, Path, QuestionGroup, encode_requests
 from .heads import DecisionHead, GroupOutput
 from .metrics import aggregate
@@ -42,7 +44,9 @@ __all__ = [
     "MAX_CHOICE",
     "MIN_LEVELS",
     "MAX_LEVELS",
+    "BenchOptions",
     "ByteTokenizer",
+    "Calibration",
     "Candidate",
     "DecisionHead",
     "DecisionModel",
@@ -58,7 +62,10 @@ __all__ = [
     "TinyLM",
     "ValidationError",
     "aggregate",
+    "benchmark_model",
+    "compare_modes",
     "encode_requests",
+    "fit_calibration",
     "generate_request",
     "generate_split",
     "load_hf_backbone",
