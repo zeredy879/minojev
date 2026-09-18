@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>minojev · decisions, not tokens</title>
+<title>minojev · 决策，而非 token</title>
 <style>
   :root {
     --bg: #080b11;
@@ -20,7 +20,7 @@
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body { margin: 0; background: var(--bg); color: var(--ink);
-    font: 15px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+    font: 15px/1.7 ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
   a { color: var(--accent-2); }
   .wrap { max-width: 1120px; margin: 0 auto; padding: 0 22px; }
 
@@ -39,9 +39,9 @@
       radial-gradient(760px 380px at 12% -10%, rgba(89,211,168,.15), transparent 62%),
       radial-gradient(680px 360px at 88% -16%, rgba(110,168,254,.17), transparent 62%); }
   .kicker { color: var(--accent); font: 12px/1 ui-monospace, Menlo, monospace; letter-spacing: 4px; }
-  h1 { font-size: clamp(38px, 6vw, 62px); margin: 14px 0 12px; letter-spacing: -1.4px; line-height: 1.03; }
+  h1 { font-size: clamp(36px, 5.6vw, 58px); margin: 14px 0 12px; letter-spacing: -1.4px; line-height: 1.12; }
   h1 span { color: var(--accent); }
-  .lead { color: var(--muted); font-size: 18px; max-width: 700px; }
+  .lead { color: var(--muted); font-size: 18px; max-width: 720px; }
   .lead b { color: var(--ink); }
   .cta { display: flex; flex-wrap: wrap; gap: 10px; margin: 26px 0 8px; }
   .btn { display: inline-block; text-decoration: none; border-radius: 10px; padding: 10px 16px;
@@ -49,7 +49,6 @@
   .btn.primary { background: rgba(89,211,168,.16); border-color: var(--accent); color: var(--accent); }
   .btn:hover { border-color: var(--accent); }
 
-  /* animated comparison */
   .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 36px; }
   @media (max-width: 820px) { .duel { grid-template-columns: 1fr; } }
   .duel .col { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px;
@@ -60,11 +59,11 @@
   .col.chat h3 { color: var(--danger); }
   .col.mino { border-color: #1f5c49; }
   .col.mino h3 { color: var(--accent); }
-  .tokenbox { margin-top: 12px; min-height: 82px; font: 13.5px/1.5 ui-monospace, Menlo, monospace; color: #c9a7b0; }
+  .tokenbox { margin-top: 12px; min-height: 82px; font: 14px/1.7 ui-sans-serif, system-ui, "PingFang SC", sans-serif; color: #c9a7b0; }
   .tok { display: inline-block; background: #221826; border: 1px solid #3a2530; border-radius: 6px;
     padding: 2px 7px; margin: 0 3px 6px 0; opacity: 0; transform: translateY(4px); transition: all .18s ease; }
   .tok.on { opacity: 1; transform: none; }
-  .parse { color: var(--warn); font: 12.5px/1.5 ui-monospace, Menlo, monospace; margin-top: 8px; min-height: 18px; }
+  .parse { color: var(--warn); font: 13px/1.6 ui-sans-serif, system-ui, "PingFang SC", sans-serif; margin-top: 8px; min-height: 18px; }
   .meta { margin-top: auto; display: flex; gap: 14px; color: var(--muted); font: 12.5px/1.6 ui-monospace, Menlo, monospace; padding-top: 12px; }
   .meta b { color: var(--ink); }
   .bars { display: grid; gap: 8px; margin-top: 14px; }
@@ -75,11 +74,11 @@
     background: linear-gradient(90deg, var(--accent-2), var(--accent));
     transition: width .5s cubic-bezier(.2,.8,.2,1); }
   .barrow .val { text-align: right; color: var(--ink); }
-  .verified { margin-top: auto; padding-top: 12px; color: var(--accent); font: 12.5px/1.6 ui-monospace, Menlo, monospace; }
+  .verified { margin-top: auto; padding-top: 12px; color: var(--accent); font: 13px/1.6 ui-sans-serif, system-ui, "PingFang SC", sans-serif; }
 
   section { padding: 56px 0; border-top: 1px solid var(--line); }
   h2 { font-size: 26px; margin: 0 0 8px; letter-spacing: -0.5px; }
-  .sub { color: var(--muted); max-width: 760px; margin: 0 0 26px; }
+  .sub { color: var(--muted); max-width: 780px; margin: 0 0 26px; }
   .statline { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
   .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
   .stat b { display: block; font-size: 26px; color: var(--accent); letter-spacing: -0.5px; }
@@ -91,7 +90,6 @@
     color: var(--accent-2); font: 12px/1 ui-monospace, Menlo, monospace; letter-spacing: 2px; }
   .step h3 { margin: 10px 0 6px; font-size: 15px; }
   .step p { margin: 0; color: var(--muted); font-size: 13.5px; }
-  .step code { background: #0c1220; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; font-size: 12px; color: #cfe1ff; }
 
   .diff { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
   .diff .card { background: linear-gradient(180deg, var(--panel), #0e1525);
@@ -112,7 +110,6 @@
   .result b { display: block; font-size: 24px; color: var(--ink); }
   .result small { color: var(--muted); }
   .result .tag { color: var(--accent); }
-  img.explain { width: 100%; border-radius: 14px; border: 1px solid var(--line); margin-top: 20px; }
 
   pre { background: #0b101c; border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px;
     overflow-x: auto; font: 12.5px/1.7 ui-monospace, Menlo, monospace; color: #cfe1ff; }
@@ -125,7 +122,7 @@
 
 <nav>
   <div class="wrap">
-    <a class="brand" href="index.html">
+    <a class="brand" href="zh.html">
       <svg width="24" height="24" viewBox="0 0 256 256" aria-hidden="true">
         <rect x="8" y="8" width="240" height="240" rx="56" fill="#131d31" stroke="#25304a" stroke-width="10"/>
         <rect x="52" y="136" width="34" height="64" rx="10" fill="#6ea8fe" opacity=".6"/>
@@ -136,52 +133,52 @@
       mino<em>jev</em>
     </a>
     <span class="spacer"></span>
-    <a class="link" href="maze.html">Maze demo</a>
-    <a class="link" href="console.html">Console</a>
+    <a class="link" href="zh-maze.html">迷宫 Demo</a>
+    <a class="link" href="zh-console.html">决策控制台</a>
     <a class="link" href="https://github.com/zeredy879/minojev">GitHub</a>
-    <a class="link" href="https://huggingface.co/zeredy879/minojev">Models</a>
-    <a class="link" href="zh.html">中文</a>
+    <a class="link" href="https://huggingface.co/zeredy879/minojev">模型</a>
+    <a class="link" href="index.html">English</a>
   </div>
 </nav>
 
 <header class="hero">
   <div class="wrap">
-    <div class="kicker">DECISIONS, NOT TOKENS</div>
-    <h1>The model already decided.<br>minojev just <span>reads it</span>.</h1>
+    <div class="kicker">决策，而非 TOKEN</div>
+    <h1>模型早就定了。<br>minojev 只是把它<span>读出来</span>。</h1>
     <p class="lead">
-      Ask a chat model a routing question and it writes you a paragraph — which your code then
-      parses back into a label. <b>minojev skips the paragraph.</b> One forward pass returns a
-      typed, calibrated probability distribution with <b>zero output tokens</b>.
+      问聊天模型一个路由问题，它会写一段话给你——你的程序再把这段话解析回一个标签。
+      <b>minojev 跳过了这段废话。</b>一次前向传播，直接返回带类型、经过校准的概率分布，
+      <b>零输出 token</b>。
     </p>
     <div class="cta">
-      <a class="btn primary" href="maze.html">Watch the maze agent →</a>
-      <a class="btn" href="console.html">Open the decision console</a>
-      <a class="btn" href="https://github.com/zeredy879/minojev">Source &amp; docs</a>
+      <a class="btn primary" href="zh-maze.html">看迷宫智能体 →</a>
+      <a class="btn" href="zh-console.html">打开决策控制台</a>
+      <a class="btn" href="https://github.com/zeredy879/minojev">源码与文档</a>
     </div>
 
     <div class="duel">
       <div class="col chat">
-        <h3>Chat model</h3>
-        <small>generate token by token, then parse</small>
+        <h3>聊天模型</h3>
+        <small>逐 token 生成，再解析</small>
         <div class="tokenbox" id="chat-tokens"></div>
         <div class="parse" id="chat-parse"></div>
         <div class="meta">
-          <span>output tokens <b id="chat-count">0</b></span>
-          <span>time <b id="chat-time">0 ms</b></span>
+          <span>输出 token <b id="chat-count">0</b></span>
+          <span>耗时 <b id="chat-time">0 ms</b></span>
         </div>
       </div>
       <div class="col mino">
         <h3>minojev</h3>
-        <small>one forward pass, read the distribution</small>
+        <small>一次前向，直接读出分布</small>
         <div class="bars" id="mino-bars">
           <div class="barrow"><label>access</label><div class="track"><div class="fill" data-w="79%"></div></div><span class="val">0.79</span></div>
           <div class="barrow"><label>deliverability</label><div class="track"><div class="fill" data-w="14%"></div></div><span class="val">0.14</span></div>
           <div class="barrow"><label>billing</label><div class="track"><div class="fill" data-w="7%"></div></div><span class="val">0.07</span></div>
         </div>
-        <div class="verified">✓ typed · calibrated · decode_steps = 0</div>
+        <div class="verified">✓ 带类型 · 已校准 · decode_steps = 0</div>
         <div class="meta">
-          <span>output tokens <b>0</b></span>
-          <span>time <b>~12 ms</b></span>
+          <span>输出 token <b>0</b></span>
+          <span>耗时 <b>~12 ms</b></span>
         </div>
       </div>
     </div>
@@ -190,38 +187,36 @@
 
 <section>
   <div class="wrap">
-    <h2>The whole insight, in one sentence</h2>
+    <h2>整个思路，一句话说清</h2>
     <p class="sub">
-      After reading your question, the model has already formed an opinion. Making it write that
-      opinion out as text is the slowest possible way to hear it. So minojev reads the opinion
-      straight from the model's hidden states, and reports it as probabilities over the candidates
-      you declared.
+      模型读完你的问题，心里已经有答案了。让它把这个答案"写"成一段文字，是听到答案最慢的方式。
+      minojev 直接从隐藏状态里读，把它变成一组你事先声明好的候选上的概率。
     </p>
     <div class="statline">
-      <div class="stat"><b>0</b><small>output tokens per decision</small></div>
-      <div class="stat"><b>1</b><small>forward pass for every question</small></div>
-      <div class="stat"><b>2–255</b><small>candidates, defined at request time</small></div>
-      <div class="stat"><b>0.016</b><small>calibration error on the maze model</small></div>
+      <div class="stat"><b>0</b><small>每个决策的输出 token 数</small></div>
+      <div class="stat"><b>1</b><small>每个问题只做一次前向</small></div>
+      <div class="stat"><b>2–255</b><small>候选数量，请求时定义</small></div>
+      <div class="stat"><b>0.016</b><small>迷宫模型的校准误差</small></div>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <h2>How it works</h2>
-    <p class="sub">Three steps, no generation loop, no output parser.</p>
+    <h2>它是怎么工作的</h2>
+    <p class="sub">三步，没有生成循环，也没有输出解析器。</p>
     <div class="steps">
       <div class="step">
-        <h3>Build candidate paths</h3>
-        <p>Each option becomes a path: state + question + that candidate. Related questions share one state prefix.</p>
+        <h3>拼出候选路径</h3>
+        <p>每个候选变成一条路径：状态 + 问题 + 该候选。同一状态下的问题共享前缀。</p>
       </div>
       <div class="step">
-        <h3>One forward pass</h3>
-        <p>Paths are batched through the backbone. Every decision head reads hidden states; no token is sampled, ever.</p>
+        <h3>一次前向传播</h3>
+        <p>所有路径一起过主干网络，决策头只读隐藏状态。自始至终不采样任何 token。</p>
       </div>
       <div class="step">
-        <h3>Read &amp; calibrate</h3>
-        <p>Choice, boolean, and score questions return distributions. Dev-fitted temperatures keep confidence honest.</p>
+        <h3>读出并校准</h3>
+        <p>choice、boolean、score 返回概率分布；dev 集拟合的温度让置信度保持诚实。</p>
       </div>
     </div>
   </div>
@@ -229,33 +224,33 @@
 
 <section>
   <div class="wrap">
-    <h2>Different by design</h2>
-    <p class="sub">What makes this project more than a demo.</p>
+    <h2>生而不同</h2>
+    <p class="sub">它不只是个演示，这些是它的底气。</p>
     <div class="diff">
-      <div class="card"><h3>Runs offline, from scratch</h3><p>A 547k-parameter transformer and a byte tokenizer train on a laptop CPU in minutes — no downloads, no API keys, no GPU.</p></div>
-      <div class="card"><h3>Every claim has an artifact</h3><p>Datasets, teacher targets, per-question predictions, metrics, and replay bundles are committed in the repo.</p></div>
-      <div class="card"><h3>Calibration is first-class</h3><p>Temperature scaling is fitted on dev and stored in the checkpoint. ECE is measured before and after.</p></div>
-      <div class="card"><h3>Two engines</h3><p>Train decision heads from scratch, or read native logits from a pretrained Hugging Face model with zero training.</p></div>
-      <div class="card"><h3>Parallel + reusable state</h3><p>Many questions per state in one pass; one KV prefill per distinct state, then cheap branches.</p></div>
-      <div class="card"><h3>Small enough to read</h3><p>The whole model, trainer, calibration, and demos fit in one afternoon of reading. Bilingual docs included.</p></div>
+      <div class="card"><h3>离线，从零跑通</h3><p>547k 参数的 Transformer 加字节分词器，在笔记本 CPU 上几分钟训练完成——不下载模型，不要 API key，不用 GPU。</p></div>
+      <div class="card"><h3>每个结论都能查证</h3><p>数据集、teacher 目标、逐题预测、指标、回放数据，全部提交在仓库里。</p></div>
+      <div class="card"><h3>校准是默认动作</h3><p>温度在 dev 集上拟合并写入检查点；ECE 校准前后都公开。</p></div>
+      <div class="card"><h3>两种引擎</h3><p>可以从零训练决策头，也可以零训练直接读取预训练 Hugging Face 模型的原生 logits。</p></div>
+      <div class="card"><h3>并行 + 状态复用</h3><p>一个状态下的多个问题一次算完；每个状态只预填充一次 KV，然后廉价分支。</p></div>
+      <div class="card"><h3>小到能读完</h3><p>模型、训练器、校准和演示，一个下午就能读完。文档中英双语。</p></div>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <h2>Live demos</h2>
-    <p class="sub">Both replay committed bundles — no server model required.</p>
+    <h2>在线 Demo</h2>
+    <p class="sub">都只是回放已提交的结果包——不需要任何后端模型。</p>
     <div class="demos">
-      <a class="demo" href="maze.html">
-        <h3>Maze agent replay</h3>
-        <p>Every step shows a move distribution, four parallel safety booleans, and the code-enforced final move. Learned from scratch in minutes.</p>
-        <div class="live" id="maze-stat">loading…</div>
+      <a class="demo" href="zh-maze.html">
+        <h3>迷宫智能体回放</h3>
+        <p>每一步都展示移动分布、四个并行安全布尔判断，以及代码约束后的最终移动。从零训练只用了几分钟。</p>
+        <div class="live" id="maze-stat">加载中…</div>
       </a>
-      <a class="demo" href="console.html">
-        <h3>Parallel decision console</h3>
-        <p>One state, many runtime questions — choices, booleans, and scores scored together, with teacher distributions overlaid.</p>
-        <div class="live" id="console-stat">loading…</div>
+      <a class="demo" href="zh-console.html">
+        <h3>并行决策控制台</h3>
+        <p>一个状态、多个运行时问题——choice、boolean、score 一起打分，并叠加 teacher 分布对照。</p>
+        <div class="live" id="console-stat">加载中…</div>
       </a>
     </div>
   </div>
@@ -263,22 +258,22 @@
 
 <section>
   <div class="wrap">
-    <h2>Measured on held-out data</h2>
-    <p class="sub">547k parameters, CPU, fully reproducible via <code style="color:#cfe1ff">scripts/build_results.sh</code>.</p>
+    <h2>留出集实测</h2>
+    <p class="sub">547k 参数，纯 CPU，用 <code style="color:#cfe1ff">scripts/build_results.sh</code> 可完整复现。</p>
     <div class="results">
-      <div class="result"><b>83.8%</b><small>maze accuracy · <span class="tag">89.5% teacher top-set</span></small></div>
-      <div class="result"><b>97.7%</b><small>distance score top-set</small></div>
-      <div class="result"><b>0.016</b><small>maze ECE after calibration (was 0.090)</small></div>
-      <div class="result"><b>366/s</b><small>decisions per second, reused state</small></div>
-      <div class="result"><b>5/6</b><small>mazes solved by the agent</small></div>
-      <div class="result"><b>41</b><small>tests passing offline</small></div>
+      <div class="result"><b>83.8%</b><small>迷宫准确率 · <span class="tag">teacher 最优集 89.5%</span></small></div>
+      <div class="result"><b>97.7%</b><small>距离评分 top-set</small></div>
+      <div class="result"><b>0.016</b><small>校准后迷宫 ECE（原 0.090）</small></div>
+      <div class="result"><b>366/秒</b><small>状态复用下的决策吞吐</small></div>
+      <div class="result"><b>5/6</b><small>智能体解出的迷宫数</small></div>
+      <div class="result"><b>41</b><small>离线通过的测试数</small></div>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <h2>Train one in a minute</h2>
+    <h2>一分钟训练一个</h2>
     <pre>minojev synth  --out data/train.jsonl --count 512 --seed 17 --split train
 minojev train  --train data/train.jsonl --dev data/dev.jsonl \
   --output-dir runs/synth --steps 800 --calibrate gold --device cpu
@@ -290,16 +285,16 @@ minojev score  --checkpoint runs/synth/checkpoint \
 <footer>
   <div class="wrap">
     <a href="https://github.com/zeredy879/minojev">GitHub</a> ·
-    <a href="https://huggingface.co/zeredy879/minojev">Hugging Face models</a> ·
-    <a href="https://huggingface.co/datasets/zeredy879/minojev-data">Datasets</a> ·
+    <a href="https://huggingface.co/zeredy879/minojev">Hugging Face 模型</a> ·
+    <a href="https://huggingface.co/datasets/zeredy879/minojev-data">数据集</a> ·
+    <a href="https://github.com/zeredy879/minojev/blob/main/README.zh-CN.md">中文 README</a> ·
     <a href="https://github.com/zeredy879/minojev/blob/main/README.md">English README</a> ·
-    <a href="https://github.com/zeredy879/minojev/blob/main/README.zh-CN.md">简体中文</a> ·
     MIT License
   </div>
 </footer>
 
 <script>
-const TOKENS = ["Based", "on", "the", "customer", "message,", "this", "is", "likely", "a", "billing", "issue", "because", "the", "reset", "email", "never", "arrived..."];
+const TOKENS = ["根据", "客户的", "描述，", "这", "很可能是", "一个", "账号", "访问", "问题，", "因为", "重置密码后", "邮件", "一直", "没收到……"];
 const chatTokens = document.getElementById("chat-tokens");
 const chatCount = document.getElementById("chat-count");
 const chatTime = document.getElementById("chat-time");
@@ -321,7 +316,7 @@ function run() {
   const chat = setInterval(() => {
     if (index >= TOKENS.length) {
       clearInterval(chat);
-      chatParse.textContent = "parsing… extracting label + confidence";
+      chatParse.textContent = "正在解析……提取标签和置信度";
       return;
     }
     const span = document.createElement("span");
@@ -348,24 +343,24 @@ function load(url, id, format) {
     .then((response) => (response.ok ? response.json() : null))
     .then((bundle) => {
       const text = format(bundle);
-      document.getElementById(id).textContent = text || "run the CLI to regenerate this bundle";
+      document.getElementById(id).textContent = text || "运行 CLI 可重新生成该数据包";
     })
     .catch(() => {
-      document.getElementById(id).textContent = "run the CLI to regenerate this bundle";
+      document.getElementById(id).textContent = "运行 CLI 可重新生成该数据包";
     });
 }
 
 load("data/maze.json", "maze-stat", (bundle) => {
   if (!bundle || !bundle.summary) return null;
   const s = bundle.summary;
-  return `${s.successes}/${s.mazes} mazes solved · ${s.total_steps} steps · ${s.forced_moves} forced moves`;
+  return `解出 ${s.successes}/${s.mazes} 局 · 共 ${s.total_steps} 步 · ${s.forced_moves} 次强制移动`;
 });
 
 load("data/demo.json", "console-stat", (bundle) => {
   if (!bundle || !bundle.summary) return null;
   const s = bundle.summary;
-  const accuracy = s.accuracy === undefined ? "" : ` · ${(100 * s.accuracy).toFixed(1)}% accuracy`;
-  return `${s.questions} questions · 0 decode steps${accuracy}`;
+  const accuracy = s.accuracy === undefined ? "" : ` · 准确率 ${(100 * s.accuracy).toFixed(1)}%`;
+  return `${s.questions} 个问题 · 0 解码步${accuracy}`;
 });
 </script>
 </body>
