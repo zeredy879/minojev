@@ -16,7 +16,7 @@
 > answers by *reading* probabilities — so software gets a decision in one pass,
 > with no sentence to parse and no output tokens to pay for.
 
-## Start here (no ML background needed)
+## The plain-language version
 
 Imagine you ask an AI: **"Which queue should this support ticket go to?"**
 
@@ -41,7 +41,7 @@ every record says `decode_steps: 0` because nothing was ever written.
 
 <img src="assets/explainer.svg" alt="A chat model generates tokens then parses text; minojev reads the distribution in one forward pass" width="100%">
 
-### A 30-second glossary
+### A few words, 30 seconds
 
 | Word | Plain meaning |
 |---|---|
@@ -50,7 +50,7 @@ every record says `decode_steps: 0` because nothing was ever written.
 | **calibrated** | if it says 0.8, it should be right about 80% of the time — we measure the gap (ECE) and report it |
 | **choice / boolean / score** | pick one of N options / yes–no / rate on a scale |
 
-### Try it right now (no install)
+### Try it in your browser
 
 Open the **[live demos](https://zeredy879.github.io/minojev/)**:
 
