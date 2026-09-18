@@ -85,6 +85,7 @@ without changing any predicted candidate.
 
 - Code and demos: https://github.com/{owner}/minojev
 - Interactive demo: https://{owner}.github.io/minojev/
+- Datasets with teacher distributions: https://huggingface.co/datasets/{owner}/minojev-data
 - English and Chinese READMEs: https://github.com/{owner}/minojev#readme
 
 ## License

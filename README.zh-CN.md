@@ -5,9 +5,9 @@
 </p>
 
 <p align="center">
+  <a href="https://huggingface.co/zeredy879/minojev"><img alt="Hugging Face models" src="https://img.shields.io/badge/Hugging%20Face-models-f0b06a"></a>
+  <a href="https://huggingface.co/datasets/zeredy879/minojev-data"><img alt="Hugging Face datasets" src="https://img.shields.io/badge/Hugging%20Face-datasets-59d3a8"></a>
   <img alt="license" src="https://img.shields.io/badge/license-MIT-f0b06a">
-  <img alt="python" src="https://img.shields.io/badge/python-3.10%2B-6ea8fe">
-  <img alt="tests" src="https://img.shields.io/badge/tests-41%20passing-59d3a8">
   <img alt="decode steps" src="https://img.shields.io/badge/decode__steps-0-6ea8fe">
   <img alt="parameters" src="https://img.shields.io/badge/parameters-547k-8d9bb3">
 </p>
@@ -150,9 +150,12 @@ minojev evaluate  --checkpoint runs/synth-calibrated --input data/test.jsonl
 原始指标和逐题预测提交在 [`results/`](results) 下；回放数据在
 [`web/data/`](web/data) 下。
 
-## 模型权重
+## Hugging Face 模型与数据集
 
-训练并校准后的检查点已发布到 Hugging Face：
+训练并校准后的检查点发布在
+[`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev)，带 teacher
+分布的完整请求数据集发布在
+[`zeredy879/minojev-data`](https://huggingface.co/datasets/zeredy879/minojev-data)。
 
 ```python
 from huggingface_hub import snapshot_download
@@ -160,6 +163,9 @@ from minojev import DecisionModel
 
 path = snapshot_download("zeredy879/minojev", allow_patterns=["maze/*"])
 model = DecisionModel.load(f"{path}/maze", device="cpu")
+
+data = snapshot_download("zeredy879/minojev-data", repo_type="dataset")
+# data/maze/test.jsonl、data/synth/test.jsonl 等
 ```
 
 ## 请求格式
