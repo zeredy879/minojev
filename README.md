@@ -284,6 +284,12 @@ calibration error, an end-to-end training convergence check, the maze task and
 rollout mechanics, benchmarking, the CLI, and both native-logits routes. It
 runs offline on CPU in a few minutes.
 
+## Development notes
+
+This project was built with AI assistance. Correctness is anchored by the
+offline test suite, the committed per-question predictions and metrics, and
+the reproducible scripts in [`scripts/`](scripts).
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
