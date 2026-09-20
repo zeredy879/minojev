@@ -82,21 +82,40 @@ def _target_for(request: Request, question, target_kind: str, path_count: int) -
 
 
 def collect_logits(
-    model, requests: list[Request], mode: str = "fresh", target_kind: str = "gold", device: str = "auto"
+    model,
+    requests: list[Request],
+    mode: str = "fresh",
+    target_kind: str = "gold",
+    device: str = "auto",
+    batch_requests: int = 16,
+    max_memory_gb: float | None = None,
 ) -> dict:
-    """Group raw logits and targets by primitive for calibration fitting."""
+    """Group raw logits and targets by primitive for calibration fitting.
+
+    Requests are forwarded in chunks so peak activation memory stays bounded
+    (a single forward over a full dev split previously exhausted unified
+    memory on Apple Silicon).
+    """
+    from .monitor import MemoryBudget, release_memory
+
     model.eval_mode(device)
+    budget = MemoryBudget(max_gb=max_memory_gb)
     buckets: dict[str, list[tuple[torch.Tensor, torch.Tensor]]] = {CHOICE: [], BOOLEAN: [], SCORE: []}
+    chunk = max(1, int(batch_requests))
     with torch.no_grad():
-        encoded = model.encode(requests)
-        outputs = model.run_encoded(encoded, mode)
-        for group, output in zip(encoded.groups, outputs):
-            request = encoded.requests[group.request_index]
-            question = request.questions[group.question_index]
-            target = _target_for(request, question, target_kind, len(group.path_indices))
-            if target is None:
-                continue
-            buckets[group.kind].append((output.logits.detach().cpu().float(), target.cpu().float()))
+        for start in range(0, len(requests), chunk):
+            subset = requests[start : start + chunk]
+            budget.check(f"calibration chunk {start}")
+            encoded = model.encode(subset)
+            outputs = model.run_encoded(encoded, mode)
+            for group, output in zip(encoded.groups, outputs):
+                request = encoded.requests[group.request_index]
+                question = request.questions[group.question_index]
+                target = _target_for(request, question, target_kind, len(group.path_indices))
+                if target is None:
+                    continue
+                buckets[group.kind].append((output.logits.detach().cpu().float(), target.cpu().float()))
+            release_memory()
     return buckets
 
 
@@ -116,12 +135,100 @@ def _fit_one(pairs: list[tuple[torch.Tensor, torch.Tensor]]) -> float:
     return round(best_temperature, 4)
 
 
+def _grid() -> list[float]:
+    low, high, steps = math.log(0.1), math.log(4.0), 64
+    values = [math.exp(low + index * (high - low) / (steps - 1)) for index in range(steps)]
+    values.append(1.0)
+    return values
+
+
+def _nll_from_probabilities(probabilities: list[float], target: list[float], temperature: float) -> float:
+    """Temperature scaling of softmax probabilities: p^(1/T) renormalized."""
+    scaled = [max(probability, 1e-12) ** (1.0 / temperature) for probability in probabilities]
+    total = sum(scaled)
+    normalized = [value / total for value in scaled]
+    return -sum(t * math.log(max(p, 1e-12)) for t, p in zip(target, normalized))
+
+
+def _record_target(record: dict, target: str) -> list[float] | None:
+    ids = record["candidate_ids"]
+    if target == "teacher" and record.get("teacher"):
+        values = [float(record["teacher"].get(candidate_id, 0.0)) for candidate_id in ids]
+        total = sum(values)
+        return [value / total for value in values] if total > 0 else None
+    gold = record.get("gold")
+    if gold is None:
+        return None
+    if record["type"] == BOOLEAN:
+        index = 1 if gold is True or gold in (1, "true", "True") else 0
+    elif record["type"] == "score":
+        index = int(gold)
+    else:
+        index = ids.index(gold)
+    values = [0.0] * len(ids)
+    values[index] = 1.0
+    return values
+
+
+def fit_calibration_from_records(records: list[dict], target: str = "gold") -> tuple[Calibration, dict]:
+    """Fit temperatures from already-scored records (no extra forward pass)."""
+    if target not in {"gold", "teacher"}:
+        raise ValueError("calibration target must be 'gold' or 'teacher'")
+    buckets: dict[str, list[tuple[list[float], list[float]]]] = {CHOICE: [], BOOLEAN: [], SCORE: []}
+    for record in records:
+        if record.get("type") not in buckets:
+            continue
+        target_values = _record_target(record, target)
+        if target_values is None:
+            continue
+        buckets[record["type"]].append((record["probabilities"], target_values))
+    temperatures: dict[str, float] = {}
+    before: dict[str, float] = {}
+    after: dict[str, float] = {}
+    grid = _grid()
+    for kind, pairs in buckets.items():
+        if not pairs:
+            temperatures[kind] = 1.0
+            continue
+        best_temperature, best_loss = 1.0, float("inf")
+        for temperature in grid:
+            loss = sum(_nll_from_probabilities(probabilities, target, temperature) for probabilities, target in pairs)
+            if loss < best_loss:
+                best_loss, best_temperature = loss, temperature
+        temperatures[kind] = round(best_temperature, 4)
+        before[kind] = sum(_nll_from_probabilities(p, t, 1.0) for p, t in pairs) / len(pairs)
+        after[kind] = sum(_nll_from_probabilities(p, t, best_temperature) for p, t in pairs) / len(pairs)
+    report = {
+        "target": target,
+        "method": "record-based temperature scaling",
+        "questions": {kind: len(pairs) for kind, pairs in buckets.items()},
+        "temperature": temperatures,
+        "nll_before": {kind: round(value, 6) for kind, value in before.items()},
+        "nll_after": {kind: round(value, 6) for kind, value in after.items()},
+    }
+    return Calibration(temperatures=temperatures), report
+
+
 def fit_calibration(
-    model, requests: list[Request], mode: str = "fresh", target: str = "gold", device: str = "auto"
+    model,
+    requests: list[Request],
+    mode: str = "fresh",
+    target: str = "gold",
+    device: str = "auto",
+    batch_requests: int = 16,
+    max_memory_gb: float | None = None,
 ) -> tuple[Calibration, dict]:
     if target not in {"gold", "teacher"}:
         raise ValueError("calibration target must be 'gold' or 'teacher'")
-    buckets = collect_logits(model, requests, mode=mode, target_kind=target, device=device)
+    buckets = collect_logits(
+        model,
+        requests,
+        mode=mode,
+        target_kind=target,
+        device=device,
+        batch_requests=batch_requests,
+        max_memory_gb=max_memory_gb,
+    )
     temperatures = {kind: _fit_one(pairs) for kind, pairs in buckets.items()}
     before = {}
     after = {}

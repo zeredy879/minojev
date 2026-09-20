@@ -1,0 +1,104 @@
+{
+  "requests": 120,
+  "decisions": 120,
+  "engine": {
+    "questions": 120,
+    "labelled": 120,
+    "accuracy": 0.9583333333333334,
+    "accuracy_by_type": {
+      "boolean": 0.916667,
+      "choice": 1.0
+    },
+    "accuracy_by_family": {
+      "clinc/clinc_oos": 1.0,
+      "fancyzhx/amazon_polarity": 0.833333,
+      "mteb/banking77": 1.0,
+      "openai/gsm8k": 1.0
+    },
+    "gold_nll": 0.11047591356507774,
+    "mean_confidence": 0.9658679429166667,
+    "expected_calibration_error": 0.024161893583333337,
+    "accuracy_by_candidate_count": {
+      "2": 0.924242,
+      "3-4": 1.0,
+      "5-8": 1.0
+    },
+    "selective_accuracy": {
+      "0.5": {
+        "coverage": 1.0,
+        "accuracy": 0.958333
+      },
+      "0.7": {
+        "coverage": 0.95,
+        "accuracy": 0.973684
+      },
+      "0.9": {
+        "coverage": 0.908333,
+        "accuracy": 0.981651
+      }
+    },
+    "teacher_scored": 120,
+    "teacher_ce": 1.1726035236632728,
+    "distribution_error": 0.06727932727099009,
+    "brier": 0.06727932727099009,
+    "teacher_argmax_accuracy": 0.9583333333333334,
+    "teacher_topset_accuracy": 0.9583333333333334,
+    "teacher_argmax_by_family": {
+      "clinc/clinc_oos": 1.0,
+      "fancyzhx/amazon_polarity": 0.833333,
+      "mteb/banking77": 1.0,
+      "openai/gsm8k": 1.0
+    },
+    "teacher_topset_by_family": {
+      "clinc/clinc_oos": 1.0,
+      "fancyzhx/amazon_polarity": 0.833333,
+      "mteb/banking77": 1.0,
+      "openai/gsm8k": 1.0
+    },
+    "decode_steps": 0,
+    "latency_p50_ms": 500.271,
+    "latency_p95_ms": 1057.777,
+    "latency_mean_ms": 568.668,
+    "output_tokens_per_decision": 0.0,
+    "decode_steps_per_decision": 0.0,
+    "parse_failure_rate": 0.0,
+    "decisions_per_second": 1.76,
+    "input_tokens_per_decision": 271.4,
+    "latency_per_request_p50_ms": 500.271,
+    "latency_per_request_p95_ms": 1057.777
+  },
+  "generative": {
+    "decisions": 120,
+    "parsed": 120,
+    "parse_failure_rate": 0.0,
+    "output_tokens_per_decision": 3.483,
+    "input_tokens_per_decision": 141.1,
+    "decisions_per_second": 3.5,
+    "latency_p50_ms": 181.214,
+    "latency_p95_ms": 683.112,
+    "ttft_p50_ms": 132.206,
+    "latency_per_request_p50_ms": 549.114,
+    "latency_per_request_p95_ms": 5319.86,
+    "accuracy": 0.8,
+    "accuracy_when_parsed": 0.8
+  },
+  "per_source": {
+    "mteb/banking77": {
+      "engine_accuracy": 1.0,
+      "generative_accuracy": 0.966667
+    },
+    "clinc/clinc_oos": {
+      "engine_accuracy": 1.0,
+      "generative_accuracy": 0.966667
+    },
+    "fancyzhx/amazon_polarity": {
+      "engine_accuracy": 0.833333,
+      "generative_accuracy": 0.766667
+    },
+    "openai/gsm8k": {
+      "engine_accuracy": 1.0,
+      "generative_accuracy": 0.5
+    }
+  },
+  "generative_model": "Qwen/Qwen3-1.7B"
+}

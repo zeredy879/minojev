@@ -64,7 +64,7 @@ def benchmark_model(model: DecisionModel, requests: list[Request], options: Benc
             "decode_steps": sum(record.get("decode_steps", 0) for record in batched),
         }
     common = {
-        "parameters": sum(parameter.numel() for parameter in model.parameters()),
+        "parameters": sum(parameter.numel() for parameter in model.trainable_parameters()),
         "device": str(next(model.head.parameters()).device),
     }
     return {**common, "modes": results}

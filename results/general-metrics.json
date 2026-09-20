@@ -1,0 +1,56 @@
+{
+  "questions": 200,
+  "labelled": 200,
+  "accuracy": 0.975,
+  "accuracy_by_type": {
+    "boolean": 0.95,
+    "choice": 1.0
+  },
+  "accuracy_by_family": {
+    "clinc/clinc_oos": 1.0,
+    "fancyzhx/amazon_polarity": 0.9,
+    "mteb/banking77": 1.0,
+    "openai/gsm8k": 1.0
+  },
+  "gold_nll": 0.08490526791807163,
+  "mean_confidence": 0.96347136115,
+  "expected_calibration_error": 0.01416979825000003,
+  "accuracy_by_candidate_count": {
+    "2": 0.95614,
+    "3-4": 1.0,
+    "5-8": 1.0
+  },
+  "selective_accuracy": {
+    "0.5": {
+      "coverage": 1.0,
+      "accuracy": 0.975
+    },
+    "0.7": {
+      "coverage": 0.955,
+      "accuracy": 0.984293
+    },
+    "0.9": {
+      "coverage": 0.895,
+      "accuracy": 0.988827
+    }
+  },
+  "teacher_scored": 200,
+  "teacher_ce": 1.1170636618378458,
+  "distribution_error": 0.052108064424841435,
+  "brier": 0.052108064424841435,
+  "teacher_argmax_accuracy": 0.975,
+  "teacher_topset_accuracy": 0.975,
+  "teacher_argmax_by_family": {
+    "clinc/clinc_oos": 1.0,
+    "fancyzhx/amazon_polarity": 0.9,
+    "mteb/banking77": 1.0,
+    "openai/gsm8k": 1.0
+  },
+  "teacher_topset_by_family": {
+    "clinc/clinc_oos": 1.0,
+    "fancyzhx/amazon_polarity": 0.9,
+    "mteb/banking77": 1.0,
+    "openai/gsm8k": 1.0
+  },
+  "decode_steps": 0
+}

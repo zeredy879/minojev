@@ -79,6 +79,23 @@ def aggregate(records: list[dict]) -> dict:
         summary["gold_nll"] = sum(nll_terms) / len(nll_terms)
         summary["mean_confidence"] = sum(confidences) / len(confidences)
         summary["expected_calibration_error"] = _ece(confidences, hits)
+        buckets: dict[str, list[float]] = {}
+        for record, hit in zip(labelled, hits):
+            size = len(record["candidate_ids"])
+            bucket = "2" if size <= 2 else "3-4" if size <= 4 else "5-8" if size <= 8 else "9+"
+            buckets.setdefault(bucket, []).append(hit)
+        summary["accuracy_by_candidate_count"] = {
+            bucket: round(sum(values) / len(values), 6) for bucket, values in sorted(buckets.items())
+        }
+        selective = {}
+        for threshold in (0.5, 0.7, 0.9):
+            members = [hit for confidence, hit in zip(confidences, hits) if confidence >= threshold]
+            if members:
+                selective[str(threshold)] = {
+                    "coverage": round(len(members) / len(confidences), 6),
+                    "accuracy": round(sum(members) / len(members), 6),
+                }
+        summary["selective_accuracy"] = selective
     pairs = []
     for record in records:
         vectors = _teacher_vectors(record)

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>minojev · training monitor</title>
+<style>
+  :root {
+    --bg: #0a0d14; --panel: #121926; --panel-2: #19223a; --ink: #e8edf7; --muted: #8d9bb3;
+    --accent: #59d3a8; --accent-2: #6ea8fe; --warn: #f0b06a; --danger: #ef7b8b; --line: #25304a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 14px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { padding: 18px 22px 14px; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #101729, var(--bg)); position: sticky; top: 0; z-index: 10; }
+  h1 { margin: 0 0 6px; font-size: 18px; }
+  h1 span { color: var(--accent); }
+  .runline { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 13px; }
+  .runline b { color: var(--ink); }
+  .note { color: var(--accent-2); font-size: 12.5px; margin-top: 6px; min-height: 18px; }
+  main { max-width: 1280px; margin: 0 auto; padding: 18px 20px 60px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .stat b { display: block; font-size: 18px; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .stat small { color: var(--muted); }
+  .progress { height: 8px; background: #0d1424; border-radius: 4px; overflow: hidden; margin-top: 10px; }
+  .progress > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent-2), var(--accent)); transition: width .4s ease; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .card h2 { margin: 0 0 8px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+  svg { display: block; width: 100%; height: auto; }
+  .axis { stroke: #26304a; stroke-width: 1; }
+  .gridline { stroke: #1a2338; stroke-width: 1; }
+  .label { fill: #5f6d85; font: 10px ui-monospace, Menlo, monospace; }
+  .legend { display: flex; gap: 14px; color: var(--muted); font-size: 12px; margin-top: 6px; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 10px; height: 3px; margin-right: 5px; vertical-align: middle; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+  th:first-child, td:first-child { text-align: left; color: var(--muted); }
+  #empty { color: var(--muted); padding: 40px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>minojev · <span>training monitor</span></h1>
+  <div class="runline">
+    <span>label <b id="label">–</b></span>
+    <span>phase <b id="phase">–</b></span>
+    <span>step <b id="step">–</b></span>
+    <span>elapsed <b id="elapsed">–</b></span>
+    <span>eta <b id="eta">–</b></span>
+    <span>updated <b id="updated">–</b></span>
+  </div>
+  <div class="note" id="note">waiting for status.json …</div>
+  <div class="progress"><div id="progress"></div></div>
+</header>
+<main>
+  <div class="stats">
+    <div class="stat"><b id="loss">–</b><small>loss</small></div>
+    <div class="stat"><b id="tokens">–</b><small>tokens / second</small></div>
+    <div class="stat"><b id="grad">–</b><small>grad norm</small></div>
+    <div class="stat"><b id="mem">–</b><small>MPS driver (GB)</small></div>
+    <div class="stat"><b id="rss">–</b><small>process peak RSS (GB)</small></div>
+    <div class="stat"><b id="cpu">–</b><small>process CPU %</small></div>
+    <div class="stat"><b id="load">–</b><small>load / core</small></div>
+    <div class="stat"><b id="sysmem">–</b><small>system memory</small></div>
+    <div class="stat"><b id="devacc">–</b><small>dev accuracy</small></div>
+    <div class="stat"><b id="devce">–</b><small>dev teacher CE</small></div>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <h2>Loss</h2>
+      <svg id="chart-loss" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+      <div class="legend"><span><i style="background:#59d3a8"></i>train loss</span></div>
+    </div>
+    <div class="card">
+      <h2>Dev quality</h2>
+      <svg id="chart-dev" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+      <div class="legend"><span><i style="background:#59d3a8"></i>accuracy</span><span><i style="background:#f0b06a"></i>teacher CE</span></div>
+    </div>
+    <div class="card">
+      <h2>Memory (GB)</h2>
+      <svg id="chart-mem" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+      <div class="legend"><span><i style="background:#6ea8fe"></i>MPS driver</span><span><i style="background:#ef7b8b"></i>process peak RSS</span></div>
+    </div>
+    <div class="card">
+      <h2>CPU &amp; system memory pressure (%)</h2>
+      <svg id="chart-cpu" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+      <div class="legend"><span><i style="background:#59d3a8"></i>process CPU</span><span><i style="background:#f0b06a"></i>system memory used</span></div>
+    </div>
+    <div class="card">
+      <h2>Throughput &amp; gradient</h2>
+      <svg id="chart-rate" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+      <div class="legend"><span><i style="background:#59d3a8"></i>tokens/s</span><span><i style="background:#f0b06a"></i>grad norm</span></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h2>Recent entries</h2>
+    <table id="recent"><thead><tr><th>step</th><th>phase</th><th>loss</th><th>grad</th><th>tok/s</th><th>MPS GB</th><th>RSS GB</th><th>CPU %</th><th>sys mem %</th><th>ETA min</th></tr></thead><tbody></tbody></table>
+  </div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const NUM = (value) => (value === null || value === undefined || Number.isNaN(Number(value))) ? null : Number(value);
+
+function renderChart(svgId, series, options = {}) {
+  const svg = $(svgId);
+  const width = 600, height = 200, pad = { left: 42, right: 10, top: 12, bottom: 22 };
+  svg.textContent = "";
+  const points = series.flatMap((s) => s.points);
+  if (!points.length) {
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", width / 2); text.setAttribute("y", height / 2);
+    text.setAttribute("text-anchor", "middle"); text.setAttribute("class", "label");
+    text.textContent = "no data yet";
+    svg.append(text);
+    return;
+  }
+  const xs = points.map((p) => p[0]);
+  const ys = points.map((p) => p[1]);
+  const xMin = Math.min(...xs), xMax = Math.max(...xs, xMin + 1);
+  const yMin = options.min !== undefined ? options.min : Math.min(...ys);
+  const yMax = options.max !== undefined ? options.max : Math.max(...ys);
+  const span = (yMax - yMin) || 1;
+  const x = (value) => pad.left + (value - xMin) / (xMax - xMin) * (width - pad.left - pad.right);
+  const y = (value) => pad.top + (1 - (value - yMin) / span) * (height - pad.top - pad.bottom);
+  for (let i = 0; i <= 4; i += 1) {
+    const value = yMin + span * i / 4;
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", pad.left); line.setAttribute("x2", width - pad.right);
+    line.setAttribute("y1", y(value)); line.setAttribute("y2", y(value));
+    line.setAttribute("class", i === 0 ? "axis" : "gridline");
+    svg.append(line);
+    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    label.setAttribute("x", pad.left - 5); label.setAttribute("y", y(value) + 3);
+    label.setAttribute("text-anchor", "end"); label.setAttribute("class", "label");
+    label.textContent = value.toFixed(value >= 100 ? 0 : value >= 10 ? 1 : 2);
+    svg.append(label);
+  }
+  for (const s of series) {
+    if (!s.points.length) continue;
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+    path.setAttribute("points", s.points.map(([px, py]) => `${x(px)},${y(py)}`).join(" "));
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", s.color);
+    path.setAttribute("stroke-width", "2");
+    path.setAttribute("stroke-linejoin", "round");
+    svg.append(path);
+  }
+  const first = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  first.setAttribute("x", pad.left); first.setAttribute("y", height - 6);
+  first.setAttribute("class", "label"); first.textContent = `step ${xMin}`;
+  svg.append(first);
+  const last = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  last.setAttribute("x", width - pad.right); last.setAttribute("y", height - 6);
+  last.setAttribute("text-anchor", "end"); last.setAttribute("class", "label");
+  last.textContent = `step ${xMax}`;
+  svg.append(last);
+}
+
+function lastDevFromLog(log) {
+  for (let i = log.length - 1; i >= 0; i -= 1) {
+    if (log[i].dev) return log[i].dev;
+  }
+  return null;
+}
+
+async function refresh() {
+  try {
+    const clean = (rows) => (Array.isArray(rows) ? rows.filter(Boolean) : []);
+    const [status, metrics, log] = await Promise.all([
+      fetch("api/status").then((r) => r.ok ? r.json() : null).catch(() => null),
+      fetch("api/metrics?limit=2000").then((r) => r.ok ? r.json() : []).then(clean).catch(() => []),
+      fetch("api/train_log").then((r) => r.ok ? r.json() : []).then(clean).catch(() => []),
+    ]);
+    if (!status && !metrics.length) { $("note").textContent = "waiting for status.json …"; return; }
+    const memory = (status && status.memory) || {};
+    if (status) {
+      $("label").textContent = status.label || "–";
+      $("phase").textContent = status.phase || (status.note ? "cache" : "–");
+      $("step").textContent = status.step !== undefined ? `${status.step}/${status.total_steps}` : "–";
+      $("elapsed").textContent = status.elapsed_seconds !== undefined ? `${(status.elapsed_seconds / 60).toFixed(1)} min` : "–";
+      $("eta").textContent = status.eta_seconds !== undefined ? `${(status.eta_seconds / 60).toFixed(1)} min` : "–";
+      $("updated").textContent = status.updated_at ? status.updated_at.replace("T", " ").replace("Z", "") : "–";
+      $("note").textContent = status.note || (status.phase ? `${status.phase} phase` : "");
+      if (status.step !== undefined && status.total_steps) {
+        $("progress").style.width = `${Math.min(100, 100 * status.step / status.total_steps).toFixed(1)}%`;
+      } else if (status.note) {
+        // Caching phases report progress inside the note, e.g. "caching train: 800/8000 requests".
+        const match = status.note.match(/(\d+)\s*\/\s*(\d+)/);
+        if (match) $("progress").style.width = `${Math.min(100, 100 * Number(match[1]) / Math.max(Number(match[2]), 1)).toFixed(1)}%`;
+      }
+      $("loss").textContent = status.loss ?? "–";
+      $("tokens").textContent = status.tokens_per_second ?? "–";
+      $("grad").textContent = status.grad_norm ?? "–";
+      $("mem").textContent = memory.mps_driver_gb ?? "–";
+      $("rss").textContent = memory.cpu_peak_rss_gb ?? "–";
+      const pressure = status.pressure || {};
+      $("cpu").textContent = pressure.process_cpu_percent !== null && pressure.process_cpu_percent !== undefined
+        ? pressure.process_cpu_percent + "%" : "–";
+      $("load").textContent = pressure.load1_per_core !== null && pressure.load1_per_core !== undefined
+        ? pressure.load1_per_core : "–";
+      $("sysmem").textContent = pressure.system_memory_percent !== null && pressure.system_memory_percent !== undefined
+        ? pressure.system_memory_percent + "%" + (pressure.system_memory_gb !== undefined && pressure.system_memory_gb !== null ? ` (${pressure.system_memory_gb}G)` : "")
+        : "–";
+    }
+    const dev = lastDevFromLog(log);
+    if (dev) {
+      $("devacc").textContent = dev.accuracy !== undefined ? (100 * dev.accuracy).toFixed(1) + "%" : "–";
+      $("devce").textContent = dev.teacher_ce !== undefined ? Number(dev.teacher_ce).toFixed(4) : "–";
+      $("mem").textContent = memory.mps_driver_gb ?? $("mem").textContent;
+      $("rss").textContent = memory.cpu_peak_rss_gb ?? $("rss").textContent;
+    }
+    const lossPoints = metrics.filter((m) => NUM(m.loss) !== null).map((m) => [m.step, NUM(m.loss)]);
+    renderChart("chart-loss", [{ points: lossPoints, color: "#59d3a8" }]);
+    const devPoints = log.filter((entry) => entry.dev).map((entry) => [entry.step, entry.dev.accuracy]).filter((p) => NUM(p[1]) !== null);
+    const cePoints = log.filter((entry) => entry.dev && entry.dev.teacher_ce !== undefined).map((entry) => [entry.step, NUM(entry.dev.teacher_ce)]);
+    renderChart("chart-dev", [
+      { points: devPoints, color: "#59d3a8" },
+      { points: cePoints, color: "#f0b06a" },
+    ], { min: 0 });
+    const memPoints = metrics.filter((m) => m.memory).map((m) => [m.step || 0, m.memory.mps_driver_gb]);
+    const rssPoints = metrics.filter((m) => m.memory).map((m) => [m.step || 0, m.memory.cpu_peak_rss_gb]);
+    renderChart("chart-mem", [
+      { points: memPoints.filter((p) => NUM(p[1]) !== null), color: "#6ea8fe" },
+      { points: rssPoints.filter((p) => NUM(p[1]) !== null), color: "#ef7b8b" },
+    ], { min: 0 });
+    const cpuPoints = metrics.filter((m) => m.pressure && NUM(m.pressure.process_cpu_percent) !== null)
+      .map((m) => [m.step || 0, NUM(m.pressure.process_cpu_percent)]);
+    const sysmemPoints = metrics.filter((m) => m.pressure && NUM(m.pressure.system_memory_percent) !== null)
+      .map((m) => [m.step || 0, NUM(m.pressure.system_memory_percent)]);
+    renderChart("chart-cpu", [
+      { points: cpuPoints, color: "#59d3a8" },
+      { points: sysmemPoints, color: "#f0b06a" },
+    ], { min: 0, max: 100 });
+    const ratePoints = metrics.filter((m) => NUM(m.tokens_per_second) !== null).map((m) => [m.step, NUM(m.tokens_per_second)]);
+    const gradPoints = metrics.filter((m) => NUM(m.grad_norm) !== null).map((m) => [m.step, NUM(m.grad_norm)]);
+    renderChart("chart-rate", [
+      { points: ratePoints, color: "#59d3a8" },
+      { points: gradPoints, color: "#f0b06a" },
+    ], { min: 0 });
+    const body = $("recent").querySelector("tbody");
+    body.textContent = "";
+    for (const entry of metrics.slice(-10).reverse()) {
+      const row = document.createElement("tr");
+      const memory = entry.memory || {};
+      const pressure = entry.pressure || {};
+      const cells = [
+        entry.step ?? "–", entry.phase ?? entry.note ?? "–", entry.loss ?? "–", entry.grad_norm ?? "–",
+        entry.tokens_per_second ?? "–", memory.mps_driver_gb ?? "–", memory.cpu_peak_rss_gb ?? "–",
+        pressure.process_cpu_percent ?? "–", pressure.system_memory_percent ?? "–",
+        entry.eta_seconds !== undefined ? (entry.eta_seconds / 60).toFixed(1) : "–",
+      ];
+      for (const value of cells) {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.append(cell);
+      }
+      body.append(row);
+    }
+  } catch (error) {
+    $("note").textContent = "monitor error: " + error.message;
+  }
+}
+refresh();
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>

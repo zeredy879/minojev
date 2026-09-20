@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/banner.svg" alt="minojev — 决策，而非 token" width="960"></p>
 
 <p align="center">
-  <b>简体中文</b> · <a href="README.md">English</a> · <a href="https://zeredy879.github.io/minojev/zh.html">在线 Demo</a> · <a href="https://huggingface.co/zeredy879/minojev">模型</a> · <a href="https://huggingface.co/datasets/zeredy879/minojev-data">数据</a>
+  <b>简体中文</b> · <a href="README.md">English</a> · <a href="https://zeredy879.github.io/minojev/zh.html">在线 Demo</a> · <a href="https://zeredy879.github.io/minojev/zh-benchmark.html">基准对比</a> · <a href="https://huggingface.co/zeredy879/minojev">模型</a> · <a href="https://huggingface.co/datasets/zeredy879/minojev-data">数据</a>
 </p>
 
 <p align="center">
@@ -9,172 +9,124 @@
   <a href="https://huggingface.co/datasets/zeredy879/minojev-data"><img alt="Hugging Face datasets" src="https://img.shields.io/badge/Hugging%20Face-datasets-59d3a8"></a>
   <img alt="license" src="https://img.shields.io/badge/license-MIT-f0b06a">
   <img alt="decode steps" src="https://img.shields.io/badge/decode__steps-0-6ea8fe">
-  <img alt="parameters" src="https://img.shields.io/badge/parameters-547k-8d9bb3">
+  <img alt="head params" src="https://img.shields.io/badge/decision__head-0.8M-8d9bb3">
 </p>
 
-> **一句话版本：** 聊天模型靠"写"文字回答，minojev 靠"读"概率回答——软件因此
-> 一次前向就能拿到决策，没有句子要解析，也没有输出 token 要付费。
+> **一句话版本：** 聊天模型靠"写"文字回答，minojev 靠"读"概率分布回答——而
+> **头训练（head training）**能在笔记本上几分钟把一个冻结的语言模型变成这样的决策层，
+> 零输出 token，也不需要微调骨干。
 
-## 先说人话
+## 什么是头训练？
 
-想象你问 AI：**"这张支持工单该进哪个队列？"**
+大部分 "Jev 式"项目要么调用托管 API，要么微调整个模型。minojev 的核心比两者都小：
 
-聊天模型会写一句话回答：
+1. **冻结骨干。** 发布版本中 Qwen3-1.7B 全程不更新。
+2. **一次性缓存候选特征。** 每条候选路径（状态 + 问题 + 选项）只前向一次，末位隐藏状态被存下来。
+3. **只训练决策头。** 一个共享打分器加集合注意力——**约 0.8M 参数**——在缓存向量上用分布损失训练。
+4. **在 dev 上校准。** 每种原语拟合一个温度，使用留出结果。
 
-> *"根据客户的消息，这看起来是账号访问问题，我建议转给账号访问团队。"*
+整个训练在 **Apple Silicon 笔记本上约 37 分钟、峰值 4GB 内存**。骨干没有被改动，因此没有
+灾难性遗忘、不需要 GPU，而且每一步都可见（见 [内存安全的训练](#内存安全的训练)）。
 
-然后你的程序得读懂这句话，再猜它到底什么意思。时间（模型一个词一个词地写）、
-成本（写出的每个词都要付费）、稳定性（措辞一变，解析器就可能崩），都花在了
-这句话上。
+## 基准：决策读出 vs 逐 token 生成
 
-minojev 不要这句话，只要那个决定：
+同一底座（Qwen3-1.7B）、同一批问题、同样的提示。基线必须逐 token **生成**答案；minojev
+直接从隐藏状态读出带类型的分布。测试集：120 条平衡决策，覆盖 banking77、CLINC150、
+Amazon Polarity、GSM8K 验证。生成式基线使用 chat 模板、关闭 thinking，并要求只答一个字母。
 
-```
-"该进哪个队列？" ──►  access 0.79 · deliverability 0.14 · billing 0.07
-```
+| 指标 | minojev（头训练） | 零训练 logits 读出 | 生成式基线 |
+|---|---:|---:|---:|
+| 准确率 | **95.8%** | 88.3% | 80.0% |
+| ECE | **0.024** | 0.097 | 无法给出 |
+| 输出 token / 决策 | **0** | **0** | 3.48 |
+| 首 token 延迟（p50） | **0 ms** | **0 ms** | ~100 ms |
+| 延迟 p95 | **~1.1 s** | ~1.1 s | ~5.3 s |
+| 格式 / 解析失败 | **0** | 0 | 0 |
 
-输入读一遍，数字直接出来。这是一组真正的概率分布，而且经过校准：0.79 差不多
-就是"约 79% 可能"。每条记录都带 `decode_steps: 0`，因为模型一个字都没写。
+完整测试集（200 条平衡请求，校准版）：**准确率 97.5%、ECE 0.014**，平均置信度 0.963；
+置信度 ≥ 0.9 时覆盖 **89.5% 的请求、准确率 98.9%**——可以直接用于"接受/升级"策略。
+
+**诚实边界：** 在一个刻意的分布外工作负载（从未训练过的客服领域）上，头训练模型只有
+31.7%，而零样本生成式基线是 40.0%。头训练是"专精"，不能替代数据广度。因此流水线会把
+OOD 来源单独隔离并单独报告。
 
 <img src="assets/explainer.svg" alt="聊天模型逐 token 生成再解析；minojev 一次前向直接读出分布" width="100%">
 
-### 几个词，30 秒看懂
+## 在线试玩
 
-| 词 | 白话解释 |
-|---|---|
-| **token** | 一小段文本。聊天模型一次只写一个，写完才能接着写下一个 |
-| **前向传播** | 把数据过一遍模型。minojev 只用一遍 |
-| **校准** | 说 0.8，就要有大约 80% 的把握。差多少，我们算给你看（ECE） |
-| **choice / boolean / score** | 几选一 / 是或否 / 按等级打分 |
-
-### 打开就能玩
-
-打开 **[在线 Demo](https://zeredy879.github.io/minojev/zh.html)**：
-
-- **[迷宫智能体](https://zeredy879.github.io/minojev/zh-maze.html)**——看模型带着
-  智能体穿过网格，每一步都展示它的移动分布和四个并行安全判断。
-- **[决策控制台](https://zeredy879.github.io/minojev/zh-console.html)**——一个状态、
-  多个问题一起打分，并叠加 teacher 分布对照。
-
-## minojev 的与众不同
-
-| | 聊天模型 | minojev |
-|---|---|---|
-| 输出什么 | 一段需要解析的文字 | 预先声明好的候选选项上的概率分布 |
-| 答案从哪来 | 逐 token 写出 | 从隐藏状态读出，零输出 token |
-| 钱花在哪 | 输出 token | 一次前向传播 |
-| 格式出错 | 可能 | 不可能——候选提前声明好 |
-| 置信度 | 自己报的，常常过度自信 | 在留出集上拟合过；ECE 可查 |
-| 同状态多问题 | 每个问题生成一次 | 一次前向，共享 KV 前缀 |
-| 运行环境 | GPU 集群或 API | 笔记本 CPU；可选 Hugging Face 模型 |
-
-相比其它决策模型实验，这个项目还有这些特点：
-
-- **完全离线复现。** 内置 547k 参数模型在 CPU 上几分钟从零训练完成：不用下载
-  模型、不用 API key、不用 GPU。
-- **每个结论都能查证。** 数据集、teacher 目标、逐题预测、指标、回放数据，
-  全都提交在仓库里。
-- **校准是默认动作。** `--calibrate gold` 开箱即用——概率不可信，还不如只给
-  一个标签。
-- **两种引擎。** 想完全掌控，就从零训练决策头；想直接借用预训练模型，就走
-  原生 logits 路径。
-- **中英双语，看得见效果。** 文档有英文和简体中文，还有一个会动起来的迷宫
-  智能体和可交互的决策控制台。
-
-## 安装
-
-```bash
-uv venv --python 3.12 .venv && . .venv/bin/activate
-uv pip install -e ".[test]"
-# 可选：使用 Hugging Face 模型的原生 logits 引擎
-uv pip install -e ".[hf]"
-```
+- **[基准对比页](https://zeredy879.github.io/minojev/zh-benchmark.html)**——准确率、token 经济、响应速度并排展示；
+- **[多领域体验场](https://zeredy879.github.io/minojev/zh-playground.html)**——六个业务场景的带类型分布；
+- **[迷宫智能体](https://zeredy879.github.io/minojev/zh-maze.html)**——逐步回放学到的策略与概率；
+- **[决策控制台](https://zeredy879.github.io/minojev/zh-console.html)**——一个状态、多个运行时问题。
 
 ## 快速开始
 
 ```bash
-# 1. 生成合成决策数据（属性查找、比较、支持度）
-minojev synth --out data/train.jsonl --count 512 --seed 17 --split train
-minojev synth --out data/dev.jsonl   --count 128 --seed 17 --split dev
-
-# 2. 一条命令完成训练 + 校准
-minojev train --train data/train.jsonl --dev data/dev.jsonl \
-  --output-dir runs/synth --steps 800 --head-steps 30 --eval-every 100 \
-  --calibrate gold --device cpu
-
-# 3. 为任意请求打分
-minojev score --checkpoint runs/synth/checkpoint --input examples/decisions.jsonl \
-  --output results/example-scores.jsonl --mode reuse
+uv venv --python 3.12 .venv && . .venv/bin/activate
+uv pip install -e ".[test,monitor]"          # 需要 Hugging Face 骨干再加 .[hf]
 ```
 
-训练迷宫智能体并导出回放数据：
+构建通用数据集并运行头训练（带实时监控）：
 
 ```bash
-minojev maze-data --out data/maze-train.jsonl --count 1024 --seed 17 --split train
-minojev train --train data/maze-train.jsonl --dev data/maze-dev.jsonl \
-  --output-dir runs/maze --steps 1500 --head-steps 40 --eval-every 100 --device cpu
-minojev maze-rollout --checkpoint runs/maze/checkpoint \
-  --output web/data/maze.json --count 6 --seed 23
+# 1. 把宽松许可的公开数据集转换成决策请求（train/dev/test/OOD）
+minojev build-data --per-source 2500 --per-ood 800
+
+# 2. 头训练：冻结骨干、缓存特征、只训决策头
+minojev posttrain --backbone Qwen/Qwen3-1.7B --mode head \
+  --train data/general-train.jsonl --dev data/general-dev.jsonl \
+  --output-dir runs/general-head --steps 3000 \
+  --inference-dtype bfloat16 --max-memory-gb 12
+
+# 3. 用 dev 结果做温度校准
+minojev calibrate --checkpoint runs/general-head/checkpoint \
+  --input data/general-dev.jsonl --output runs/general-cal --target gold --from-records
+
+# 4. 与同底座的逐 token 生成对比
+minojev compare --checkpoint runs/general-cal \
+  --input data/general-test.jsonl --limit 120 --chat-template
 ```
 
-## 概率校准：让置信度有意义
-
-训练只最小化分布损失，这本身并不能保证置信度可信。`minojev calibrate` 在
-dev 集上为每种原语拟合一个温度，写入检查点并在推理时自动应用。温度始终为正，
-所以它永远不会改变模型的预测结果，只会改变模型的"确信程度"。
-
-| 内置模型 | 准确率 | 校准前 ECE | 校准后 ECE | 平均置信度 |
-|---|---:|---:|---:|---:|
-| 属性决策 | 66.5% | 0.093 | **0.074** | 0.72 |
-| 迷宫决策 | 83.8% | 0.090 | **0.016** | 0.84 |
+另开一个终端实时看训练面板：
 
 ```bash
-minojev calibrate --checkpoint runs/synth/checkpoint --input data/dev.jsonl \
-  --output runs/synth-calibrated --target gold
-minojev evaluate  --checkpoint runs/synth-calibrated --input data/test.jsonl
+minojev watch --run runs/general-head --port 8010   # http://127.0.0.1:8010/
 ```
 
-## 结果
+## 内存安全的训练
 
-两个内置模型都是从零训练的 547k 参数 Transformer，全程在 CPU 上完成。
-"Teacher top-set" 指预测命中 teacher 的最优候选集合——在网格移动中两个方向
-经常并列，这一指标更公平。运行 `scripts/build_results.sh` 可复现全部数字。
+监控面板不是装饰：每个训练阶段都会把 loss、梯度范数、tokens/s、ETA、MPS 显存、进程 RSS、
+CPU 负载和系统内存压力写入 `status.json` 与 `metrics.jsonl`。硬预算（`--max-memory-gb`）
+会在机器濒临危险前终止该步；校准前向分块执行；每个阶段先释放上一个模型再加载下一个。
+1.7B 头训练峰值 **4.0GB**，预算 12GB。
 
-| 任务 | 问题数 | 准确率 | Teacher 最优集 | 分布误差 | 解码步数 |
-|---|---:|---:|---:|---:|---:|
-| 属性决策 | 627 | 66.5% | 66.5% | 0.29 | 0 |
-| 迷宫决策 | 1,536 | 83.8% | 89.5% | 0.13 | 0 |
+## 不用 loss 的评测
 
-迷宫分原语 top-set 准确率：**布尔安全判断 87.8%**、**距离评分 97.7%**、
-**移动选择 87.9%**。
+loss 对决策模型是个糟糕的进度指标——teacher 分布有熵下界，异构批次又让它噪声很大。流水线报告：
 
-### 延迟与吞吐（笔记本 CPU，547k 参数）
+| 维度 | 指标 |
+|---|---|
+| 决策质量 | 准确率、teacher 最优集、按来源与候选数的拆分 |
+| 概率质量 | ECE、Brier、gold NLL、选择性准确率（覆盖率 @ 置信度） |
+| Token 经济 | 每决策输入/输出 token、解码步数（0） |
+| 响应速度 | 首 token 延迟、每请求 p50/p95、每秒决策数、解析失败率 |
 
-| 任务 | 模式 | p50 | p95 | 决策数/秒 |
-|---|---|---:|---:|---:|
-| 属性 | fresh | 13.1 ms | 16.3 ms | 198 |
-| 属性 | reuse | **11.8 ms** | **14.7 ms** | **233** |
-| 迷宫 | fresh | 23.6 ms | 27.0 ms | 198 |
-| 迷宫 | reuse | **17.1 ms** | **18.0 ms** | **366** |
-
-一个决策对应一个问题；一个请求可以包含多个问题。使用 `minojev bench` 复现。
-原始指标和逐题预测提交在 [`results/`](results) 下；回放数据在
-[`web/data/`](web/data) 下。
+`minojev compare` 会从提交在仓库里的产物生成 JSON + Markdown 报告，
+`scripts/build_benchmark_bundle.py` 为在线基准页提供数据。
 
 ## Hugging Face 模型与数据集
 
-- 检查点（训练 + 校准）：[`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev)
-- 带 teacher 分布的请求数据集：[`zeredy879/minojev-data`](https://huggingface.co/datasets/zeredy879/minojev-data)
+- 检查点：[`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev)——
+  `general/`（Qwen3-1.7B + 决策头），以及从零训练的微型 `synth/`、`maze/`；
+- 数据：[`zeredy879/minojev-data`](https://huggingface.co/datasets/zeredy879/minojev-data)——
+  `general/{train,dev,test,ood}.jsonl`，每行都带来源与许可证。
 
 ```python
 from huggingface_hub import snapshot_download
 from minojev import DecisionModel
 
-path = snapshot_download("zeredy879/minojev", allow_patterns=["maze/*"])
-model = DecisionModel.load(f"{path}/maze", device="cpu")
-
-data = snapshot_download("zeredy879/minojev-data", repo_type="dataset")
-# data/maze/test.jsonl、data/synth/test.jsonl 等
+path = snapshot_download("zeredy879/minojev", allow_patterns=["general/*"])
+model = DecisionModel.load(f"{path}/general", device="cpu")
 ```
 
 ## 请求格式
@@ -203,82 +155,64 @@ data = snapshot_download("zeredy879/minojev-data", repo_type="dataset")
 }
 ```
 
-`state` 可以是文本或 JSON。扁平的单问题行
-（`{"id", "state", "question", "options"}`）会按 choice 问题解析。问题 id
-只用于标识返回结果，永远不会进入模型输入。可选的 `gold` 与 `teacher`
-字段用于评估和有监督训练。
+`choice` 支持 2–255 个候选，`score` 支持 2–10 个有序等级。扁平的单问题行会按 choice 解析。
+问题 id 永远不会进入模型输入。
 
-## Python API
+## 本地服务
 
-```python
-from minojev import DecisionModel, Request, make_choice_question, ScoreOptions
-
-model = DecisionModel.load("runs/synth-calibrated", device="cpu")
-request = Request(
-    id="r1",
-    state={"color": "blue", "shape": "round"},
-    questions=[make_choice_question("q", "Which value belongs to 'shape'?",
-                                    {"round": "round", "blue": "blue", "tiny": "tiny"})],
-)
-record = model.score([request], ScoreOptions(mode="reuse"))[0]
-print(record["candidate_ids"], record["probabilities"], record["decode_steps"])
+```bash
+minojev serve --checkpoint runs/general-cal --port 8000
+curl -s localhost:8000/score -H 'content-type: application/json' \
+  -d '{"id":"r1","state":"Where is my card?","question":"Which category?","options":{"card_arrival":"Card arrival","atm":"ATM"}}'
 ```
 
-## 原生 logits 引擎（预训练模型）
+每条记录都会报告 `decode_steps: 0` 并携带完整候选分布。
 
-对于预训练的 Hugging Face 因果语言模型，`minojev.logits` 直接读取固定答案槽
-位置的 next-token logits 为声明的候选打分。当候选数超过 16 个字母槽时，
-两阶段路径会逐个候选独立打分（yes/no log-odds 后归一化）：
+## 原生 logits 引擎（零训练）
+
+对预训练模型，`minojev.logits` 直接读取字母槽位置的选项 logits——基准里的零训练路线：
 
 ```python
 from minojev import load_hf_backbone
-from minojev.data import read_requests
 from minojev.logits import score_logits, score_logits_two_stage
 
-backbone = load_hf_backbone("Qwen/Qwen2.5-0.5B-Instruct")
-requests = read_requests("examples/decisions.jsonl")
+backbone = load_hf_backbone("Qwen/Qwen3-1.7B")
 records = score_logits(backbone, backbone.tokenizer, requests)
-wide = score_logits_two_stage(backbone, backbone.tokenizer, requests)
+wide = score_logits_two_stage(backbone, backbone.tokenizer, requests)  # 超过 16 个候选
 ```
 
 ## 仓库结构
 
 ```
 src/minojev/
-  types.py       请求校验与原语定义
-  encoding.py    候选路径、状态/后缀切分
-  backbone.py    TinyLM（RoPE + KV 缓存）与 HF 适配器
-  heads.py       共享标量 + 集合注意力、各原语读出
-  calibrate.py   每种原语的温度缩放校准
-  model.py       推理模式与检查点
-  train.py       预热、训练目标、dev 选点
-  synth.py       属性决策合成任务
-  maze.py        网格世界状态、teacher 与智能体回放
-  logits.py      原生 logits 读出（单次与两阶段）
-  bench.py       延迟与吞吐测量
-  metrics.py     准确率、CE、ECE、按任务族拆分
-  cli.py         synth / train / calibrate / bench / score / evaluate / demo / maze
-tests/           41 个测试：契约、等价性、校准、训练、迷宫、CLI
-web/             主页、决策控制台、迷宫回放
-assets/          banner、logo、原理图
+  types.py        请求校验与原语
+  encoding.py     候选路径、状态/后缀切分
+  backbone.py     TinyLM（RoPE + KV 缓存）与 HF 适配器
+  heads.py        共享打分器 + 集合注意力、各原语读出
+  posttrain.py    头训练 / LoRA（缓存特征）
+  monitor.py      实时状态、内存预算、CPU/内存压力
+  watch.py        训练面板服务
+  calibrate.py    温度校准（前向式与记录式）
+  generative.py   生成式基线（含 TTFT 测量）
+  compare.py      决策引擎 vs 生成基准
+  domains.py      六领域合成决策
+  dataset_build.py 公开数据集转换与来源隔离
+  logits.py       原生 logits 读出（单次与两阶段）
+  serve.py        本地 HTTP 决策 API
+  metrics.py      准确率、ECE、Brier、选择性准确率、分来源
+  maze.py         网格世界任务与智能体回放
+  synth.py        属性决策任务
+tests/            离线测试套件（单元 + 端到端 + 面板）
+web/              主页、基准、体验场、迷宫、控制台（中英双语）
 ```
-
-## 测试
-
-```bash
-.venv/bin/python -m pytest tests -q
-```
-
-测试覆盖校验边界、路径编码、置换等变、布尔与评分读出、fresh 与 reuse
-等价性、批量独立性、检查点往返、校准不变性与拟合、ECE、端到端训练收敛、
-迷宫任务与回放机制、基准测量、CLI，以及两条原生 logits 路径。全部离线运行，
-几分钟内完成。
 
 ## 开发说明
 
-本项目在开发过程中使用了 AI 辅助。正确性由离线测试套件、随仓库提交的逐题预测
-与指标，以及 [`scripts/`](scripts) 下的可复现脚本共同保证。
+本项目在开发过程中使用了 AI 辅助。正确性由离线测试套件、随仓库提交的逐题预测与指标，
+以及 [`scripts/`](scripts) 下的可复现脚本共同保证。训练数据只用宽松许可（MIT、Apache-2.0、
+CC-BY）；NC 许可的数据仅用于评测。
 
 ## 许可证
 
-MIT — 见 [LICENSE](LICENSE)。
+MIT — 见 [LICENSE](LICENSE)。`general/` 检查点是 Qwen3-1.7B（Apache-2.0）的衍生作品，
+继承其许可证。

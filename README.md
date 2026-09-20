@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/banner.svg" alt="minojev — decisions, not tokens" width="960"></p>
 
 <p align="center">
-  <a href="README.zh-CN.md">简体中文</a> · <b>English</b> · <a href="https://zeredy879.github.io/minojev/">Live demos</a> · <a href="https://huggingface.co/zeredy879/minojev">Models</a> · <a href="https://huggingface.co/datasets/zeredy879/minojev-data">Data</a>
+  <a href="README.zh-CN.md">简体中文</a> · <b>English</b> · <a href="https://zeredy879.github.io/minojev/">Live demos</a> · <a href="https://zeredy879.github.io/minojev/benchmark.html">Benchmark</a> · <a href="https://huggingface.co/zeredy879/minojev">Models</a> · <a href="https://huggingface.co/datasets/zeredy879/minojev-data">Data</a>
 </p>
 
 <p align="center">
@@ -9,179 +9,140 @@
   <a href="https://huggingface.co/datasets/zeredy879/minojev-data"><img alt="Hugging Face datasets" src="https://img.shields.io/badge/Hugging%20Face-datasets-59d3a8"></a>
   <img alt="license" src="https://img.shields.io/badge/license-MIT-f0b06a">
   <img alt="decode steps" src="https://img.shields.io/badge/decode__steps-0-6ea8fe">
-  <img alt="parameters" src="https://img.shields.io/badge/parameters-547k-8d9bb3">
+  <img alt="head params" src="https://img.shields.io/badge/decision__head-0.8M-8d9bb3">
 </p>
 
-> **The one-sentence version.** A chat model answers by *writing* text; minojev
-> answers by *reading* probabilities — so software gets a decision in one pass,
-> with no sentence to parse and no output tokens to pay for.
+> **The one-sentence version.** A chat model answers by *writing* text; minojev answers by
+> *reading* a probability distribution — and **head training** turns any frozen language
+> model into that decision layer in minutes on a laptop, with no output tokens and no
+> backbone fine-tuning.
 
-## The plain-language version
+## What is head training?
 
-Imagine you ask an AI: **"Which queue should this support ticket go to?"**
+Most "Jev-style" projects either call a hosted API or fine-tune a whole model. minojev's
+core is smaller than both:
 
-A chat model answers with a sentence:
+1. **Freeze the backbone.** In the bundled release, Qwen3-1.7B never updates.
+2. **Cache candidate features once.** Every candidate path (state + question + option) is
+   forwarded a single time; the final hidden state is stored.
+3. **Train only the decision head.** A shared scorer plus set attention — **~0.8M
+   parameters** — is trained on those cached vectors with distribution losses.
+4. **Calibrate on dev.** One temperature per primitive is fitted on held-out outcomes.
 
-> *"Based on the customer's message, this looks like an access issue, so I would
-> route it to the account access team."*
+The whole run was **~37 minutes and ~4 GB of peak memory on an Apple Silicon laptop**.
+Because the backbone is untouched, there is no catastrophic forgetting, no GPU required,
+and every step is observable (see the [monitor dashboard](#memory-safe-training)).
 
-Now your program has to read that sentence and guess what it meant. That costs
-time (the model writes word by word), money (you pay for every written word),
-and luck (the wording can change, drift, or break your parser).
+## Benchmark: decisions vs token generation
 
-minojev throws away the sentence and keeps only the decision:
+Same backbone (Qwen3-1.7B), same questions, same prompts. The baseline must *generate*
+its answer, token by token; minojev reads a typed distribution from hidden states.
+Suite: 120 balanced decisions across banking77, CLINC150, Amazon Polarity, and GSM8K
+verification. The generative baseline uses the chat template with thinking disabled and
+is told to answer with a single letter.
 
-```
-"Which queue?" ──►  access 0.79 · deliverability 0.14 · billing 0.07
-```
+| Metric | minojev (head-trained) | zero-shot logits readout | generative baseline |
+|---|---:|---:|---:|
+| Accuracy | **95.8%** | 88.3% | 80.0% |
+| ECE | **0.024** | 0.097 | not available |
+| Output tokens / decision | **0** | **0** | 3.48 |
+| Time to first token (p50) | **0 ms** | **0 ms** | ~100 ms |
+| Latency p95 | **~1.1 s** | ~1.1 s | ~5.3 s |
+| Format / parse failures | **0** | 0 | 0 |
 
-One read of the input, one batch of numbers out. The numbers form a real
-probability distribution, calibrated so 0.79 means close to "79% likely", and
-every record says `decode_steps: 0` because nothing was ever written.
+Full test suite (200 balanced requests, calibrated release): **97.5% accuracy, ECE
+0.014**, mean confidence 0.963, and at confidence ≥ 0.9 the model covers **89.5% of
+requests at 98.9% accuracy** — usable for accept/escalate policies.
+
+**Honest boundary:** on a deliberate out-of-distribution workload (never-trained customer
+support domains), the head-trained model scored 31.7% vs 40.0% for the zero-shot
+generative baseline. Head training specializes; it is not a substitute for data breadth.
+That is why the pipeline isolates OOD sources and reports them separately.
 
 <img src="assets/explainer.svg" alt="A chat model generates tokens then parses text; minojev reads the distribution in one forward pass" width="100%">
 
-### A few words, 30 seconds
+## Try it in your browser
 
-| Word | Plain meaning |
-|---|---|
-| **token** | a small piece of text; chat models produce them one at a time |
-| **forward pass** | one trip through the model; minojev needs exactly one |
-| **calibrated** | if it says 0.8, it should be right about 80% of the time — we measure the gap (ECE) and report it |
-| **choice / boolean / score** | pick one of N options / yes–no / rate on a scale |
-
-### Try it in your browser
-
-Open the **[live demos](https://zeredy879.github.io/minojev/)**:
-
-- **[Maze agent](https://zeredy879.github.io/minojev/maze.html)** — watch the
-  model steer an agent through a grid while every step shows its move
-  distribution and four parallel safety judgments.
-- **[Decision console](https://zeredy879.github.io/minojev/console.html)** —
-  one state, many questions scored together with their teacher distributions.
-
-## What makes minojev different
-
-| | A chat model | minojev |
-|---|---|---|
-| What comes out | a sentence to parse | a typed distribution over declared candidates |
-| Where the answer comes from | token-by-token writing | read from hidden states, zero output tokens |
-| What you pay for | output tokens | one forward pass |
-| Broken output | possible | impossible — the output space is declared up front |
-| Confidence | self-reported, often overconfident | fitted on held-out data; ECE measured |
-| Many questions, one state | one generation each | one pass, shared KV prefix |
-| Where it runs | GPU cluster or API | a laptop CPU; Hugging Face backbones optional |
-
-What sets **this** project apart from other decision-model experiments:
-
-- **Fully offline reproduction.** The bundled 547k-parameter models train from
-  scratch on CPU in minutes. No downloads, no API keys, no GPU.
-- **Every claim has an artifact.** Datasets, teacher targets, per-question
-  predictions, metrics, and replay bundles are committed in the repo.
-- **Calibration is first-class.** `--calibrate gold` is the default, because a
-  probability you cannot trust is worse than a plain label.
-- **Two engines.** Trained decision heads for full control, plus a
-  native-logits route for pretrained Hugging Face models.
-- **Bilingual and visual.** English + 简体中文 docs, an animated maze agent, and
-  an interactive decision console.
-
-## Install
-
-```bash
-uv venv --python 3.12 .venv && . .venv/bin/activate
-uv pip install -e ".[test]"
-# optional: Hugging Face backbones for the native-logits engine
-uv pip install -e ".[hf]"
-```
+- **[Benchmark page](https://zeredy879.github.io/minojev/benchmark.html)** — accuracy,
+  token economy, and latency side by side.
+- **[Domain playground](https://zeredy879.github.io/minojev/playground.html)** — six
+  operational domains answered as typed distributions.
+- **[Maze agent](https://zeredy879.github.io/minojev/maze.html)** — a learned policy
+  replayed step by step with its probabilities.
+- **[Decision console](https://zeredy879.github.io/minojev/console.html)** — one state,
+  many runtime questions.
 
 ## Quick start
 
 ```bash
-# 1. generate synthetic decision data (attribute lookup, comparison, support)
-minojev synth --out data/train.jsonl --count 512 --seed 17 --split train
-minojev synth --out data/dev.jsonl   --count 128 --seed 17 --split dev
-
-# 2. train + calibrate in one command
-minojev train --train data/train.jsonl --dev data/dev.jsonl \
-  --output-dir runs/synth --steps 800 --head-steps 30 --eval-every 100 \
-  --calibrate gold --device cpu
-
-# 3. score arbitrary requests
-minojev score --checkpoint runs/synth/checkpoint --input examples/decisions.jsonl \
-  --output results/example-scores.jsonl --mode reuse
+uv venv --python 3.12 .venv && . .venv/bin/activate
+uv pip install -e ".[test,monitor]"          # add .[hf] for Hugging Face backbones
 ```
 
-Train the maze agent and export a replay bundle:
+Build the general dataset and run head training with live observability:
 
 ```bash
-minojev maze-data --out data/maze-train.jsonl --count 1024 --seed 17 --split train
-minojev train --train data/maze-train.jsonl --dev data/maze-dev.jsonl \
-  --output-dir runs/maze --steps 1500 --head-steps 40 --eval-every 100 --device cpu
-minojev maze-rollout --checkpoint runs/maze/checkpoint \
-  --output web/data/maze.json --count 6 --seed 23
+# 1. convert permissive public sources into decision requests (train/dev/test/OOD)
+minojev build-data --per-source 2500 --per-ood 800
+
+# 2. head training: frozen backbone, cached features, decision head only
+minojev posttrain --backbone Qwen/Qwen3-1.7B --mode head \
+  --train data/general-train.jsonl --dev data/general-dev.jsonl \
+  --output-dir runs/general-head --steps 3000 \
+  --inference-dtype bfloat16 --max-memory-gb 12
+
+# 3. calibrate on dev outcomes
+minojev calibrate --checkpoint runs/general-head/checkpoint \
+  --input data/general-dev.jsonl --output runs/general-cal --target gold --from-records
+
+# 4. compare against token generation with the same backbone
+minojev compare --checkpoint runs/general-cal \
+  --input data/general-test.jsonl --limit 120 --chat-template
 ```
 
-## Calibration: confidence that means something
-
-Training minimizes distribution loss, which does not by itself make confidence
-meaningful. `minojev calibrate` fits one temperature per primitive on a dev
-split, stores it in the checkpoint, and applies it at serving time. A positive
-temperature never changes the predicted candidate — only how much the model
-believes it.
-
-| Bundled run | Accuracy | ECE before | ECE after | Mean confidence |
-|---|---:|---:|---:|---:|
-| Attribute decisions | 66.5% | 0.093 | **0.074** | 0.72 |
-| Maze decisions | 83.8% | 0.090 | **0.016** | 0.84 |
+Watch any run live from a second terminal:
 
 ```bash
-minojev calibrate --checkpoint runs/synth/checkpoint --input data/dev.jsonl \
-  --output runs/synth-calibrated --target gold
-minojev evaluate  --checkpoint runs/synth-calibrated --input data/test.jsonl
+minojev watch --run runs/general-head --port 8010   # http://127.0.0.1:8010/
 ```
 
-## Results
+## Memory-safe training
 
-Both bundled models are 547k-parameter transformers trained from scratch on
-CPU. "Teacher top-set" counts a decision as correct when the prediction is
-among the teacher's best — important for grid moves, where two directions
-often tie. Regenerate everything with `scripts/build_results.sh`.
+The monitor is not decoration: every training phase reports loss, gradient norm,
+tokens/s, ETA, MPS driver memory, process RSS, CPU load, and system memory pressure to
+`status.json` and `metrics.jsonl`. A hard budget (`--max-memory-gb`) aborts a step before
+the machine is at risk, calibration forwards are chunked, and each phase frees the
+previous model before loading the next. The 1.7B head run peaked at **4.0 GB** against a
+12 GB budget.
 
-| Run | Questions | Accuracy | Teacher top-set | Dist. error | Decode steps |
-|---|---:|---:|---:|---:|---:|
-| Attribute decisions | 627 | 66.5% | 66.5% | 0.29 | 0 |
-| Maze decisions | 1,536 | 83.8% | 89.5% | 0.13 | 0 |
+## Evaluation without loss
 
-Maze per-primitive top-set accuracy: **boolean safety 87.8%**, **distance
-score 97.7%**, **move choice 87.9%**.
+Loss is a poor progress signal for a decision model — teacher distributions have an
+entropy floor and heterogeneous batches make it noisy. The pipeline reports:
 
-### Latency and throughput (laptop CPU, 547k params)
+| Dimension | Metrics |
+|---|---|
+| Decision quality | accuracy, teacher top-set, per-source and per-candidate-count breakdown |
+| Probability quality | ECE, Brier, gold NLL, selective accuracy (coverage @ confidence) |
+| Token economy | input/output tokens per decision, decode steps (0) |
+| Response speed | time to first token, per-request p50/p95, decisions/second, parse failures |
 
-| Run | Mode | p50 | p95 | Decisions/s |
-|---|---|---:|---:|---:|
-| Attribute | fresh | 13.1 ms | 16.3 ms | 198 |
-| Attribute | reuse | **11.8 ms** | **14.7 ms** | **233** |
-| Maze | fresh | 23.6 ms | 27.0 ms | 198 |
-| Maze | reuse | **17.1 ms** | **18.0 ms** | **366** |
-
-One decision is one question; a request may carry several. Reproduce with
-`minojev bench`. Raw metrics and per-question predictions are committed under
-[`results/`](results); replay bundles live in [`web/data/`](web/data).
+`minojev compare` produces JSON + Markdown reports from committed artifacts, and
+`scripts/build_benchmark_bundle.py` feeds the live benchmark page.
 
 ## Models and datasets on Hugging Face
 
-- Checkpoints (trained + calibrated): [`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev)
-- Request datasets with teacher distributions: [`zeredy879/minojev-data`](https://huggingface.co/datasets/zeredy879/minojev-data)
+- Checkpoints: [`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev) —
+  `general/` (Qwen3-1.7B + head), plus the tiny from-scratch `synth/` and `maze/` models.
+- Data: [`zeredy879/minojev-data`](https://huggingface.co/datasets/zeredy879/minojev-data) —
+  `general/{train,dev,test,ood}.jsonl` with source and license on every line.
 
 ```python
 from huggingface_hub import snapshot_download
 from minojev import DecisionModel
 
-path = snapshot_download("zeredy879/minojev", allow_patterns=["maze/*"])
-model = DecisionModel.load(f"{path}/maze", device="cpu")
-
-data = snapshot_download("zeredy879/minojev-data", repo_type="dataset")
-# data/maze/test.jsonl, data/synth/test.jsonl, ...
+path = snapshot_download("zeredy879/minojev", allow_patterns=["general/*"])
+model = DecisionModel.load(f"{path}/general", device="cpu")
 ```
 
 ## Request format
@@ -210,86 +171,66 @@ data = snapshot_download("zeredy879/minojev-data", repo_type="dataset")
 }
 ```
 
-`state` may be text or JSON. Flat single-question rows
-(`{"id", "state", "question", "options"}`) are accepted as choice questions.
-Question ids identify responses and are never placed in the model input.
-Optional `gold` and `teacher` maps enable evaluation and supervised training.
+`choice` accepts 2–255 candidates, `score` 2–10 ordered levels. Flat single-question rows
+are accepted as choice questions. Question ids are never placed in the model input.
 
-## Python API
+## Serving
 
-```python
-from minojev import DecisionModel, Request, make_choice_question, ScoreOptions
-
-model = DecisionModel.load("runs/synth-calibrated", device="cpu")
-request = Request(
-    id="r1",
-    state={"color": "blue", "shape": "round"},
-    questions=[make_choice_question("q", "Which value belongs to 'shape'?",
-                                    {"round": "round", "blue": "blue", "tiny": "tiny"})],
-)
-record = model.score([request], ScoreOptions(mode="reuse"))[0]
-print(record["candidate_ids"], record["probabilities"], record["decode_steps"])
+```bash
+minojev serve --checkpoint runs/general-cal --port 8000
+curl -s localhost:8000/score -H 'content-type: application/json' \
+  -d '{"id":"r1","state":"Where is my card?","question":"Which category?","options":{"card_arrival":"Card arrival","atm":"ATM"}}'
 ```
 
-## Native-logits engine (pretrained models)
+Records report `decode_steps: 0` and carry the full candidate distribution.
 
-For a pretrained Hugging Face causal LM, `minojev.logits` scores declared
-options directly from next-token logits at fixed answer-slot tokens. A
-two-stage route scores each candidate independently (yes/no log-odds, then
-normalization) for candidate sets beyond the 16 letter slots:
+## Native-logits engine (zero training)
+
+For pretrained models, `minojev.logits` reads declared option logits directly at
+letter slots — the zero-training route used in the benchmark:
 
 ```python
 from minojev import load_hf_backbone
-from minojev.data import read_requests
 from minojev.logits import score_logits, score_logits_two_stage
 
-backbone = load_hf_backbone("Qwen/Qwen2.5-0.5B-Instruct")
-requests = read_requests("examples/decisions.jsonl")
+backbone = load_hf_backbone("Qwen/Qwen3-1.7B")
 records = score_logits(backbone, backbone.tokenizer, requests)
-wide = score_logits_two_stage(backbone, backbone.tokenizer, requests)
+wide = score_logits_two_stage(backbone, backbone.tokenizer, requests)  # >16 candidates
 ```
 
 ## Repository layout
 
 ```
 src/minojev/
-  types.py       request validation and primitives
-  encoding.py    candidate paths, shared state/suffix split
-  backbone.py    TinyLM (RoPE + KV cache) and HF adapter
-  heads.py       scalar scorer + set attention, primitive readouts
-  calibrate.py   temperature scaling per primitive
-  model.py       serving modes, checkpoints
-  train.py       warmup, objectives, dev selection
-  synth.py       attribute decision families
-  maze.py        grid-world states, teachers, agent rollout
-  logits.py      native-logits readout (single-pass and two-stage)
-  bench.py       latency and throughput measurement
-  metrics.py     accuracy, CE, ECE, per-family splits
-  cli.py         synth / train / calibrate / bench / score / evaluate / demo / maze
-tests/           41 tests: contract, equivalence, calibration, training, maze, CLI
-web/             landing page, decision console, maze replay
-assets/          banner, logo, explainer
+  types.py        request validation and primitives
+  encoding.py     candidate paths, state/suffix split
+  backbone.py     TinyLM (RoPE + KV cache) and HF adapter
+  heads.py        shared scorer + set attention, primitive readouts
+  posttrain.py    head training / LoRA with cached features
+  monitor.py      live status, memory budget, CPU/memory pressure
+  watch.py        training dashboard server
+  calibrate.py    temperature scaling (forward-based and record-based)
+  generative.py   token-generating baseline with TTFT measurement
+  compare.py      decision engine vs generation benchmark
+  domains.py      six-domain synthetic decisions
+  dataset_build.py converted public datasets with source-level splits
+  logits.py       native-logits readout (single-pass and two-stage)
+  serve.py        local HTTP decision API
+  metrics.py      accuracy, ECE, Brier, selective accuracy, by-source
+  maze.py         grid-world tasks and agent rollout
+  synth.py        attribute decision families
+tests/            offline suite (unit + end-to-end + dashboards)
+web/              landing, benchmark, playground, maze, console (EN + 中文)
 ```
-
-## Tests
-
-```bash
-.venv/bin/python -m pytest tests -q
-```
-
-The suite covers validation limits, path encoding, permutation equivariance,
-boolean and score readouts, fresh-vs-reuse equivalence, batch independence,
-checkpoint round trips, calibration invariance and fitting, expected
-calibration error, an end-to-end training convergence check, the maze task and
-rollout mechanics, benchmarking, the CLI, and both native-logits routes. It
-runs offline on CPU in a few minutes.
 
 ## Development notes
 
-This project was built with AI assistance. Correctness is anchored by the
-offline test suite, the committed per-question predictions and metrics, and
-the reproducible scripts in [`scripts/`](scripts).
+This project was built with AI assistance. Correctness is anchored by the offline test
+suite, the committed per-question predictions and metrics, and the reproducible scripts
+in [`scripts/`](scripts). Training data uses permissive licenses only (MIT, Apache-2.0,
+CC-BY); NC-licensed datasets are reserved for evaluation.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE). The `general/` checkpoint is a derivative of Qwen3-1.7B
+(Apache-2.0) and inherits that license.

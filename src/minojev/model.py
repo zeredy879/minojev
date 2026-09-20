@@ -65,17 +65,28 @@ class DecisionModel(torch.nn.Module):
     def encode(self, requests: list[Request]) -> EncodedBatch:
         return encode_requests(requests, self.tokenizer)
 
-    def to(self, device) -> "DecisionModel":
+    def backbone_parameters(self):
+        return list(self.backbone.parameters())
+
+    def trainable_parameters(self):
         if isinstance(self.backbone, torch.nn.Module):
-            self.backbone.to(device)
+            return list(self.parameters())
+        return list(self.head.parameters()) + list(self.backbone.parameters())
+
+    def to(self, device) -> "DecisionModel":
+        self.backbone.to(device)
         self.head.to(device)
         return self
 
     def eval_mode(self, device: str = "auto") -> "DecisionModel":
         self.to(resolve_device(device))
-        if isinstance(self.backbone, torch.nn.Module):
-            self.backbone.eval()
+        self.backbone.eval()
         self.head.eval()
+        return self
+
+    def train_mode(self) -> "DecisionModel":
+        self.backbone.train()
+        self.head.train()
         return self
 
     def forward_paths(self, encoded: EncodedBatch):
@@ -84,7 +95,7 @@ class DecisionModel(torch.nn.Module):
         hidden, _ = self.backbone(input_ids=tokens, attention_mask=mask)
         lengths = mask.sum(-1) - 1
         rows = hidden[torch.arange(len(encoded.paths), device=device), lengths]
-        return rows
+        return rows.float()
 
     def forward_reuse(self, encoded: EncodedBatch):
         device = next(self.head.parameters()).device
@@ -120,7 +131,7 @@ class DecisionModel(torch.nn.Module):
             lengths = suffix_mask.sum(-1) - 1
             rows = hidden[torch.arange(count, device=device), lengths]
             for row, path_index in enumerate(path_indices):
-                hidden_rows[path_index] = rows[row]
+                hidden_rows[path_index] = rows[row].float()
         return torch.stack(hidden_rows)
 
     def run_encoded(self, encoded: EncodedBatch, mode: str = "fresh") -> list[GroupOutput]:
@@ -173,6 +184,7 @@ class DecisionModel(torch.nn.Module):
             }
             if question.family:
                 record["family"] = question.family
+            record["input_tokens"] = sum(len(encoded.paths[index].token_ids) for index in group.path_indices)
             if question.qid in request.gold:
                 gold = request.gold[question.qid]
                 record["gold"] = gold
@@ -182,21 +194,27 @@ class DecisionModel(torch.nn.Module):
             records.append(record)
         return records
 
-    def save(self, directory: str | Path) -> None:
+    def save(self, directory: str | Path, save_backbone: bool = True) -> None:
         directory = Path(directory)
         directory.mkdir(parents=True, exist_ok=True)
-        self.backbone.save(directory)
+        backbone_config = self.backbone.to_config()
+        if backbone_config.get("type") == "hf":
+            if save_backbone:
+                self.backbone.save(directory / "backbone")
+                save_tokenizer(self.tokenizer, directory / "backbone")
+        else:
+            self.backbone.save(directory)
+            save_tokenizer(self.tokenizer, directory)
         from safetensors.torch import save_file
 
         save_file(
             {key: value.contiguous() for key, value in self.head.state_dict().items()},
             str(directory / "head.safetensors"),
         )
-        save_tokenizer(self.tokenizer, directory)
         config = {
             "format": "minojev-checkpoint",
-            "version": 1,
-            "backbone": self.backbone.to_config(),
+            "version": 2,
+            "backbone": backbone_config,
             "head": {
                 "hidden_size": self.head.scalar.in_features,
                 "attention_dim": self.head.set_attention.embed_dim,
@@ -216,15 +234,35 @@ class DecisionModel(torch.nn.Module):
         config = json.loads((directory / "config.json").read_text())
         if config.get("format") != "minojev-checkpoint":
             raise ValueError(f"Not a minojev checkpoint: {directory}")
-        tokenizer = load_tokenizer(directory)
-        backbone_config = TinyConfig.from_dict(config["backbone"])
-        backbone = TinyLM(backbone_config)
-        missing, unexpected = backbone.load_state_dict(load_file(str(directory / "model.safetensors")), strict=False)
-        if set(missing) - {"lm_head.weight"} or unexpected:
-            raise RuntimeError(f"Checkpoint mismatch: missing={missing}, unexpected={unexpected}")
+        backbone_entry = config["backbone"]
+        if backbone_entry.get("type") == "hf":
+            from .backbone import load_hf_backbone
+
+            backbone_path = directory / "backbone"
+            source = str(backbone_path) if backbone_path.exists() else backbone_entry.get("source")
+            backbone = load_hf_backbone(
+                source,
+                dtype=backbone_entry.get("dtype", "float32"),
+                device=device,
+            )
+            if backbone_path.exists() and (backbone_path / "minojev_tokenizer.json").exists():
+                tokenizer = load_tokenizer(backbone_path)
+            elif backbone.tokenizer is not None:
+                tokenizer = backbone.tokenizer
+            else:
+                tokenizer = load_tokenizer(directory)
+            hidden_size = int(backbone_entry.get("hidden_size", backbone.hidden_size))
+        else:
+            tokenizer = load_tokenizer(directory)
+            backbone_config = TinyConfig.from_dict(backbone_entry)
+            backbone = TinyLM(backbone_config)
+            missing, unexpected = backbone.load_state_dict(load_file(str(directory / "model.safetensors")), strict=False)
+            if set(missing) - {"lm_head.weight"} or unexpected:
+                raise RuntimeError(f"Checkpoint mismatch: missing={missing}, unexpected={unexpected}")
+            hidden_size = backbone_config.hidden_size
         head_config = config.get("head", {})
         head = DecisionHead(
-            hidden_size=int(head_config.get("hidden_size", backbone_config.hidden_size)),
+            hidden_size=int(head_config.get("hidden_size", hidden_size)),
             attention_dim=int(head_config.get("attention_dim", 128)),
             num_heads=int(head_config.get("num_heads", 4)),
         )

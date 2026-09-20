@@ -34,11 +34,25 @@ runtime-defined state plus questions in, typed probability distributions out.
 | dev | {synth_dev} | {maze_dev} |
 | test | {synth_test} | {maze_test} |
 
+### General decision data (converted from public sources)
+
+| Split | Requests | Content |
+|---|---:|---|
+| train | {general_train} | banking77, CLINC150, Amazon Polarity, GSM8K verification |
+| dev | {general_dev} | same sources, held out |
+| test | {general_test} | same sources, held out |
+| ood | {general_ood} | MASSIVE intents, WANLI NLI (never trained on) |
+
+Source licenses: mteb/banking77 (MIT; upstream CC-BY-4.0), clinc/clinc_oos (CC-BY-3.0),
+fancyzhx/amazon_polarity (Apache-2.0), openai/gsm8k (MIT),
+SetFit/amazon_massive_intent_en-US (upstream MASSIVE, CC-BY-4.0), alisawuffles/WANLI (CC-BY-4.0).
+
 ## Layout
 
 ```
 synth/{{train,dev,test}}.jsonl
 maze/{{train,dev,test}}.jsonl
+general/{{train,dev,test,ood}}.jsonl
 ```
 
 ## Schema
@@ -124,6 +138,12 @@ def main() -> int:
                 source_path = source / f"{split}.jsonl"
             shutil.copyfile(source_path, target / f"{split}.jsonl")
             counts[f"{family}_{split}"] = count_lines(source_path)
+    general_dir = output / "general"
+    general_dir.mkdir()
+    for split in ("train", "dev", "test", "ood"):
+        source_path = source / f"general-{split}.jsonl"
+        shutil.copyfile(source_path, general_dir / f"{split}.jsonl")
+        counts[f"general_{split}"] = count_lines(source_path)
     card = DATASET_CARD.format(owner=args.repo_id.split("/")[0], **counts)
     (output / "README.md").write_text(card)
     print(json.dumps({"output": str(output), "repo_id": args.repo_id, "counts": counts}))

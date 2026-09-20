@@ -5,6 +5,7 @@ from minojev import (
     CHOICE,
     MAX_CHOICE,
     SCORE,
+    Request,
     ValidationError,
     make_boolean_question,
     make_choice_question,
@@ -53,6 +54,20 @@ def test_teacher_distribution_rejects_wrong_keys():
         teacher_distribution(question, {"a": 0.0, "b": 0.0})
     normalized = teacher_distribution(question, {"a": 2.0, "b": 2.0})
     assert normalized == [0.5, 0.5]
+
+
+def test_jsonl_round_trip_with_unicode_line_separator(tmp_path):
+    from minojev.data import read_requests, write_requests
+
+    request = Request(
+        id="u2028",
+        state={"text": "line one\u2028line two\u2029and more"},
+        questions=[make_boolean_question("q", "Is the text intact?")],
+    )
+    path = tmp_path / "rows.jsonl"
+    write_requests([request], path)
+    loaded = read_requests(path)
+    assert loaded[0].state["text"] == "line one\u2028line two\u2029and more"
 
 
 def test_flat_and_nested_round_trip():

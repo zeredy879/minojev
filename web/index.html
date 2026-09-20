@@ -141,6 +141,8 @@
     <span class="spacer"></span>
     <a class="link" href="maze.html">Maze demo</a>
     <a class="link" href="console.html">Console</a>
+    <a class="link" href="playground.html">Domains</a>
+    <a class="link" href="benchmark.html">Benchmark</a>
     <a class="link" href="https://github.com/zeredy879/minojev">GitHub</a>
     <a class="link" href="https://huggingface.co/zeredy879/minojev">Models</a>
     <a class="link" href="zh.html">中文</a>
@@ -232,6 +234,25 @@
 
 <section>
   <div class="wrap">
+    <h2>Head training is the core</h2>
+    <p class="sub">
+      Freeze the backbone, cache every candidate path once, then train only the decision head. No backbone
+      drift, no catastrophic forgetting — just minutes of laptop compute for a calibrated decision layer.
+    </p>
+    <div class="statline">
+      <div class="stat"><b>37 min</b><small>1.7B head training on a laptop</small></div>
+      <div class="stat"><b>4 GB</b><small>peak memory, MPS</small></div>
+      <div class="stat"><b>95.0%</b><small>accuracy vs 80.0% for generation</small></div>
+      <div class="stat"><b>0</b><small>output tokens per decision</small></div>
+    </div>
+    <div class="cta" style="margin-top:18px">
+      <a class="btn primary" href="benchmark.html">See the full benchmark →</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <h2>Different by design</h2>
     <p class="sub">What makes this project more than a demo.</p>
     <div class="diff">
@@ -257,8 +278,13 @@
       </a>
       <a class="demo" href="console.html">
         <h3>Parallel decision console</h3>
-        <p>One state, many runtime questions — choices, booleans, and scores scored together, with teacher distributions overlaid.</p>
+        <p>One state, many runtime questions scored together, with teacher distributions overlaid.</p>
         <div class="live" id="console-stat">loading…</div>
+      </a>
+      <a class="demo" href="playground.html">
+        <h3>Domain playground</h3>
+        <p>Six operational domains — support, moderation, code review, refunds, urgency, leads — answered together by the post-trained model.</p>
+        <div class="live" id="domains-stat">loading…</div>
       </a>
     </div>
   </div>
@@ -369,6 +395,16 @@ load("data/demo.json", "console-stat", (bundle) => {
   const s = bundle.summary;
   const accuracy = s.accuracy === undefined ? "" : ` · ${(100 * s.accuracy).toFixed(1)}% accuracy`;
   return `${s.questions} questions · 0 decode steps${accuracy}`;
+});
+
+load("data/domains.json", "domains-stat", (bundle) => {
+  if (!bundle || !bundle.records) return null;
+  const domains = new Set(bundle.records.map((record) => record.family).filter(Boolean));
+  const labelled = bundle.records.filter((record) => record.correct !== undefined);
+  const accuracy = labelled.length
+    ? labelled.reduce((sum, record) => sum + (record.correct ? 1 : 0), 0) / labelled.length
+    : null;
+  return `${domains.size} domains · ${bundle.records.length} questions` + (accuracy === null ? "" : ` · ${(100 * accuracy).toFixed(1)}% accuracy`);
 });
 </script>
 </body>

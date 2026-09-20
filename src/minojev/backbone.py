@@ -11,6 +11,7 @@ Two options are provided:
 
 from __future__ import annotations
 
+import json
 import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -196,16 +197,24 @@ class TinyLM(nn.Module):
 
 
 class HFBackbone:
-    """Adapter over a Hugging Face causal language model."""
+    """Adapter over a Hugging Face causal language model.
+
+    Hidden states come from the base model (``model.model``), keeping the
+    forward pass free of the vocabulary projection. The causal LM head is only
+    used by the native-logits engine.
+    """
 
     supports_reuse = False
 
-    supports_reuse = False
-
-    def __init__(self, model, tokenizer) -> None:
+    def __init__(self, model, tokenizer=None, source: str = "") -> None:
         self.model = model
+        self.base = getattr(model, "model", None) or model.get_decoder()
         self.tokenizer = tokenizer
+        self.source = source
         self.hidden_size = int(model.config.hidden_size)
+
+    def refresh_base(self) -> None:
+        self.base = getattr(self.model, "model", None) or self.model.get_decoder()
 
     def __call__(self, input_ids, attention_mask=None, past_key_values=None, position_ids=None, use_cache=False):
         kwargs = {"input_ids": input_ids, "use_cache": use_cache, "return_dict": True}
@@ -215,24 +224,85 @@ class HFBackbone:
             kwargs["past_key_values"] = past_key_values
         if position_ids is not None:
             kwargs["position_ids"] = position_ids
-        output = self.model(**kwargs)
+        output = self.base(**kwargs)
         return output.last_hidden_state, output.past_key_values
 
     def logits(self, hidden: torch.Tensor) -> torch.Tensor:
         return self.model.get_output_embeddings()(hidden)
 
+    def parameters(self):
+        return self.model.parameters()
 
-def load_hf_backbone(name_or_path: str, dtype: str = "auto", device: str = "auto"):
+    def named_parameters(self):
+        return self.model.named_parameters()
+
+    def to(self, device):
+        self.model.to(device)
+        return self
+
+    def train(self, mode: bool = True):
+        self.model.train(mode)
+        return self
+
+    def eval(self):
+        self.model.eval()
+        return self
+
+    def save(self, directory) -> None:
+        self.model.save_pretrained(directory)
+
+    def to_config(self) -> dict:
+        return {"type": "hf", "source": self.source, "hidden_size": self.hidden_size}
+
+
+def _is_adapter_directory(path: str) -> bool:
+    try:
+        return (Path(path) / "adapter_config.json").exists()
+    except (OSError, TypeError):
+        return False
+
+
+def load_hf_backbone(name_or_path: str, dtype: str = "float32", device: str = "auto", for_training: bool = False):
     import transformers
 
-    torch_dtype = {"auto": "auto", "float32": torch.float32, "bfloat16": torch.bfloat16}[dtype]
-    model = transformers.AutoModelForCausalLM.from_pretrained(name_or_path, torch_dtype=torch_dtype)
-    tokenizer = transformers.AutoTokenizer.from_pretrained(name_or_path)
-    if tokenizer.pad_token_id is None:
+    from .tokenizer import HFTokenizerAdapter
+
+    dtype_map = {
+        "auto": "auto",
+        "float32": torch.float32,
+        "bfloat16": torch.bfloat16,
+        "float16": torch.float16,
+    }
+    if dtype not in dtype_map:
+        raise ValueError(f"Unsupported dtype {dtype!r}")
+    if _is_adapter_directory(name_or_path):
+        adapter_config = json.loads((Path(name_or_path) / "adapter_config.json").read_text())
+        base_source = adapter_config.get("base_model_name_or_path", "Qwen/Qwen3-0.6B-Base")
+        base = transformers.AutoModelForCausalLM.from_pretrained(base_source, dtype=dtype_map[dtype])
+        from peft import PeftModel
+
+        model = PeftModel.from_pretrained(base, name_or_path)
+        tokenizer_source = base_source
+    else:
+        model = transformers.AutoModelForCausalLM.from_pretrained(name_or_path, dtype=dtype_map[dtype])
+        tokenizer_source = name_or_path
+    try:
+        tokenizer = transformers.AutoTokenizer.from_pretrained(tokenizer_source)
+    except (OSError, ValueError):
+        tokenizer = None
+    if tokenizer is not None and tokenizer.pad_token_id is None:
         tokenizer.pad_token = tokenizer.eos_token
-    model.eval()
+    adapter = HFTokenizerAdapter(tokenizer, source=tokenizer_source) if tokenizer is not None else None
+    if adapter is None:
+        from .tokenizer import load_tokenizer
+
+        try:
+            adapter = load_tokenizer(Path(tokenizer_source))
+        except (FileNotFoundError, ValueError):
+            adapter = None
     model.to(resolve_device(device))
-    return HFBackbone(model, tokenizer)
+    model.train() if for_training else model.eval()
+    return HFBackbone(model, tokenizer=adapter, source=name_or_path)
 
 
 def resolve_device(device: str = "auto") -> torch.device:

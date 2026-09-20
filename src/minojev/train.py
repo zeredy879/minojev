@@ -75,9 +75,13 @@ def batch_loss(model: DecisionModel, encoded, objective: str) -> torch.Tensor:
 
 
 def evaluate_requests(
-    model: DecisionModel, requests: list[Request], mode: str = "fresh", device: str = "auto"
+    model: DecisionModel,
+    requests: list[Request],
+    mode: str = "fresh",
+    device: str = "auto",
+    batch_requests: int = 8,
 ) -> tuple[list[dict], dict]:
-    records = model.score(requests, ScoreOptions(mode=mode, device=device))
+    records = model.score(requests, ScoreOptions(mode=mode, batch_requests=batch_requests, device=device))
     return records, aggregate(records)
 
 
@@ -97,13 +101,15 @@ def train(
 
     encoded_train = [model.encode([request]) for request in train_requests]
     head_parameters = [parameter for parameter in model.head.parameters()]
-    backbone_parameters = [parameter for parameter in model.backbone.parameters()] if isinstance(model.backbone, torch.nn.Module) else []
-    model.train()
+    backbone_parameters = model.backbone_parameters()
+    trainable_flags = [parameter.requires_grad for parameter in backbone_parameters]
+    trainable_backbone = [parameter for parameter, flag in zip(backbone_parameters, trainable_flags) if flag]
+    model.train_mode()
     for parameter in backbone_parameters:
-        parameter.requires_grad_(config.head_steps == 0)
+        parameter.requires_grad_(False)
     optimizer = torch.optim.AdamW(
         [
-            {"params": backbone_parameters, "lr": config.learning_rate},
+            {"params": trainable_backbone, "lr": config.learning_rate},
             {"params": head_parameters, "lr": config.head_lr},
         ],
         weight_decay=config.weight_decay,
@@ -115,17 +121,17 @@ def train(
     for step in range(config.steps):
         warmup = step < config.head_steps
         optimizer.param_groups[1]["lr"] = config.head_lr if warmup else config.learning_rate
-        for parameter in backbone_parameters:
-            parameter.requires_grad_(not warmup)
+        for parameter, flag in zip(backbone_parameters, trainable_flags):
+            parameter.requires_grad_(flag and not warmup)
         batch_indices = random.sample(range(len(encoded_train)), min(config.batch_requests, len(encoded_train)))
         batch = _merge_encoded([encoded_train[index] for index in batch_indices])
-        model.train()
+        model.train_mode()
         optimizer.zero_grad(set_to_none=True)
         loss = batch_loss(model, batch, config.objective)
         if not torch.isfinite(loss):
             raise RuntimeError(f"Non-finite loss at step {step}")
         loss.backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), config.grad_clip)
+        torch.nn.utils.clip_grad_norm_(model.trainable_parameters(), config.grad_clip)
         optimizer.step()
         entry = {
             "step": step + 1,
@@ -158,7 +164,7 @@ def train(
         "train_requests": len(train_requests),
         "dev_requests": len(dev_requests),
         "training_seconds": round(time.perf_counter() - started, 3),
-        "parameter_count": sum(parameter.numel() for parameter in model.parameters()),
+        "parameter_count": sum(parameter.numel() for parameter in model.trainable_parameters()),
     }
     (output_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
     model.config["objective"] = config.objective

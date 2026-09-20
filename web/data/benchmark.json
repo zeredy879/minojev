@@ -1,0 +1,150 @@
+{
+  "generated_at": "2026-09-20T08:40:29Z",
+  "model": "Qwen3-1.7B + trained decision head (bf16)",
+  "reference": {
+    "method": "zero-training native logits readout (letter-slot softmax, openjev-style)",
+    "model": "Qwen/Qwen3-1.7B (bf16)",
+    "workload": "general-test balanced, 120 decisions",
+    "questions": 120,
+    "accuracy": 0.8833333333333333,
+    "teacher_topset_accuracy": 0.8833333333333333,
+    "expected_calibration_error": 0.0968,
+    "gold_nll": 0.6507,
+    "mean_confidence": 0.9552,
+    "output_tokens_per_decision": 0.0,
+    "decode_steps": 0,
+    "note": "measured with minojev.logits.score_logits; no training, no temperature fitting"
+  },
+  "workloads": [
+    {
+      "name": "general (in-domain)",
+      "requests": 120,
+      "decisions": 120,
+      "engine": {
+        "accuracy": 0.9583333333333334,
+        "teacher_topset_accuracy": 0.9583333333333334,
+        "ece": 0.024161893583333337,
+        "gold_nll": 0.11047591356507774,
+        "output_tokens_per_decision": 0.0,
+        "input_tokens_per_decision": 271.4,
+        "ttft_p50_ms": 0.0,
+        "latency_p50_ms": 500.271,
+        "latency_p95_ms": 1057.777,
+        "decisions_per_second": 1.76,
+        "parse_failure_rate": 0.0,
+        "selective_accuracy": {
+          "0.5": {
+            "coverage": 1.0,
+            "accuracy": 0.958333
+          },
+          "0.7": {
+            "coverage": 0.95,
+            "accuracy": 0.973684
+          },
+          "0.9": {
+            "coverage": 0.908333,
+            "accuracy": 0.981651
+          }
+        }
+      },
+      "generative": {
+        "accuracy": 0.8,
+        "accuracy_when_parsed": 0.8,
+        "output_tokens_per_decision": 3.483,
+        "input_tokens_per_decision": 141.1,
+        "ttft_p50_ms": 132.206,
+        "latency_p50_ms": 549.114,
+        "latency_p95_ms": 5319.86,
+        "decisions_per_second": 3.5,
+        "parse_failure_rate": 0.0
+      },
+      "per_source": {
+        "mteb/banking77": {
+          "engine_accuracy": 1.0,
+          "generative_accuracy": 0.966667
+        },
+        "clinc/clinc_oos": {
+          "engine_accuracy": 1.0,
+          "generative_accuracy": 0.966667
+        },
+        "fancyzhx/amazon_polarity": {
+          "engine_accuracy": 0.833333,
+          "generative_accuracy": 0.766667
+        },
+        "openai/gsm8k": {
+          "engine_accuracy": 1.0,
+          "generative_accuracy": 0.5
+        }
+      }
+    },
+    {
+      "name": "domains (3 questions/request, OOD)",
+      "requests": 40,
+      "decisions": 120,
+      "engine": {
+        "accuracy": 0.31666666666666665,
+        "teacher_topset_accuracy": 0.31666666666666665,
+        "ece": 0.19683009858333333,
+        "gold_nll": 1.3091362220146534,
+        "output_tokens_per_decision": 0.0,
+        "input_tokens_per_decision": 245.7,
+        "ttft_p50_ms": 0.0,
+        "latency_p50_ms": 529.31,
+        "latency_p95_ms": 720.815,
+        "decisions_per_second": 5.65,
+        "parse_failure_rate": 0.0,
+        "selective_accuracy": {
+          "0.5": {
+            "coverage": 0.475,
+            "accuracy": 0.368421
+          },
+          "0.7": {
+            "coverage": 0.158333,
+            "accuracy": 0.368421
+          },
+          "0.9": {
+            "coverage": 0.033333,
+            "accuracy": 0.0
+          }
+        }
+      },
+      "generative": {
+        "accuracy": 0.4,
+        "accuracy_when_parsed": 0.4,
+        "output_tokens_per_decision": 2.517,
+        "input_tokens_per_decision": 100.8,
+        "ttft_p50_ms": 121.646,
+        "latency_p50_ms": 543.394,
+        "latency_p95_ms": 848.709,
+        "decisions_per_second": 5.2,
+        "parse_failure_rate": 0.0
+      },
+      "per_source": {
+        "support": {
+          "engine_accuracy": 0.380952,
+          "generative_accuracy": 0.619048
+        },
+        "moderation": {
+          "engine_accuracy": 0.333333,
+          "generative_accuracy": 0.428571
+        },
+        "code-review": {
+          "engine_accuracy": 0.333333,
+          "generative_accuracy": 0.380952
+        },
+        "refunds": {
+          "engine_accuracy": 0.190476,
+          "generative_accuracy": 0.095238
+        },
+        "triage": {
+          "engine_accuracy": 0.388889,
+          "generative_accuracy": 0.555556
+        },
+        "leads": {
+          "engine_accuracy": 0.277778,
+          "generative_accuracy": 0.333333
+        }
+      }
+    }
+  ]
+}

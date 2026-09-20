@@ -33,6 +33,23 @@ def test_fit_calibration_is_monotone_on_dev(tiny_model):
         assert after <= report["nll_before"][kind] + 1e-9
 
 
+def test_record_based_calibration_improves_nll():
+    from minojev.calibrate import fit_calibration_from_records
+
+    records = [
+        {"type": "boolean", "candidate_ids": ["false", "true"], "probabilities": [0.40, 0.60], "gold": True},
+        {"type": "boolean", "candidate_ids": ["false", "true"], "probabilities": [0.45, 0.55], "gold": True},
+        {"type": "boolean", "candidate_ids": ["false", "true"], "probabilities": [0.35, 0.65], "gold": True},
+        {"type": "choice", "candidate_ids": ["a", "b"], "probabilities": [0.55, 0.45], "gold": "a"},
+    ] * 4
+    calibration, report = fit_calibration_from_records(records, target="gold")
+    assert report["nll_after"]["boolean"] <= report["nll_before"]["boolean"] + 1e-9
+    assert report["nll_after"]["choice"] <= report["nll_before"]["choice"] + 1e-9
+    # Underconfident predictions should be sharpened (temperature < 1).
+    assert calibration.temperature("boolean") < 1.0
+    assert report["questions"]["boolean"] == 12
+
+
 def test_calibration_round_trip(tiny_model, tmp_path):
     requests = _corpus()
     calibration, _ = fit_calibration(tiny_model, requests, target="gold", device="cpu")

@@ -1,0 +1,65 @@
+{
+  "sources": [
+    {
+      "key": "banking77",
+      "name": "mteb/banking77",
+      "license": "mit",
+      "primitive": "choice",
+      "group": "train",
+      "rows": 2500,
+      "notes": "77 banking intents (mteb parquet mirror; upstream PolyAI/banking77)"
+    },
+    {
+      "key": "clinc_oos",
+      "name": "clinc/clinc_oos",
+      "license": "cc-by-3.0",
+      "primitive": "choice",
+      "group": "train",
+      "rows": 2500,
+      "notes": "150 intents including out-of-scope"
+    },
+    {
+      "key": "amazon_polarity",
+      "name": "fancyzhx/amazon_polarity",
+      "license": "apache-2.0",
+      "primitive": "boolean",
+      "group": "train",
+      "rows": 2500,
+      "notes": "binary sentiment as yes/no"
+    },
+    {
+      "key": "gsm8k",
+      "name": "openai/gsm8k",
+      "license": "mit",
+      "primitive": "verify",
+      "group": "train",
+      "rows": 2500,
+      "notes": "is this solution correct? (wrong answers injected)"
+    },
+    {
+      "key": "massive",
+      "name": "SetFit/amazon_massive_intent_en-US",
+      "license": "cc-by-4.0",
+      "primitive": "choice",
+      "group": "ood",
+      "rows": 800,
+      "notes": "held out: 60 intents, spoken assistant (SetFit mirror of AmazonScience/massive)"
+    },
+    {
+      "key": "wanli",
+      "name": "alisawuffles/WANLI",
+      "license": "cc-by-4.0",
+      "primitive": "nli-choice",
+      "group": "ood",
+      "rows": 800,
+      "notes": "held out: adversarial NLI"
+    }
+  ],
+  "counts": {
+    "train": 8000,
+    "dev": 1000,
+    "test": 1000,
+    "ood": 1600
+  },
+  "failures": {}
+}

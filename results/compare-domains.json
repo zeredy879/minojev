@@ -1,0 +1,119 @@
+{
+  "requests": 40,
+  "decisions": 120,
+  "engine": {
+    "questions": 120,
+    "labelled": 120,
+    "accuracy": 0.31666666666666665,
+    "accuracy_by_type": {
+      "boolean": 0.375,
+      "choice": 0.325,
+      "score": 0.25
+    },
+    "accuracy_by_family": {
+      "code-review": 0.333333,
+      "leads": 0.277778,
+      "moderation": 0.333333,
+      "refunds": 0.190476,
+      "support": 0.380952,
+      "triage": 0.388889
+    },
+    "gold_nll": 1.3091362220146534,
+    "mean_confidence": 0.5032624414166667,
+    "expected_calibration_error": 0.19683009858333333,
+    "accuracy_by_candidate_count": {
+      "2": 0.375,
+      "3-4": 0.325,
+      "5-8": 0.25
+    },
+    "selective_accuracy": {
+      "0.5": {
+        "coverage": 0.475,
+        "accuracy": 0.368421
+      },
+      "0.7": {
+        "coverage": 0.158333,
+        "accuracy": 0.368421
+      },
+      "0.9": {
+        "coverage": 0.033333,
+        "accuracy": 0.0
+      }
+    },
+    "teacher_scored": 120,
+    "teacher_ce": 1.3264383454950155,
+    "distribution_error": 0.4925263540844855,
+    "brier": 0.4925263540844855,
+    "teacher_argmax_accuracy": 0.31666666666666665,
+    "teacher_topset_accuracy": 0.31666666666666665,
+    "teacher_argmax_by_family": {
+      "code-review": 0.333333,
+      "leads": 0.277778,
+      "moderation": 0.333333,
+      "refunds": 0.190476,
+      "support": 0.380952,
+      "triage": 0.388889
+    },
+    "teacher_topset_by_family": {
+      "code-review": 0.333333,
+      "leads": 0.277778,
+      "moderation": 0.333333,
+      "refunds": 0.190476,
+      "support": 0.380952,
+      "triage": 0.388889
+    },
+    "decode_steps": 0,
+    "latency_p50_ms": 529.31,
+    "latency_p95_ms": 720.815,
+    "latency_mean_ms": 530.611,
+    "output_tokens_per_decision": 0.0,
+    "decode_steps_per_decision": 0.0,
+    "parse_failure_rate": 0.0,
+    "decisions_per_second": 5.65,
+    "input_tokens_per_decision": 245.7,
+    "latency_per_request_p50_ms": 529.31,
+    "latency_per_request_p95_ms": 720.815
+  },
+  "generative": {
+    "decisions": 120,
+    "parsed": 120,
+    "parse_failure_rate": 0.0,
+    "output_tokens_per_decision": 2.517,
+    "input_tokens_per_decision": 100.8,
+    "decisions_per_second": 5.2,
+    "latency_p50_ms": 169.233,
+    "latency_p95_ms": 292.168,
+    "ttft_p50_ms": 121.646,
+    "latency_per_request_p50_ms": 543.394,
+    "latency_per_request_p95_ms": 848.709,
+    "accuracy": 0.4,
+    "accuracy_when_parsed": 0.4
+  },
+  "per_source": {
+    "support": {
+      "engine_accuracy": 0.380952,
+      "generative_accuracy": 0.619048
+    },
+    "moderation": {
+      "engine_accuracy": 0.333333,
+      "generative_accuracy": 0.428571
+    },
+    "code-review": {
+      "engine_accuracy": 0.333333,
+      "generative_accuracy": 0.380952
+    },
+    "refunds": {
+      "engine_accuracy": 0.190476,
+      "generative_accuracy": 0.095238
+    },
+    "triage": {
+      "engine_accuracy": 0.388889,
+      "generative_accuracy": 0.555556
+    },
+    "leads": {
+      "engine_accuracy": 0.277778,
+      "generative_accuracy": 0.333333
+    }
+  },
+  "generative_model": "Qwen/Qwen3-1.7B"
+}

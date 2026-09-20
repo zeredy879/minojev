@@ -138,6 +138,8 @@
     <span class="spacer"></span>
     <a class="link" href="zh-maze.html">迷宫演示</a>
     <a class="link" href="zh-console.html">决策控制台</a>
+    <a class="link" href="zh-playground.html">多领域体验</a>
+    <a class="link" href="zh-benchmark.html">基准对比</a>
     <a class="link" href="https://github.com/zeredy879/minojev">GitHub</a>
     <a class="link" href="https://huggingface.co/zeredy879/minojev">模型</a>
     <a class="link" href="index.html">English</a>
@@ -227,6 +229,25 @@
 
 <section>
   <div class="wrap">
+    <h2>头训练是核心</h2>
+    <p class="sub">
+      冻结骨干、把每条候选路径特征缓存一次，然后只训练决策头。骨干不发生漂移、没有灾难性遗忘，
+      只需笔记本上几十分钟，就得到一个可校准的决策层。
+    </p>
+    <div class="statline">
+      <div class="stat"><b>37 分钟</b><small>1.7B 头训练（笔记本）</small></div>
+      <div class="stat"><b>4 GB</b><small>峰值内存</small></div>
+      <div class="stat"><b>95.0%</b><small>准确率 vs 生成式 80.0%</small></div>
+      <div class="stat"><b>0</b><small>每决策输出 token</small></div>
+    </div>
+    <div class="cta" style="margin-top:18px">
+      <a class="btn primary" href="zh-benchmark.html">查看完整基准对比 →</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <h2>哪里不一样</h2>
     <p class="sub">它不只是一个演示，这些是它的底气。</p>
     <div class="diff">
@@ -254,6 +275,11 @@
         <h3>并行决策控制台</h3>
         <p>同一个状态下的多个问题——选择、判断、打分——一次全部算完，并叠上参考分布做对照。</p>
         <div class="live" id="console-stat">加载中…</div>
+      </a>
+      <a class="demo" href="zh-playground.html">
+        <h3>多领域决策体验场</h3>
+        <p>客服工单、内容审核、代码评审、退款政策、分诊、线索评分——后训练模型一次前向全部给出。</p>
+        <div class="live" id="domains-stat">加载中…</div>
       </a>
     </div>
   </div>
@@ -364,6 +390,16 @@ load("data/demo.json", "console-stat", (bundle) => {
   const s = bundle.summary;
   const accuracy = s.accuracy === undefined ? "" : ` · 准确率 ${(100 * s.accuracy).toFixed(1)}%`;
   return `${s.questions} 个问题 · 0 解码步${accuracy}`;
+});
+
+load("data/domains.json", "domains-stat", (bundle) => {
+  if (!bundle || !bundle.records) return null;
+  const domains = new Set(bundle.records.map((record) => record.family).filter(Boolean));
+  const labelled = bundle.records.filter((record) => record.correct !== undefined);
+  const accuracy = labelled.length
+    ? labelled.reduce((sum, record) => sum + (record.correct ? 1 : 0), 0) / labelled.length
+    : null;
+  return `${domains.size} 个领域 · ${bundle.records.length} 个问题` + (accuracy === null ? "" : ` · 准确率 ${(100 * accuracy).toFixed(1)}%`);
 });
 </script>
 </body>

@@ -1,0 +1,14 @@
+{
+  "method": "zero-training native logits readout (letter-slot softmax, openjev-style)",
+  "model": "Qwen/Qwen3-1.7B (bf16)",
+  "workload": "general-test balanced, 120 decisions",
+  "questions": 120,
+  "accuracy": 0.8833333333333333,
+  "teacher_topset_accuracy": 0.8833333333333333,
+  "expected_calibration_error": 0.0968,
+  "gold_nll": 0.6507,
+  "mean_confidence": 0.9552,
+  "output_tokens_per_decision": 0.0,
+  "decode_steps": 0,
+  "note": "measured with minojev.logits.score_logits; no training, no temperature fitting"
+}

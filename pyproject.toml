@@ -19,6 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 hf = ["transformers>=4.40"]
+monitor = ["psutil>=5.9"]
 test = ["pytest>=8"]
 
 [project.scripts]
@@ -26,6 +27,9 @@ minojev = "minojev.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+minojev = ["*.html"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
