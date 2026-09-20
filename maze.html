@@ -86,9 +86,12 @@
   </p>
   <h1>Maze agent · <span>decision replay</span></h1>
   <p>
-    At each step the model answers nine questions in one forward pass: one choice over four
-    moves, four parallel safety booleans, and one distance score. Code multiplies the move
-    distribution by the safety probabilities, blocks wall moves, and takes the survivor.
+    This replay is driven by a compact 547k-parameter model trained from scratch on synthetic
+    maze decisions — the flagship Qwen3-1.7B head-training results live on the
+    <a href="benchmark.html">benchmark page</a>. At each step the model answers nine questions
+    in one forward pass: one choice over four moves, four parallel safety booleans, and one
+    distance score. Code multiplies the move distribution by safety probabilities, filters out
+    blocked moves, and takes the largest remaining value.
   </p>
 </header>
 <main>
