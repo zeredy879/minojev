@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>minojev · head training benchmark</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="alternate icon" href="favicon.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<style>
+  :root {
+    --bg: #0a0d14; --panel: #121926; --panel-2: #19223a; --ink: #e8edf7; --muted: #8d9bb3;
+    --accent: #59d3a8; --accent-2: #6ea8fe; --warn: #f0b06a; --danger: #ef7b8b; --line: #25304a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.7 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: var(--accent-2); }
+  header { padding: 34px 24px 22px; border-bottom: 1px solid var(--line);
+    background: radial-gradient(800px 320px at 12% -20%, rgba(89,211,168,.14), transparent 60%), var(--bg); }
+  h1 { margin: 8px 0 8px; font-size: clamp(28px, 4vw, 42px); letter-spacing: -0.8px; }
+  h1 span { color: var(--accent); }
+  header p { margin: 0; color: var(--muted); max-width: 860px; }
+  main { max-width: 1120px; margin: 0 auto; padding: 26px 20px 80px; }
+  h2 { font-size: 20px; margin: 34px 0 12px; }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0 6px; }
+  .tab { border: 1px solid var(--line); background: var(--panel-2); color: var(--muted); border-radius: 999px;
+    padding: 7px 14px; font-size: 13.5px; cursor: pointer; }
+  .tab.active { border-color: var(--accent); color: var(--accent); background: rgba(89,211,168,.12); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 10px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .card h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; }
+  .row { display: grid; grid-template-columns: 110px 1fr 96px; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .row label { color: var(--muted); font-size: 13px; }
+  .track { height: 12px; background: #0d1424; border-radius: 6px; overflow: hidden; }
+  .fill { height: 100%; width: 0; border-radius: 6px; transition: width .5s ease; }
+  .fill.engine { background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+  .fill.generative { background: linear-gradient(90deg, #7c3f4c, var(--danger)); }
+  .fill.reference { background: linear-gradient(90deg, #5b4a2a, var(--warn)); }
+  .row .value { text-align: right; font: 12.5px ui-monospace, Menlo, monospace; color: var(--ink); }
+  .legend { display: flex; gap: 14px; color: var(--muted); font-size: 12.5px; margin-top: 8px; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 10px; height: 3px; margin-right: 5px; vertical-align: middle; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-weight: 500; }
+  .note { color: var(--muted); font-size: 13px; }
+  .pill { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px;
+    font: 12px ui-monospace, Menlo, monospace; color: var(--muted); margin-right: 6px; }
+  pre { background: #0b101c; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    overflow-x: auto; font: 12.5px/1.7 ui-monospace, Menlo, monospace; color: #cfe1ff; }
+  footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 12.5px; padding: 24px 0 44px; }
+  footer a { color: var(--muted); }
+  #error { color: var(--danger); }
+</style>
+</head>
+<body>
+<header>
+  <p style="margin:0 0 4px;display:flex;gap:14px;flex-wrap:wrap">
+    <a href="index.html" style="color:var(--accent);text-decoration:none">← all demos</a>
+    <a href="playground.html" style="color:var(--muted);text-decoration:none">Domains</a>
+    <a href="maze.html" style="color:var(--muted);text-decoration:none">Maze demo</a>
+    <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
+    <a href="zh-benchmark.html" style="color:var(--muted);text-decoration:none">中文</a>
+  </p>
+  <h1>Head training, measured against <span>token generation</span></h1>
+  <p>
+    Same backbone, same questions. <strong>minojev reads a typed distribution from hidden states</strong>;
+    the baseline answers the very same prompts by decoding tokens. Head training is minojev's core:
+    freeze the backbone, cache candidate-path features once, then train only the decision head.
+  </p>
+</header>
+<main>
+  <div class="tabs" id="tabs"></div>
+  <div class="cards" id="cards"><p id="error">Loading data/benchmark.json …</p></div>
+
+  <h2>Per-source accuracy</h2>
+  <div class="card"><table id="sources"><thead><tr><th>source</th><th>minojev</th><th>generative</th></tr></thead><tbody></tbody></table></div>
+
+  <h2>What “head training” means</h2>
+  <div class="card">
+    <p class="note" style="margin-top:0">
+      <span class="pill">1.7B frozen backbone</span>
+      <span class="pill">8000 requests</span>
+      <span class="pill">cached features</span>
+      <span class="pill">head only</span>
+      <span class="pill">dev calibration</span>
+    </p>
+    <p class="note">
+      The backbone never updates. Every candidate path (state + question + option) is forwarded once and its
+      final hidden state is cached; the decision head — a few million parameters — is then trained on those
+      cached vectors with distribution losses, and temperatures are fitted on dev. In this run that was
+      <strong>~37 minutes and 4 GB of memory on a laptop</strong>, with no catastrophic-forgetting risk to the
+      backbone. The result is a model that returns a <strong>typed, calibrated distribution with zero output
+      tokens</strong>, instead of a sentence that has to be parsed.
+    </p>
+    <pre>minojev build-data --per-source 2500 --per-ood 800
+minojev posttrain --backbone Qwen/Qwen3-1.7B --mode head \
+  --train data/general-train.jsonl --dev data/general-dev.jsonl \
+  --output-dir runs/general-head --steps 3000 --inference-dtype bfloat16
+minojev compare --checkpoint runs/general-head/checkpoint \
+  --input data/general-test.jsonl --limit 120 --chat-template</pre>
+  </div>
+
+  <h2>Why it matters</h2>
+  <div class="cards">
+    <div class="card"><h3>Zero decoding</h3><p class="note">0 output tokens per decision. The generative baseline spends 2.5–3.5 tokens even when told to answer with a single letter.</p></div>
+    <div class="card"><h3>No time to first token</h3><p class="note">There is no first token: the answer is a readout. The baseline waits ~100 ms before its first token and can stall for seconds at p95.</p></div>
+    <div class="card"><h3>Calibrated confidence</h3><p class="note">Every answer carries a probability distribution, with dev-fitted temperatures and reported ECE — generation gives no probabilities at all.</p></div>
+  </div>
+</main>
+<footer>
+  <div class="wrap" style="max-width:1120px;margin:0 auto;padding:0 20px">
+    <a href="index.html">Home</a> · <a href="https://github.com/zeredy879/minojev">GitHub</a> ·
+    <a href="https://huggingface.co/zeredy879/minojev">Models</a> · MIT License
+  </div>
+</footer>
+<script>
+const $ = (id) => document.getElementById(id);
+const pct = (x) => x === null || x === undefined ? "—" : (100 * x).toFixed(1) + "%";
+const num = (x, digits = 0) => x === null || x === undefined ? "—" : Number(x).toFixed(digits);
+
+let bundle = null;
+let active = 0;
+
+function barRow(label, engineValue, generativeValue, referenceValue, options) {
+  const max = options.max;
+  const format = options.format || pct;
+  const row = document.createElement("div");
+  row.className = "row";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const track = document.createElement("div");
+  track.className = "track";
+  const strongest = Math.max(engineValue ?? 0, generativeValue ?? 0, referenceValue ?? 0);
+  const engineFill = document.createElement("div");
+  engineFill.className = "fill engine";
+  engineFill.style.width = pct(Math.min(1, (engineValue ?? 0) / max));
+  const genFill = document.createElement("div");
+  genFill.className = "fill generative";
+  genFill.style.width = pct(Math.min(1, (generativeValue ?? 0) / max));
+  const refFill = document.createElement("div");
+  refFill.className = "fill reference";
+  refFill.style.width = pct(Math.min(1, (referenceValue ?? 0) / max));
+  if (referenceValue !== undefined && referenceValue !== null) track.append(refFill);
+  track.append(engineFill, genFill);
+  const value = document.createElement("div");
+  value.className = "value";
+  value.textContent = `${format(engineValue)} / ${format(generativeValue)}`;
+  row.append(name, track, value);
+  return row;
+}
+
+function render() {
+  const workload = bundle.workloads[active];
+  const engine = workload.engine;
+  const generative = workload.generative;
+  const reference = bundle.reference || {};
+  $("cards").textContent = "";
+  const accuracyCard = document.createElement("div");
+  accuracyCard.className = "card";
+  const accuracyTitle = document.createElement("h3");
+  accuracyTitle.textContent = `Accuracy — ${workload.name}`;
+  accuracyCard.append(accuracyTitle);
+  accuracyCard.append(barRow("accuracy", engine.accuracy, generative.accuracy, reference.accuracy, { max: 1 }));
+  accuracyCard.append(barRow("teacher top-set", engine.teacher_topset_accuracy, null, reference.teacher_topset_accuracy, { max: 1 }));
+  const eceValue = document.createElement("p");
+  eceValue.className = "note";
+  eceValue.textContent = `ECE: head-trained ${num(engine.ece, 3)} · zero-shot logits ${num(reference.expected_calibration_error, 3)} · generation n/a`;
+  accuracyCard.append(eceValue);
+  if (engine.selective_accuracy) {
+    const selective = Object.entries(engine.selective_accuracy).map(([threshold, entry]) =>
+      `≥${threshold}: ${pct(entry.coverage)} coverage @ ${pct(entry.accuracy)} accuracy`).join(" · ");
+    const line = document.createElement("p");
+    line.className = "note";
+    line.textContent = `Selective accuracy — ${selective}`;
+    accuracyCard.append(line);
+  }
+  $("cards").append(accuracyCard);
+
+  const costCard = document.createElement("div");
+  costCard.className = "card";
+  const costTitle = document.createElement("h3");
+  costTitle.textContent = "Token economy";
+  costCard.append(costTitle);
+  costCard.append(barRow("output tok/decision", engine.output_tokens_per_decision, generative.output_tokens_per_decision, reference.output_tokens_per_decision, { max: 4, format: (x) => num(x, 2) }));
+  costCard.append(barRow("input tok/decision", engine.input_tokens_per_decision, generative.input_tokens_per_decision, null, { max: 320, format: (x) => num(x, 0) }));
+  const decode = document.createElement("p");
+  decode.className = "note";
+  decode.textContent = "Decode steps per decision: minojev 0 · generation 2.5–3.5.";
+  costCard.append(decode);
+  $("cards").append(costCard);
+
+  const speedCard = document.createElement("div");
+  speedCard.className = "card";
+  const speedTitle = document.createElement("h3");
+  speedTitle.textContent = "Response speed";
+  speedCard.append(speedTitle);
+  speedCard.append(barRow("TTFT p50 (ms)", 0, generative.ttft_p50_ms, null, { max: 160, format: (x) => num(x, 0) }));
+  speedCard.append(barRow("p50 (ms)", engine.latency_p50_ms, generative.latency_p50_ms, null, { max: 700, format: (x) => num(x, 0) }));
+  speedCard.append(barRow("p95 (ms)", engine.latency_p95_ms, generative.latency_p95_ms, null, { max: 4000, format: (x) => num(x, 0) }));
+  speedCard.append(barRow("decisions/s", engine.decisions_per_second, generative.decisions_per_second, null, { max: 8, format: (x) => num(x, 1) }));
+  const parse = document.createElement("p");
+  parse.className = "note";
+  parse.textContent = `Parse failures: minojev ${pct(engine.parse_failure_rate)} · generation ${pct(generative.parse_failure_rate)}`;
+  speedCard.append(parse);
+  $("cards").append(speedCard);
+
+  const body = $("sources").querySelector("tbody");
+  body.textContent = "";
+  for (const [source, entry] of Object.entries(workload.per_source || {})) {
+    const row = document.createElement("tr");
+    for (const value of [source, pct(entry.engine_accuracy), pct(entry.generative_accuracy)]) {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.append(cell);
+    }
+    body.append(row);
+  }
+}
+
+function renderTabs() {
+  const tabs = $("tabs");
+  tabs.textContent = "";
+  bundle.workloads.forEach((workload, index) => {
+    const button = document.createElement("button");
+    button.className = "tab" + (index === active ? " active" : "");
+    button.textContent = workload.name;
+    button.onclick = () => { active = index; renderTabs(); render(); };
+    tabs.append(button);
+  });
+}
+
+fetch("data/benchmark.json")
+  .then((response) => { if (!response.ok) throw new Error("HTTP " + response.status); return response.json(); })
+  .then((data) => {
+    bundle = data;
+    renderTabs();
+    render();
+  })
+  .catch((error) => {
+    $("error").textContent = "Could not load data/benchmark.json (" + error.message + ").";
+  });
+</script>
+</body>
+</html>

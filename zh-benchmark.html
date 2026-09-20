@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>minojev · 头训练基准</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="alternate icon" href="favicon.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<style>
+  :root {
+    --bg: #0a0d14; --panel: #121926; --panel-2: #19223a; --ink: #e8edf7; --muted: #8d9bb3;
+    --accent: #59d3a8; --accent-2: #6ea8fe; --warn: #f0b06a; --danger: #ef7b8b; --line: #25304a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.75 ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  a { color: var(--accent-2); }
+  header { padding: 34px 24px 22px; border-bottom: 1px solid var(--line);
+    background: radial-gradient(800px 320px at 12% -20%, rgba(89,211,168,.14), transparent 60%), var(--bg); }
+  h1 { margin: 8px 0 8px; font-size: clamp(26px, 3.6vw, 38px); letter-spacing: -0.6px; }
+  h1 span { color: var(--accent); }
+  header p { margin: 0; color: var(--muted); max-width: 900px; }
+  main { max-width: 1120px; margin: 0 auto; padding: 26px 20px 80px; }
+  h2 { font-size: 20px; margin: 34px 0 12px; }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 18px 0 6px; }
+  .tab { border: 1px solid var(--line); background: var(--panel-2); color: var(--muted); border-radius: 999px;
+    padding: 7px 14px; font-size: 13.5px; cursor: pointer; }
+  .tab.active { border-color: var(--accent); color: var(--accent); background: rgba(89,211,168,.12); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 10px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .card h3 { margin: 0 0 10px; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: .7px; }
+  .row { display: grid; grid-template-columns: 110px 1fr 96px; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .row label { color: var(--muted); font-size: 13px; }
+  .track { height: 12px; background: #0d1424; border-radius: 6px; overflow: hidden; }
+  .fill { height: 100%; width: 0; border-radius: 6px; transition: width .5s ease; }
+  .fill.engine { background: linear-gradient(90deg, var(--accent-2), var(--accent)); }
+  .fill.generative { background: linear-gradient(90deg, #7c3f4c, var(--danger)); }
+  .fill.reference { background: linear-gradient(90deg, #5b4a2a, var(--warn)); }
+  .row .value { text-align: right; font: 12.5px ui-monospace, Menlo, monospace; color: var(--ink); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-weight: 500; }
+  .note { color: var(--muted); font-size: 13px; }
+  .pill { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px;
+    font: 12px ui-monospace, Menlo, monospace; color: var(--muted); margin-right: 6px; }
+  pre { background: #0b101c; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    overflow-x: auto; font: 12.5px/1.7 ui-monospace, Menlo, monospace; color: #cfe1ff; }
+  footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 12.5px; padding: 24px 0 44px; }
+  footer a { color: var(--muted); }
+  #error { color: var(--danger); }
+</style>
+</head>
+<body>
+<header>
+  <p style="margin:0 0 4px;display:flex;gap:14px;flex-wrap:wrap">
+    <a href="zh.html" style="color:var(--accent);text-decoration:none">← 全部演示</a>
+    <a href="zh-playground.html" style="color:var(--muted);text-decoration:none">多领域体验</a>
+    <a href="zh-maze.html" style="color:var(--muted);text-decoration:none">迷宫演示</a>
+    <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
+    <a href="benchmark.html" style="color:var(--muted);text-decoration:none">English</a>
+  </p>
+  <h1>头训练，对照<span>逐 token 生成</span></h1>
+  <p>
+    同一个底座、同一批问题。<strong>minojev 从隐藏状态直接读出带类型的分布</strong>；基线则对同样的提示
+    逐 token 生成答案。头训练（head training）是 minojev 的核心：冻结骨干、一次性缓存候选路径特征，
+    只训练决策头。
+  </p>
+</header>
+<main>
+  <div class="tabs" id="tabs"></div>
+  <div class="cards" id="cards"><p id="error">正在加载 data/benchmark.json …</p></div>
+
+  <h2>分来源准确率</h2>
+  <div class="card"><table id="sources"><thead><tr><th>来源</th><th>minojev</th><th>生成式</th></tr></thead><tbody></tbody></table></div>
+
+  <h2>什么是"头训练"</h2>
+  <div class="card">
+    <p class="note" style="margin-top:0">
+      <span class="pill">1.7B 冻结骨干</span>
+      <span class="pill">8000 条请求</span>
+      <span class="pill">缓存特征</span>
+      <span class="pill">只训决策头</span>
+      <span class="pill">dev 温度校准</span>
+    </p>
+    <p class="note">
+      骨干权重全程不动。每条候选路径（状态 + 问题 + 选项）只前向一次，末位隐藏状态被缓存；随后只用
+      几百万参数的决策头在这些缓存向量上做分布损失训练，最后在 dev 上拟合温度。本次运行在笔记本上
+      约 <strong>37 分钟、4GB 内存</strong>，骨干没有灾难性遗忘风险。产出的是一个
+      <strong>零输出 token 的带类型、可校准分布</strong>，而不是需要解析的句子。
+    </p>
+    <pre>minojev build-data --per-source 2500 --per-ood 800
+minojev posttrain --backbone Qwen/Qwen3-1.7B --mode head \
+  --train data/general-train.jsonl --dev data/general-dev.jsonl \
+  --output-dir runs/general-head --steps 3000 --inference-dtype bfloat16
+minojev compare --checkpoint runs/general-head/checkpoint \
+  --input data/general-test.jsonl --limit 120 --chat-template</pre>
+  </div>
+
+  <h2>为什么重要</h2>
+  <div class="cards">
+    <div class="card"><h3>零解码</h3><p class="note">每个决策 0 个输出 token。生成式基线即使被要求只答一个字母，也要花 2.5–3.5 个 token。</p></div>
+    <div class="card"><h3>没有首 token 等待</h3><p class="note">根本没有"第一个 token"：答案是读出来的。基线在 ~100ms 后才出首 token，p95 可拖到数秒。</p></div>
+    <div class="card"><h3>可校准置信度</h3><p class="note">每个答案都带概率分布，温度在 dev 上拟合、ECE 公开；生成式给不出概率。</p></div>
+  </div>
+</main>
+<footer>
+  <div style="max-width:1120px;margin:0 auto;padding:0 20px">
+    <a href="zh.html">主页</a> · <a href="https://github.com/zeredy879/minojev">GitHub</a> ·
+    <a href="https://huggingface.co/zeredy879/minojev">模型</a> · MIT License
+  </div>
+</footer>
+<script>
+const $ = (id) => document.getElementById(id);
+const pct = (x) => x === null || x === undefined ? "—" : (100 * x).toFixed(1) + "%";
+const num = (x, digits = 0) => x === null || x === undefined ? "—" : Number(x).toFixed(digits);
+
+let bundle = null;
+let active = 0;
+
+function barRow(label, engineValue, generativeValue, referenceValue, options) {
+  const max = options.max;
+  const format = options.format || pct;
+  const row = document.createElement("div");
+  row.className = "row";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const track = document.createElement("div");
+  track.className = "track";
+  const engineFill = document.createElement("div");
+  engineFill.className = "fill engine";
+  engineFill.style.width = pct(Math.min(1, (engineValue ?? 0) / max));
+  const genFill = document.createElement("div");
+  genFill.className = "fill generative";
+  genFill.style.width = pct(Math.min(1, (generativeValue ?? 0) / max));
+  const refFill = document.createElement("div");
+  refFill.className = "fill reference";
+  refFill.style.width = pct(Math.min(1, (referenceValue ?? 0) / max));
+  if (referenceValue !== undefined && referenceValue !== null) track.append(refFill);
+  track.append(engineFill, genFill);
+  const value = document.createElement("div");
+  value.className = "value";
+  value.textContent = `${format(engineValue)} / ${format(generativeValue)}`;
+  row.append(name, track, value);
+  return row;
+}
+
+function render() {
+  const workload = bundle.workloads[active];
+  const engine = workload.engine;
+  const generative = workload.generative;
+  const reference = bundle.reference || {};
+  $("cards").textContent = "";
+
+  const accuracyCard = document.createElement("div");
+  accuracyCard.className = "card";
+  const accuracyTitle = document.createElement("h3");
+  accuracyTitle.textContent = `准确率 — ${workload.name}`;
+  accuracyCard.append(accuracyTitle);
+  accuracyCard.append(barRow("准确率", engine.accuracy, generative.accuracy, reference.accuracy, { max: 1 }));
+  accuracyCard.append(barRow("teacher 最优集", engine.teacher_topset_accuracy, null, reference.teacher_topset_accuracy, { max: 1 }));
+  const eceValue = document.createElement("p");
+  eceValue.className = "note";
+  eceValue.textContent = `ECE：头训练 ${num(engine.ece, 3)} · 零训练 logits ${num(reference.expected_calibration_error, 3)} · 生成式不适用`;
+  accuracyCard.append(eceValue);
+  if (engine.selective_accuracy) {
+    const selective = Object.entries(engine.selective_accuracy).map(([threshold, entry]) =>
+      `≥${threshold}：覆盖率 ${pct(entry.coverage)}，准确率 ${pct(entry.accuracy)}`).join(" · ");
+    const line = document.createElement("p");
+    line.className = "note";
+    line.textContent = `选择性准确率 — ${selective}`;
+    accuracyCard.append(line);
+  }
+  $("cards").append(accuracyCard);
+
+  const costCard = document.createElement("div");
+  costCard.className = "card";
+  const costTitle = document.createElement("h3");
+  costTitle.textContent = "Token 经济";
+  costCard.append(costTitle);
+  costCard.append(barRow("输出 token/决策", engine.output_tokens_per_decision, generative.output_tokens_per_decision, reference.output_tokens_per_decision, { max: 4, format: (x) => num(x, 2) }));
+  costCard.append(barRow("输入 token/决策", engine.input_tokens_per_decision, generative.input_tokens_per_decision, null, { max: 320, format: (x) => num(x, 0) }));
+  const decode = document.createElement("p");
+  decode.className = "note";
+  decode.textContent = "每决策解码步数：minojev 0 · 生成式 2.5–3.5。";
+  costCard.append(decode);
+  $("cards").append(costCard);
+
+  const speedCard = document.createElement("div");
+  speedCard.className = "card";
+  const speedTitle = document.createElement("h3");
+  speedTitle.textContent = "响应速度";
+  speedCard.append(speedTitle);
+  speedCard.append(barRow("首 token p50 (ms)", 0, generative.ttft_p50_ms, null, { max: 160, format: (x) => num(x, 0) }));
+  speedCard.append(barRow("p50 (ms)", engine.latency_p50_ms, generative.latency_p50_ms, null, { max: 700, format: (x) => num(x, 0) }));
+  speedCard.append(barRow("p95 (ms)", engine.latency_p95_ms, generative.latency_p95_ms, null, { max: 4000, format: (x) => num(x, 0) }));
+  speedCard.append(barRow("每秒决策数", engine.decisions_per_second, generative.decisions_per_second, null, { max: 8, format: (x) => num(x, 1) }));
+  const parse = document.createElement("p");
+  parse.className = "note";
+  parse.textContent = `解析失败率：minojev ${pct(engine.parse_failure_rate)} · 生成式 ${pct(generative.parse_failure_rate)}`;
+  speedCard.append(parse);
+  $("cards").append(speedCard);
+
+  const body = $("sources").querySelector("tbody");
+  body.textContent = "";
+  for (const [source, entry] of Object.entries(workload.per_source || {})) {
+    const row = document.createElement("tr");
+    for (const value of [source, pct(entry.engine_accuracy), pct(entry.generative_accuracy)]) {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.append(cell);
+    }
+    body.append(row);
+  }
+}
+
+function renderTabs() {
+  const tabs = $("tabs");
+  tabs.textContent = "";
+  bundle.workloads.forEach((workload, index) => {
+    const button = document.createElement("button");
+    button.className = "tab" + (index === active ? " active" : "");
+    button.textContent = workload.name === "general (in-domain)" ? "通用测试集（同分布）" : workload.name === "domains (3 questions/request, OOD)" ? "多问题状态（3 问/请求，OOD）" : workload.name;
+    button.onclick = () => { active = index; renderTabs(); render(); };
+    tabs.append(button);
+  });
+}
+
+fetch("data/benchmark.json")
+  .then((response) => { if (!response.ok) throw new Error("HTTP " + response.status); return response.json(); })
+  .then((data) => {
+    bundle = data;
+    renderTabs();
+    render();
+  })
+  .catch((error) => {
+    $("error").textContent = "无法加载 data/benchmark.json（" + error.message + "）。";
+  });
+</script>
+</body>
+</html>

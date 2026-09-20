@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>minojev · domain playground</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="alternate icon" href="favicon.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<style>
+  :root {
+    --bg: #0b0e14; --panel: #141925; --panel-2: #1b2233; --ink: #e7ecf5; --muted: #93a0b4;
+    --accent: #59d3a8; --accent-2: #6ea8fe; --warn: #f0b06a; --line: #26304a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: var(--accent-2); }
+  header { padding: 26px 24px 18px; border-bottom: 1px solid var(--line); background: linear-gradient(180deg,#101627,var(--bg)); }
+  h1 { margin: 6px 0 4px; font-size: 22px; }
+  h1 span { color: var(--accent); }
+  header p { margin: 0; color: var(--muted); max-width: 900px; font-size: 13.5px; }
+  main { max-width: 1080px; margin: 0 auto; padding: 20px 20px 80px; }
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 18px 0 14px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .stat b { display: block; font-size: 20px; color: var(--accent); }
+  .stat small { color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 20px; }
+  .chip { border: 1px solid var(--line); background: var(--panel-2); color: var(--muted); border-radius: 999px;
+    padding: 6px 12px; font-size: 13px; cursor: pointer; }
+  .chip.active { border-color: var(--accent); color: var(--accent); background: rgba(89,211,168,.12); }
+  .chip small { color: var(--muted); }
+  .record { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; margin: 0 0 14px; overflow: hidden; }
+  .record > header { padding: 12px 16px; background: var(--panel-2); border-bottom: 1px solid var(--line);
+    display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .record > header strong { font-size: 14px; }
+  .record > header code { color: var(--muted); font-size: 12px; }
+  .domain-badge { font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--accent-2);
+    border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; }
+  .verdict { float: right; font-size: 12px; font-weight: 600; }
+  .ok { color: var(--accent); }
+  .bad { color: #ef7b8b; }
+  .expected { color: var(--warn); float: right; font-size: 12px; }
+  .state { margin: 0; padding: 12px 16px; border-bottom: 1px dashed var(--line); color: var(--muted);
+    font-size: 12.5px; white-space: pre-wrap; font-family: ui-monospace, Menlo, monospace; }
+  .question { padding: 12px 16px 6px; }
+  .question h3 { margin: 0 0 2px; font-size: 14px; font-weight: 600; }
+  .question .type { display: inline-block; font-size: 11px; text-transform: uppercase; letter-spacing: .6px;
+    color: var(--accent-2); margin-right: 8px; }
+  .bars { padding: 6px 16px 14px; display: grid; gap: 6px; }
+  .bar { display: grid; grid-template-columns: minmax(120px, 240px) 1fr 56px; gap: 10px; align-items: center; }
+  .bar label { color: var(--muted); font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .track { height: 12px; background: #0e1320; border-radius: 6px; overflow: hidden; }
+  .fill { height: 100%; background: linear-gradient(90deg, var(--accent-2), var(--accent)); border-radius: 6px; }
+  .fill.gold { outline: 1px solid var(--accent); }
+  .pct { text-align: right; font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
+  .teacher { padding: 0 16px 12px; color: var(--muted); font-size: 12px; }
+  .teacher code { color: var(--warn); }
+  footer { max-width: 1080px; margin: 0 auto; padding: 0 20px 60px; color: var(--muted); font-size: 12px; }
+  #error { color: #ef7b8b; }
+</style>
+</head>
+<body>
+<header>
+  <p style="margin:0 0 10px;display:flex;gap:14px;flex-wrap:wrap">
+    <a href="index.html" style="color:var(--accent);text-decoration:none">← all demos</a>
+    <a href="maze.html" style="color:var(--muted);text-decoration:none">Maze demo</a>
+    <a href="console.html" style="color:var(--muted);text-decoration:none">Decision console</a>
+    <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
+    <a href="zh-playground.html" style="color:var(--muted);text-decoration:none">中文</a>
+  </p>
+  <h1>Domain <span>playground</span></h1>
+  <p>
+    Six operational domains — support routing, content moderation, code review triage, refund policy,
+    intake urgency, and lead scoring — each answered as a typed distribution by the post-trained
+    model in one forward pass. Bars are the model; the reference distribution is shown underneath.
+  </p>
+</header>
+<main>
+  <div class="summary" id="summary"></div>
+  <div class="chips" id="chips"></div>
+  <div id="records"><p id="error">Loading data/domains.json …</p></div>
+</main>
+<footer>
+  Regenerate with <code>minojev demo --checkpoint &lt;dir&gt; --input data/domains-test.jsonl --limit 24 --output web/data/domains.json</code>.
+</footer>
+<script>
+const fmt = (x, digits = 3) => Number(x).toFixed(digits);
+const pct = (x) => (100 * x).toFixed(1) + "%";
+const state = { bundle: null, filter: "all" };
+
+function stat(label, value) {
+  const node = document.createElement("div");
+  node.className = "stat";
+  const big = document.createElement("b");
+  big.textContent = value;
+  const small = document.createElement("small");
+  small.textContent = label;
+  node.append(big, small);
+  return node;
+}
+
+function summarize(records) {
+  const labelled = records.filter((record) => record.correct !== undefined);
+  const accuracy = labelled.length ? labelled.reduce((sum, record) => sum + (record.correct ? 1 : 0), 0) / labelled.length : null;
+  const confidence = records.reduce((sum, record) => sum + Math.max(...record.probabilities), 0) / (records.length || 1);
+  return { questions: records.length, accuracy, confidence };
+}
+
+function renderSummary() {
+  const box = document.getElementById("summary");
+  box.textContent = "";
+  const all = summarize(state.bundle.records || []);
+  box.append(stat("questions", all.questions));
+  if (all.accuracy !== null) box.append(stat("accuracy vs gold", pct(all.accuracy)));
+  box.append(stat("mean confidence", fmt(all.confidence)));
+  const domains = new Set((state.bundle.records || []).map((record) => record.family).filter(Boolean));
+  box.append(stat("domains", domains.size));
+}
+
+function renderChips() {
+  const box = document.getElementById("chips");
+  box.textContent = "";
+  const counts = {};
+  (state.bundle.records || []).forEach((record) => {
+    const family = record.family || "other";
+    counts[family] = (counts[family] || 0) + 1;
+  });
+  const options = [["all", "all", (state.bundle.records || []).length]].concat(Object.entries(counts).sort());
+  for (const [value, label, count] of options) {
+    const chip = document.createElement("button");
+    chip.className = "chip" + (state.filter === value ? " active" : "");
+    chip.innerHTML = label + " <small>(" + count + ")</small>";
+    chip.onclick = () => { state.filter = value; render(); };
+    box.append(chip);
+  }
+}
+
+function renderRecord(record) {
+  const card = document.createElement("section");
+  card.className = "record";
+  const head = document.createElement("header");
+  const badge = document.createElement("span");
+  badge.className = "domain-badge";
+  badge.textContent = record.family || "case";
+  const title = document.createElement("strong");
+  title.textContent = record.id;
+  head.append(badge, title);
+  if (record.correct !== undefined) {
+    const verdict = document.createElement("span");
+    verdict.className = "verdict " + (record.correct ? "ok" : "bad");
+    verdict.textContent = record.correct ? "correct" : "miss";
+    head.append(verdict);
+  }
+  card.append(head);
+
+  const stateBox = document.createElement("pre");
+  stateBox.className = "state";
+  stateBox.textContent = typeof record.state === "string" ? record.state : JSON.stringify(record.state, null, 2);
+  card.append(stateBox);
+
+  const question = document.createElement("div");
+  question.className = "question";
+  const h3 = document.createElement("h3");
+  const type = document.createElement("span");
+  type.className = "type";
+  type.textContent = record.type;
+  h3.append(type, document.createTextNode(record.instructions));
+  question.append(h3);
+  if (record.expected !== undefined) {
+    const expected = document.createElement("span");
+    expected.className = "expected";
+    expected.textContent = "expected level " + fmt(record.expected, 2);
+    question.append(expected);
+  }
+  card.append(question);
+
+  const bars = document.createElement("div");
+  bars.className = "bars";
+  const max = Math.max(...record.probabilities);
+  record.probabilities.forEach((probability, index) => {
+    const row = document.createElement("div");
+    row.className = "bar";
+    const label = document.createElement("label");
+    label.textContent = record.candidate_ids[index];
+    const track = document.createElement("div");
+    track.className = "track";
+    const fill = document.createElement("div");
+    fill.className = "fill" + (probability === max ? " gold" : "");
+    fill.style.width = (100 * probability).toFixed(2) + "%";
+    track.append(fill);
+    const value = document.createElement("div");
+    value.className = "pct";
+    value.textContent = pct(probability);
+    row.append(label, track, value);
+    bars.append(row);
+  });
+  card.append(bars);
+
+  if (record.teacher) {
+    const teacher = document.createElement("div");
+    teacher.className = "teacher";
+    const parts = Object.entries(record.teacher).map(([key, value]) => key + ": " + fmt(value, 3));
+    teacher.innerHTML = "reference — <code>" + parts.join(" · ") + "</code>";
+    card.append(teacher);
+  }
+  return card;
+}
+
+function render() {
+  renderSummary();
+  renderChips();
+  const box = document.getElementById("records");
+  box.textContent = "";
+  const records = (state.bundle.records || []).filter(
+    (record) => state.filter === "all" || record.family === state.filter
+  );
+  records.forEach((record) => box.append(renderRecord(record)));
+  if (!records.length) box.innerHTML = "<p id='error'>No records for this filter.</p>";
+}
+
+fetch("data/domains.json")
+  .then((response) => { if (!response.ok) throw new Error("HTTP " + response.status); return response.json(); })
+  .then((bundle) => { state.bundle = bundle; render(); })
+  .catch((error) => {
+    document.getElementById("error").textContent =
+      "Could not load data/domains.json (" + error.message + "). Generate it with `minojev demo` and serve over HTTP.";
+  });
+</script>
+</body>
+</html>
