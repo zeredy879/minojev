@@ -1,0 +1,3478 @@
+{
+  "model": {
+    "checkpoint": "runs/qwen-head-cal",
+    "config": {
+      "format": "minojev-checkpoint",
+      "version": 2,
+      "backbone": {
+        "type": "hf",
+        "source": "Qwen/Qwen3-0.6B-Base",
+        "hidden_size": 1024
+      },
+      "head": {
+        "hidden_size": 1024,
+        "attention_dim": 256,
+        "num_heads": 8
+      },
+      "objective": null,
+      "metrics": {
+        "questions": 1440,
+        "labelled": 1440,
+        "accuracy": 0.5840277777777778,
+        "accuracy_by_type": {
+          "boolean": 0.747917,
+          "choice": 0.589583,
+          "score": 0.414583
+        },
+        "accuracy_by_family": {
+          "code-review": 0.658333,
+          "leads": 0.470833,
+          "moderation": 0.7375,
+          "refunds": 0.454167,
+          "support": 0.470833,
+          "triage": 0.7125
+        },
+        "gold_nll": 1.0386324320480909,
+        "mean_confidence": 0.46337427709722223,
+        "expected_calibration_error": 0.13811550415277773,
+        "teacher_scored": 1440,
+        "teacher_ce": 1.0925528203768191,
+        "distribution_error": 0.33790111090119945,
+        "brier": 0.33790111090119945,
+        "teacher_argmax_accuracy": 0.5840277777777778,
+        "teacher_topset_accuracy": 0.5840277777777778,
+        "teacher_argmax_by_family": {
+          "code-review": 0.658333,
+          "leads": 0.470833,
+          "moderation": 0.7375,
+          "refunds": 0.454167,
+          "support": 0.470833,
+          "triage": 0.7125
+        },
+        "teacher_topset_by_family": {
+          "code-review": 0.658333,
+          "leads": 0.470833,
+          "moderation": 0.7375,
+          "refunds": 0.454167,
+          "support": 0.470833,
+          "triage": 0.7125
+        },
+        "decode_steps": 0
+      },
+      "calibration": {
+        "temperatures": {
+          "choice": 0.7322,
+          "boolean": 0.9812,
+          "score": 1.4783
+        }
+      }
+    },
+    "parameters": 596579074
+  },
+  "summary": {
+    "questions": 75,
+    "labelled": 75,
+    "accuracy": 0.6133333333333333,
+    "accuracy_by_type": {
+      "boolean": 0.76,
+      "choice": 0.44,
+      "score": 0.64
+    },
+    "accuracy_by_family": {
+      "code-review": 0.666667,
+      "leads": 0.416667,
+      "moderation": 0.666667,
+      "refunds": 0.583333,
+      "support": 0.6,
+      "triage": 0.75
+    },
+    "gold_nll": 1.0443149775957579,
+    "mean_confidence": 0.46575797719999995,
+    "expected_calibration_error": 0.16685207720000003,
+    "accuracy_by_candidate_count": {
+      "2": 0.76,
+      "3-4": 0.44,
+      "5-8": 0.64
+    },
+    "selective_accuracy": {
+      "0.5": {
+        "coverage": 0.44,
+        "accuracy": 0.727273
+      },
+      "0.7": {
+        "coverage": 0.146667,
+        "accuracy": 1.0
+      },
+      "0.9": {
+        "coverage": 0.053333,
+        "accuracy": 1.0
+      }
+    },
+    "teacher_scored": 75,
+    "teacher_ce": 1.0990165699676226,
+    "distribution_error": 0.3390845830310985,
+    "brier": 0.3390845830310985,
+    "teacher_argmax_accuracy": 0.6133333333333333,
+    "teacher_topset_accuracy": 0.6133333333333333,
+    "teacher_argmax_by_family": {
+      "code-review": 0.666667,
+      "leads": 0.416667,
+      "moderation": 0.666667,
+      "refunds": 0.583333,
+      "support": 0.6,
+      "triage": 0.75
+    },
+    "teacher_topset_by_family": {
+      "code-review": 0.666667,
+      "leads": 0.416667,
+      "moderation": 0.666667,
+      "refunds": 0.583333,
+      "support": 0.6,
+      "triage": 0.75
+    },
+    "decode_steps": 0
+  },
+  "records": [
+    {
+      "id": "test-support-000000",
+      "qid": "queue",
+      "type": "choice",
+      "state": {
+        "ticket": "Password reset and notification emails to this domain are bouncing.",
+        "customer_tier": "pro",
+        "sentiment": 0.21,
+        "prior_contacts_7d": 3,
+        "sla_hours_left": 13
+      },
+      "instructions": "Which support queue should handle this ticket?",
+      "candidate_ids": [
+        "access",
+        "billing",
+        "deliverability",
+        "retention"
+      ],
+      "probabilities": [
+        0.22023654,
+        0.23995577,
+        0.30421957,
+        0.23558809
+      ],
+      "logits": [
+        20.95175552,
+        21.03750801,
+        21.27480316,
+        21.01913834
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "support",
+      "input_tokens": 273,
+      "gold": "deliverability",
+      "correct": true,
+      "teacher": {
+        "access": 0.05000000000000001,
+        "billing": 0.05000000000000001,
+        "deliverability": 0.85,
+        "retention": 0.05000000000000001
+      }
+    },
+    {
+      "id": "test-support-000000",
+      "qid": "escalate",
+      "type": "boolean",
+      "state": {
+        "ticket": "Password reset and notification emails to this domain are bouncing.",
+        "customer_tier": "pro",
+        "sentiment": 0.21,
+        "prior_contacts_7d": 3,
+        "sla_hours_left": 13
+      },
+      "instructions": "Should this ticket be escalated to a human agent now?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.28627953,
+        0.7137205
+      ],
+      "logits": [
+        15.7421875,
+        16.65571022
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "support",
+      "input_tokens": 156,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-support-000000",
+      "qid": "churn",
+      "type": "score",
+      "state": {
+        "ticket": "Password reset and notification emails to this domain are bouncing.",
+        "customer_tier": "pro",
+        "sentiment": 0.21,
+        "prior_contacts_7d": 3,
+        "sla_hours_left": 13
+      },
+      "instructions": "What is the churn risk for this customer?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.20362221,
+        0.16737062,
+        0.16048633,
+        0.22489795,
+        0.24362287
+      ],
+      "logits": [
+        1.07390153,
+        0.87784576,
+        0.83584392,
+        1.17328191,
+        1.25325656
+      ],
+      "expected": 2.13752842,
+      "level": 4,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "support",
+      "input_tokens": 347,
+      "gold": 2,
+      "correct": false,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.8,
+        "3": 0.04999999999999999,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-moderation-000001",
+      "qid": "category",
+      "type": "choice",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 1,
+          "threat_terms": 2,
+          "hate_terms": 3,
+          "nsfw_score": 0.62
+        },
+        "author_reports": 6,
+        "account_age_days": 2467
+      },
+      "instructions": "Which policy category applies to this content?",
+      "candidate_ids": [
+        "clean",
+        "spam",
+        "harassment",
+        "nsfw"
+      ],
+      "probabilities": [
+        0.06608092,
+        0.17202052,
+        0.54613608,
+        0.2157625
+      ],
+      "logits": [
+        19.84985733,
+        20.80659103,
+        21.9618454,
+        21.03315544
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "moderation",
+      "input_tokens": 301,
+      "gold": "harassment",
+      "correct": true,
+      "teacher": {
+        "clean": 0.05000000000000001,
+        "spam": 0.05000000000000001,
+        "harassment": 0.85,
+        "nsfw": 0.05000000000000001
+      }
+    },
+    {
+      "id": "test-moderation-000001",
+      "qid": "block",
+      "type": "boolean",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 1,
+          "threat_terms": 2,
+          "hate_terms": 3,
+          "nsfw_score": 0.62
+        },
+        "author_reports": 6,
+        "account_age_days": 2467
+      },
+      "instructions": "Should this content be blocked?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.06323165,
+        0.93676835
+      ],
+      "logits": [
+        12.54227543,
+        15.23790646
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "moderation",
+      "input_tokens": 160,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-moderation-000001",
+      "qid": "severity",
+      "type": "score",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 1,
+          "threat_terms": 2,
+          "hate_terms": 3,
+          "nsfw_score": 0.62
+        },
+        "author_reports": 6,
+        "account_age_days": 2467
+      },
+      "instructions": "How severe is this policy issue?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.1518998,
+        0.17501475,
+        0.20868209,
+        0.2744559,
+        0.18994752
+      ],
+      "logits": [
+        0.05339581,
+        0.19504513,
+        0.37098685,
+        0.64496547,
+        0.27692255
+      ],
+      "expected": 2.17553663,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "moderation",
+      "input_tokens": 372,
+      "gold": 4,
+      "correct": false,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.8
+      }
+    },
+    {
+      "id": "test-code-review-000002",
+      "qid": "risk",
+      "type": "choice",
+      "state": {
+        "files_changed": 7,
+        "lines_changed": 1067,
+        "touches": [
+          "api"
+        ],
+        "tests_added": 6,
+        "coverage_delta": -0.05,
+        "author_experience_months": 9
+      },
+      "instructions": "What is the review risk level of this change?",
+      "candidate_ids": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "probabilities": [
+        0.31657058,
+        0.15183559,
+        0.5315938
+      ],
+      "logits": [
+        9.87935543,
+        9.14460754,
+        10.39768887
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "code-review",
+      "input_tokens": 189,
+      "gold": "high",
+      "correct": true,
+      "teacher": {
+        "low": 0.07500000000000001,
+        "medium": 0.07500000000000001,
+        "high": 0.85
+      }
+    },
+    {
+      "id": "test-code-review-000002",
+      "qid": "second-reviewer",
+      "type": "boolean",
+      "state": {
+        "files_changed": 7,
+        "lines_changed": 1067,
+        "touches": [
+          "api"
+        ],
+        "tests_added": 6,
+        "coverage_delta": -0.05,
+        "author_experience_months": 9
+      },
+      "instructions": "Does this change require a second reviewer?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.29779929,
+        0.70220065
+      ],
+      "logits": [
+        7.09861898,
+        7.95641851
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "code-review",
+      "input_tokens": 132,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-code-review-000002",
+      "qid": "complexity",
+      "type": "score",
+      "state": {
+        "files_changed": 7,
+        "lines_changed": 1067,
+        "touches": [
+          "api"
+        ],
+        "tests_added": 6,
+        "coverage_delta": -0.05,
+        "author_experience_months": 9
+      },
+      "instructions": "How complex is this change to review?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.11589201,
+        0.16910742,
+        0.20997845,
+        0.32415238,
+        0.18086967
+      ],
+      "logits": [
+        -10.34776592,
+        -9.96989059,
+        -9.75341988,
+        -9.31921101,
+        -9.90264797
+      ],
+      "expected": 2.28500032,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "code-review",
+      "input_tokens": 307,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-refunds-000003",
+      "qid": "action",
+      "type": "choice",
+      "state": {
+        "order_status": "in_transit",
+        "days_since_delivery": 79,
+        "reason": "late",
+        "item_price_usd": 385,
+        "customer_tier": "basic",
+        "return_window_days": 30
+      },
+      "instructions": "What should the agent do with this refund request?",
+      "candidate_ids": [
+        "approve",
+        "deny",
+        "escalate",
+        "request_info"
+      ],
+      "probabilities": [
+        0.27130684,
+        0.19772904,
+        0.37678722,
+        0.15417698
+      ],
+      "logits": [
+        19.49845123,
+        19.18209839,
+        19.82688141,
+        18.93330193
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "refunds",
+      "input_tokens": 269,
+      "gold": "request_info",
+      "correct": false,
+      "teacher": {
+        "approve": 0.05000000000000001,
+        "deny": 0.05000000000000001,
+        "escalate": 0.05000000000000001,
+        "request_info": 0.85
+      }
+    },
+    {
+      "id": "test-refunds-000003",
+      "qid": "eligible",
+      "type": "boolean",
+      "state": {
+        "order_status": "in_transit",
+        "days_since_delivery": 79,
+        "reason": "late",
+        "item_price_usd": 385,
+        "customer_tier": "basic",
+        "return_window_days": 30
+      },
+      "instructions": "Is the order eligible for a standard refund?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.55883187,
+        0.44116816
+      ],
+      "logits": [
+        14.4757843,
+        14.23936176
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "refunds",
+      "input_tokens": 145,
+      "gold": false,
+      "correct": true,
+      "teacher": {
+        "true": 0.1,
+        "false": 0.9
+      }
+    },
+    {
+      "id": "test-refunds-000003",
+      "qid": "escalation-risk",
+      "type": "score",
+      "state": {
+        "order_status": "in_transit",
+        "days_since_delivery": 79,
+        "reason": "late",
+        "item_price_usd": 385,
+        "customer_tier": "basic",
+        "return_window_days": 30
+      },
+      "instructions": "How likely is this decision to cause a complaint?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.16676885,
+        0.17512389,
+        0.19241181,
+        0.2454398,
+        0.22025573
+      ],
+      "logits": [
+        1.00226915,
+        1.05115414,
+        1.14529836,
+        1.38871217,
+        1.28044975
+      ],
+      "expected": 2.17728996,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "refunds",
+      "input_tokens": 337,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-triage-000004",
+      "qid": "urgency",
+      "type": "choice",
+      "state": {
+        "age": 43,
+        "temperature_c": 37.5,
+        "heart_rate_bpm": 121,
+        "spo2_percent": 94,
+        "pain_level": 6,
+        "symptom_duration_hours": 26
+      },
+      "instructions": "What is the intake urgency for this patient?",
+      "candidate_ids": [
+        "self_care",
+        "soon",
+        "urgent",
+        "emergency"
+      ],
+      "probabilities": [
+        0.079124,
+        0.16071069,
+        0.35845467,
+        0.40171063
+      ],
+      "logits": [
+        22.36382294,
+        23.07241249,
+        23.87460899,
+        23.98853874
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "triage",
+      "input_tokens": 274,
+      "gold": "emergency",
+      "correct": true,
+      "teacher": {
+        "self_care": 0.05000000000000001,
+        "soon": 0.05000000000000001,
+        "urgent": 0.05000000000000001,
+        "emergency": 0.85
+      }
+    },
+    {
+      "id": "test-triage-000004",
+      "qid": "red-flag",
+      "type": "boolean",
+      "state": {
+        "age": 43,
+        "temperature_c": 37.5,
+        "heart_rate_bpm": 121,
+        "spo2_percent": 94,
+        "pain_level": 6,
+        "symptom_duration_hours": 26
+      },
+      "instructions": "Does any red-flag vital sign trigger apply?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.30225512,
+        0.69774491
+      ],
+      "logits": [
+        16.76145172,
+        17.59803391
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "triage",
+      "input_tokens": 146,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-triage-000004",
+      "qid": "severity",
+      "type": "score",
+      "state": {
+        "age": 43,
+        "temperature_c": 37.5,
+        "heart_rate_bpm": 121,
+        "spo2_percent": 94,
+        "pain_level": 6,
+        "symptom_duration_hours": 26
+      },
+      "instructions": "How severe does this intake look?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.23536089,
+        0.14284617,
+        0.21114455,
+        0.15488712,
+        0.25576127
+      ],
+      "logits": [
+        2.74505162,
+        2.24569988,
+        2.63647461,
+        2.32662821,
+        2.82817602
+      ],
+      "expected": 2.05284166,
+      "level": 4,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "triage",
+      "input_tokens": 332,
+      "gold": 4,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.8
+      }
+    },
+    {
+      "id": "test-leads-000005",
+      "qid": "tier",
+      "type": "choice",
+      "state": {
+        "company_size": 4483,
+        "budget_usd": 60000,
+        "timeline_days": 14,
+        "engagement_score": 0.81,
+        "industry": "saas"
+      },
+      "instructions": "How should this lead be classified?",
+      "candidate_ids": [
+        "hot",
+        "warm",
+        "cold"
+      ],
+      "probabilities": [
+        0.21575889,
+        0.41080263,
+        0.37343842
+      ],
+      "logits": [
+        21.0596962,
+        21.70364761,
+        21.60828781
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "leads",
+      "input_tokens": 186,
+      "gold": "hot",
+      "correct": false,
+      "teacher": {
+        "hot": 0.85,
+        "warm": 0.07500000000000001,
+        "cold": 0.07500000000000001
+      }
+    },
+    {
+      "id": "test-leads-000005",
+      "qid": "enterprise",
+      "type": "boolean",
+      "state": {
+        "company_size": 4483,
+        "budget_usd": 60000,
+        "timeline_days": 14,
+        "engagement_score": 0.81,
+        "industry": "saas"
+      },
+      "instructions": "Should this lead be routed to the enterprise team?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.64480889,
+        0.35519105
+      ],
+      "logits": [
+        17.195858,
+        16.59955978
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "leads",
+      "input_tokens": 142,
+      "gold": true,
+      "correct": false,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-leads-000005",
+      "qid": "fit",
+      "type": "score",
+      "state": {
+        "company_size": 4483,
+        "budget_usd": 60000,
+        "timeline_days": 14,
+        "engagement_score": 0.81,
+        "industry": "saas"
+      },
+      "instructions": "How well does this lead fit the product?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.17335412,
+        0.19092928,
+        0.2018193,
+        0.24150029,
+        0.19239704
+      ],
+      "logits": [
+        1.10770142,
+        1.2042681,
+        1.25973773,
+        1.43923569,
+        1.21192622
+      ],
+      "expected": 2.0886569,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "leads",
+      "input_tokens": 322,
+      "gold": 4,
+      "correct": false,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.8
+      }
+    },
+    {
+      "id": "test-support-000006",
+      "qid": "queue",
+      "type": "choice",
+      "state": {
+        "ticket": "Team emails from our platform are delayed by hours for this account.",
+        "customer_tier": "enterprise",
+        "sentiment": -0.25,
+        "prior_contacts_7d": 3,
+        "sla_hours_left": 23
+      },
+      "instructions": "Which support queue should handle this ticket?",
+      "candidate_ids": [
+        "access",
+        "billing",
+        "deliverability",
+        "retention"
+      ],
+      "probabilities": [
+        0.24588044,
+        0.26693836,
+        0.22532205,
+        0.26185918
+      ],
+      "logits": [
+        21.53309059,
+        21.61526299,
+        21.44577599,
+        21.59605217
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "support",
+      "input_tokens": 281,
+      "gold": "deliverability",
+      "correct": false,
+      "teacher": {
+        "access": 0.05000000000000001,
+        "billing": 0.05000000000000001,
+        "deliverability": 0.85,
+        "retention": 0.05000000000000001
+      }
+    },
+    {
+      "id": "test-support-000006",
+      "qid": "escalate",
+      "type": "boolean",
+      "state": {
+        "ticket": "Team emails from our platform are delayed by hours for this account.",
+        "customer_tier": "enterprise",
+        "sentiment": -0.25,
+        "prior_contacts_7d": 3,
+        "sla_hours_left": 23
+      },
+      "instructions": "Should this ticket be escalated to a human agent now?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.30242407,
+        0.69757593
+      ],
+      "logits": [
+        17.29703712,
+        18.13281822
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "support",
+      "input_tokens": 160,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-support-000006",
+      "qid": "churn",
+      "type": "score",
+      "state": {
+        "ticket": "Team emails from our platform are delayed by hours for this account.",
+        "customer_tier": "enterprise",
+        "sentiment": -0.25,
+        "prior_contacts_7d": 3,
+        "sla_hours_left": 23
+      },
+      "instructions": "What is the churn risk for this customer?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.1833891,
+        0.17565723,
+        0.18236853,
+        0.23728423,
+        0.22130081
+      ],
+      "logits": [
+        1.63431895,
+        1.59124339,
+        1.6287384,
+        1.89196754,
+        1.82223177
+      ],
+      "expected": 2.13745022,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "support",
+      "input_tokens": 357,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-moderation-000007",
+      "qid": "category",
+      "type": "choice",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 0,
+          "threat_terms": 3,
+          "hate_terms": 3,
+          "nsfw_score": 0.7
+        },
+        "author_reports": 2,
+        "account_age_days": 217
+      },
+      "instructions": "Which policy category applies to this content?",
+      "candidate_ids": [
+        "clean",
+        "spam",
+        "harassment",
+        "nsfw"
+      ],
+      "probabilities": [
+        0.06918564,
+        0.17166875,
+        0.54283231,
+        0.21631332
+      ],
+      "logits": [
+        20.21328354,
+        21.12205696,
+        22.27329063,
+        21.35321808
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "moderation",
+      "input_tokens": 293,
+      "gold": "harassment",
+      "correct": true,
+      "teacher": {
+        "clean": 0.05000000000000001,
+        "spam": 0.05000000000000001,
+        "harassment": 0.85,
+        "nsfw": 0.05000000000000001
+      }
+    },
+    {
+      "id": "test-moderation-000007",
+      "qid": "block",
+      "type": "boolean",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 0,
+          "threat_terms": 3,
+          "hate_terms": 3,
+          "nsfw_score": 0.7
+        },
+        "author_reports": 2,
+        "account_age_days": 217
+      },
+      "instructions": "Should this content be blocked?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.07326471,
+        0.92673534
+      ],
+      "logits": [
+        13.25791264,
+        15.79550171
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "moderation",
+      "input_tokens": 156,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-moderation-000007",
+      "qid": "severity",
+      "type": "score",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 0,
+          "threat_terms": 3,
+          "hate_terms": 3,
+          "nsfw_score": 0.7
+        },
+        "author_reports": 2,
+        "account_age_days": 217
+      },
+      "instructions": "How severe is this policy issue?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.14824939,
+        0.17937741,
+        0.21647452,
+        0.27295372,
+        0.18294504
+      ],
+      "logits": [
+        0.50458318,
+        0.69517934,
+        0.88316023,
+        1.11498964,
+        0.71487314
+      ],
+      "expected": 2.16296768,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "moderation",
+      "input_tokens": 362,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-code-review-000008",
+      "qid": "risk",
+      "type": "choice",
+      "state": {
+        "files_changed": 5,
+        "lines_changed": 696,
+        "touches": [
+          "ui",
+          "docs",
+          "tests"
+        ],
+        "tests_added": 8,
+        "coverage_delta": 0.98,
+        "author_experience_months": 2
+      },
+      "instructions": "What is the review risk level of this change?",
+      "candidate_ids": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "probabilities": [
+        0.31530783,
+        0.17151147,
+        0.51318067
+      ],
+      "logits": [
+        10.82405663,
+        10.21515751,
+        11.31113529
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "code-review",
+      "input_tokens": 198,
+      "gold": "medium",
+      "correct": false,
+      "teacher": {
+        "low": 0.07500000000000001,
+        "medium": 0.85,
+        "high": 0.07500000000000001
+      }
+    },
+    {
+      "id": "test-code-review-000008",
+      "qid": "second-reviewer",
+      "type": "boolean",
+      "state": {
+        "files_changed": 5,
+        "lines_changed": 696,
+        "touches": [
+          "ui",
+          "docs",
+          "tests"
+        ],
+        "tests_added": 8,
+        "coverage_delta": 0.98,
+        "author_experience_months": 2
+      },
+      "instructions": "Does this change require a second reviewer?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.15224938,
+        0.84775066
+      ],
+      "logits": [
+        8.76396751,
+        10.48103428
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "code-review",
+      "input_tokens": 138,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-code-review-000008",
+      "qid": "complexity",
+      "type": "score",
+      "state": {
+        "files_changed": 5,
+        "lines_changed": 696,
+        "touches": [
+          "ui",
+          "docs",
+          "tests"
+        ],
+        "tests_added": 8,
+        "coverage_delta": 0.98,
+        "author_experience_months": 2
+      },
+      "instructions": "How complex is this change to review?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.09991734,
+        0.19083001,
+        0.22264104,
+        0.33497348,
+        0.15163814
+      ],
+      "logits": [
+        -7.61407375,
+        -6.96703386,
+        -6.8128562,
+        -6.40436554,
+        -7.19691992
+      ],
+      "expected": 2.24758506,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "code-review",
+      "input_tokens": 322,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-refunds-000009",
+      "qid": "action",
+      "type": "choice",
+      "state": {
+        "order_status": "in_transit",
+        "days_since_delivery": 22,
+        "reason": "late",
+        "item_price_usd": 232,
+        "customer_tier": "pro",
+        "return_window_days": 30
+      },
+      "instructions": "What should the agent do with this refund request?",
+      "candidate_ids": [
+        "approve",
+        "deny",
+        "escalate",
+        "request_info"
+      ],
+      "probabilities": [
+        0.26953033,
+        0.19766179,
+        0.37627348,
+        0.15653433
+      ],
+      "logits": [
+        19.42263603,
+        19.11251259,
+        19.75627136,
+        18.8792305
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "refunds",
+      "input_tokens": 269,
+      "gold": "request_info",
+      "correct": false,
+      "teacher": {
+        "approve": 0.05000000000000001,
+        "deny": 0.05000000000000001,
+        "escalate": 0.05000000000000001,
+        "request_info": 0.85
+      }
+    },
+    {
+      "id": "test-refunds-000009",
+      "qid": "eligible",
+      "type": "boolean",
+      "state": {
+        "order_status": "in_transit",
+        "days_since_delivery": 22,
+        "reason": "late",
+        "item_price_usd": 232,
+        "customer_tier": "pro",
+        "return_window_days": 30
+      },
+      "instructions": "Is the order eligible for a standard refund?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.55215627,
+        0.44784373
+      ],
+      "logits": [
+        14.72452068,
+        14.51513386
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "refunds",
+      "input_tokens": 145,
+      "gold": false,
+      "correct": true,
+      "teacher": {
+        "true": 0.1,
+        "false": 0.9
+      }
+    },
+    {
+      "id": "test-refunds-000009",
+      "qid": "escalation-risk",
+      "type": "score",
+      "state": {
+        "order_status": "in_transit",
+        "days_since_delivery": 22,
+        "reason": "late",
+        "item_price_usd": 232,
+        "customer_tier": "pro",
+        "return_window_days": 30
+      },
+      "instructions": "How likely is this decision to cause a complaint?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.16943613,
+        0.17432316,
+        0.18869293,
+        0.24474508,
+        0.22280279
+      ],
+      "logits": [
+        1.08012176,
+        1.10855651,
+        1.18776667,
+        1.44786286,
+        1.35393274
+      ],
+      "expected": 2.17715549,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "refunds",
+      "input_tokens": 337,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-triage-000010",
+      "qid": "urgency",
+      "type": "choice",
+      "state": {
+        "age": 76,
+        "temperature_c": 39.8,
+        "heart_rate_bpm": 137,
+        "spo2_percent": 97,
+        "pain_level": 1,
+        "symptom_duration_hours": 196
+      },
+      "instructions": "What is the intake urgency for this patient?",
+      "candidate_ids": [
+        "self_care",
+        "soon",
+        "urgent",
+        "emergency"
+      ],
+      "probabilities": [
+        0.0815819,
+        0.15602531,
+        0.35279617,
+        0.40959665
+      ],
+      "logits": [
+        22.30150223,
+        22.94991302,
+        23.76578522,
+        23.91506767
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "triage",
+      "input_tokens": 278,
+      "gold": "emergency",
+      "correct": true,
+      "teacher": {
+        "self_care": 0.05000000000000001,
+        "soon": 0.05000000000000001,
+        "urgent": 0.05000000000000001,
+        "emergency": 0.85
+      }
+    },
+    {
+      "id": "test-triage-000010",
+      "qid": "red-flag",
+      "type": "boolean",
+      "state": {
+        "age": 76,
+        "temperature_c": 39.8,
+        "heart_rate_bpm": 137,
+        "spo2_percent": 97,
+        "pain_level": 1,
+        "symptom_duration_hours": 196
+      },
+      "instructions": "Does any red-flag vital sign trigger apply?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.29547802,
+        0.70452201
+      ],
+      "logits": [
+        16.70858383,
+        17.57750893
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "triage",
+      "input_tokens": 148,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-triage-000010",
+      "qid": "severity",
+      "type": "score",
+      "state": {
+        "age": 76,
+        "temperature_c": 39.8,
+        "heart_rate_bpm": 137,
+        "spo2_percent": 97,
+        "pain_level": 1,
+        "symptom_duration_hours": 196
+      },
+      "instructions": "How severe does this intake look?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.23473999,
+        0.14372297,
+        0.21303159,
+        0.15386346,
+        0.25464198
+      ],
+      "logits": [
+        2.77422881,
+        2.283638,
+        2.67719078,
+        2.35181594,
+        2.85560894
+      ],
+      "expected": 2.0499444,
+      "level": 4,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "triage",
+      "input_tokens": 337,
+      "gold": 4,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.8
+      }
+    },
+    {
+      "id": "test-leads-000011",
+      "qid": "tier",
+      "type": "choice",
+      "state": {
+        "company_size": 454,
+        "budget_usd": 25000,
+        "timeline_days": 7,
+        "engagement_score": 0.96,
+        "industry": "finance"
+      },
+      "instructions": "How should this lead be classified?",
+      "candidate_ids": [
+        "hot",
+        "warm",
+        "cold"
+      ],
+      "probabilities": [
+        0.21079279,
+        0.39812291,
+        0.39108434
+      ],
+      "logits": [
+        20.97915459,
+        21.61503983,
+        21.5972023
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "leads",
+      "input_tokens": 177,
+      "gold": "warm",
+      "correct": true,
+      "teacher": {
+        "hot": 0.07500000000000001,
+        "warm": 0.85,
+        "cold": 0.07500000000000001
+      }
+    },
+    {
+      "id": "test-leads-000011",
+      "qid": "enterprise",
+      "type": "boolean",
+      "state": {
+        "company_size": 454,
+        "budget_usd": 25000,
+        "timeline_days": 7,
+        "engagement_score": 0.96,
+        "industry": "finance"
+      },
+      "instructions": "Should this lead be routed to the enterprise team?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.62975949,
+        0.37024051
+      ],
+      "logits": [
+        16.83610153,
+        16.30491638
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "leads",
+      "input_tokens": 136,
+      "gold": false,
+      "correct": true,
+      "teacher": {
+        "true": 0.1,
+        "false": 0.9
+      }
+    },
+    {
+      "id": "test-leads-000011",
+      "qid": "fit",
+      "type": "score",
+      "state": {
+        "company_size": 454,
+        "budget_usd": 25000,
+        "timeline_days": 7,
+        "engagement_score": 0.96,
+        "industry": "finance"
+      },
+      "instructions": "How well does this lead fit the product?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.19191414,
+        0.17602678,
+        0.18764289,
+        0.23218368,
+        0.21223253
+      ],
+      "logits": [
+        1.46736407,
+        1.38095212,
+        1.44485664,
+        1.65784478,
+        1.56799853
+      ],
+      "expected": 2.09679365,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "leads",
+      "input_tokens": 307,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-support-000012",
+      "qid": "queue",
+      "type": "choice",
+      "state": {
+        "ticket": "Account says locked after too many attempts; the customer needs access today.",
+        "customer_tier": "enterprise",
+        "sentiment": -0.52,
+        "prior_contacts_7d": 2,
+        "sla_hours_left": 49
+      },
+      "instructions": "Which support queue should handle this ticket?",
+      "candidate_ids": [
+        "access",
+        "billing",
+        "deliverability",
+        "retention"
+      ],
+      "probabilities": [
+        0.20741212,
+        0.27849251,
+        0.23340307,
+        0.28069228
+      ],
+      "logits": [
+        20.70736122,
+        21.00204468,
+        20.82542038,
+        21.00991249
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "support",
+      "input_tokens": 285,
+      "gold": "access",
+      "correct": false,
+      "teacher": {
+        "access": 0.85,
+        "billing": 0.05000000000000001,
+        "deliverability": 0.05000000000000001,
+        "retention": 0.05000000000000001
+      }
+    },
+    {
+      "id": "test-support-000012",
+      "qid": "escalate",
+      "type": "boolean",
+      "state": {
+        "ticket": "Account says locked after too many attempts; the customer needs access today.",
+        "customer_tier": "enterprise",
+        "sentiment": -0.52,
+        "prior_contacts_7d": 2,
+        "sla_hours_left": 49
+      },
+      "instructions": "Should this ticket be escalated to a human agent now?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.30491617,
+        0.6950838
+      ],
+      "logits": [
+        16.5035553,
+        17.32755089
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "support",
+      "input_tokens": 162,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-support-000012",
+      "qid": "churn",
+      "type": "score",
+      "state": {
+        "ticket": "Account says locked after too many attempts; the customer needs access today.",
+        "customer_tier": "enterprise",
+        "sentiment": -0.52,
+        "prior_contacts_7d": 2,
+        "sla_hours_left": 49
+      },
+      "instructions": "What is the churn risk for this customer?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.18871164,
+        0.17172088,
+        0.18866999,
+        0.22554004,
+        0.22535744
+      ],
+      "logits": [
+        1.68681335,
+        1.59246361,
+        1.6865927,
+        1.86509097,
+        1.86428106
+      ],
+      "expected": 2.12711096,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "support",
+      "input_tokens": 362,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-moderation-000013",
+      "qid": "category",
+      "type": "choice",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 1,
+          "threat_terms": 2,
+          "hate_terms": 2,
+          "nsfw_score": 0.72
+        },
+        "author_reports": 6,
+        "account_age_days": 1951
+      },
+      "instructions": "Which policy category applies to this content?",
+      "candidate_ids": [
+        "clean",
+        "spam",
+        "harassment",
+        "nsfw"
+      ],
+      "probabilities": [
+        0.06938498,
+        0.17529298,
+        0.54267436,
+        0.21264774
+      ],
+      "logits": [
+        20.22143555,
+        21.14822388,
+        22.27827454,
+        21.34140205
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "moderation",
+      "input_tokens": 301,
+      "gold": "harassment",
+      "correct": true,
+      "teacher": {
+        "clean": 0.05000000000000001,
+        "spam": 0.05000000000000001,
+        "harassment": 0.85,
+        "nsfw": 0.05000000000000001
+      }
+    },
+    {
+      "id": "test-moderation-000013",
+      "qid": "block",
+      "type": "boolean",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 1,
+          "threat_terms": 2,
+          "hate_terms": 2,
+          "nsfw_score": 0.72
+        },
+        "author_reports": 6,
+        "account_age_days": 1951
+      },
+      "instructions": "Should this content be blocked?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.06585896,
+        0.93414104
+      ],
+      "logits": [
+        12.75470638,
+        15.40681839
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "moderation",
+      "input_tokens": 160,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-moderation-000013",
+      "qid": "severity",
+      "type": "score",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 1,
+          "threat_terms": 2,
+          "hate_terms": 2,
+          "nsfw_score": 0.72
+        },
+        "author_reports": 6,
+        "account_age_days": 1951
+      },
+      "instructions": "How severe is this policy issue?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.15406677,
+        0.17463174,
+        0.21316774,
+        0.2684598,
+        0.18967406
+      ],
+      "logits": [
+        0.29149798,
+        0.41679135,
+        0.61619139,
+        0.84681314,
+        0.49941903
+      ],
+      "expected": 2.16504288,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "moderation",
+      "input_tokens": 372,
+      "gold": 4,
+      "correct": false,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.8
+      }
+    },
+    {
+      "id": "test-code-review-000014",
+      "qid": "risk",
+      "type": "choice",
+      "state": {
+        "files_changed": 3,
+        "lines_changed": 267,
+        "touches": [
+          "search",
+          "tests"
+        ],
+        "tests_added": 0,
+        "coverage_delta": 1.22,
+        "author_experience_months": 6
+      },
+      "instructions": "What is the review risk level of this change?",
+      "candidate_ids": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "probabilities": [
+        0.31774288,
+        0.16253237,
+        0.51972473
+      ],
+      "logits": [
+        10.90477848,
+        10.23441315,
+        11.39683533
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "code-review",
+      "input_tokens": 192,
+      "gold": "medium",
+      "correct": false,
+      "teacher": {
+        "low": 0.07500000000000001,
+        "medium": 0.85,
+        "high": 0.07500000000000001
+      }
+    },
+    {
+      "id": "test-code-review-000014",
+      "qid": "second-reviewer",
+      "type": "boolean",
+      "state": {
+        "files_changed": 3,
+        "lines_changed": 267,
+        "touches": [
+          "search",
+          "tests"
+        ],
+        "tests_added": 0,
+        "coverage_delta": 1.22,
+        "author_experience_months": 6
+      },
+      "instructions": "Does this change require a second reviewer?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.35016507,
+        0.64983493
+      ],
+      "logits": [
+        9.05657005,
+        9.67488384
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "code-review",
+      "input_tokens": 134,
+      "gold": false,
+      "correct": false,
+      "teacher": {
+        "true": 0.1,
+        "false": 0.9
+      }
+    },
+    {
+      "id": "test-code-review-000014",
+      "qid": "complexity",
+      "type": "score",
+      "state": {
+        "files_changed": 3,
+        "lines_changed": 267,
+        "touches": [
+          "search",
+          "tests"
+        ],
+        "tests_added": 0,
+        "coverage_delta": 1.22,
+        "author_experience_months": 6
+      },
+      "instructions": "How complex is this change to review?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.1310928,
+        0.16573137,
+        0.2116866,
+        0.29450151,
+        0.19698776
+      ],
+      "logits": [
+        -8.25515842,
+        -8.02069569,
+        -7.77595711,
+        -7.4457798,
+        -7.84792233
+      ],
+      "expected": 2.26056004,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "code-review",
+      "input_tokens": 312,
+      "gold": 2,
+      "correct": false,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.8,
+        "3": 0.04999999999999999,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-refunds-000015",
+      "qid": "action",
+      "type": "choice",
+      "state": {
+        "order_status": "delivered",
+        "days_since_delivery": 35,
+        "reason": "changed_mind",
+        "item_price_usd": 775,
+        "customer_tier": "enterprise",
+        "return_window_days": 30
+      },
+      "instructions": "What should the agent do with this refund request?",
+      "candidate_ids": [
+        "approve",
+        "deny",
+        "escalate",
+        "request_info"
+      ],
+      "probabilities": [
+        0.26550186,
+        0.19938834,
+        0.37443259,
+        0.16067727
+      ],
+      "logits": [
+        19.87768173,
+        19.59131432,
+        20.22147179,
+        19.37545776
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "refunds",
+      "input_tokens": 273,
+      "gold": "escalate",
+      "correct": true,
+      "teacher": {
+        "approve": 0.05000000000000001,
+        "deny": 0.05000000000000001,
+        "escalate": 0.85,
+        "request_info": 0.05000000000000001
+      }
+    },
+    {
+      "id": "test-refunds-000015",
+      "qid": "eligible",
+      "type": "boolean",
+      "state": {
+        "order_status": "delivered",
+        "days_since_delivery": 35,
+        "reason": "changed_mind",
+        "item_price_usd": 775,
+        "customer_tier": "enterprise",
+        "return_window_days": 30
+      },
+      "instructions": "Is the order eligible for a standard refund?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.46155187,
+        0.5384481
+      ],
+      "logits": [
+        14.37037563,
+        14.52447224
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "refunds",
+      "input_tokens": 147,
+      "gold": false,
+      "correct": false,
+      "teacher": {
+        "true": 0.1,
+        "false": 0.9
+      }
+    },
+    {
+      "id": "test-refunds-000015",
+      "qid": "escalation-risk",
+      "type": "score",
+      "state": {
+        "order_status": "delivered",
+        "days_since_delivery": 35,
+        "reason": "changed_mind",
+        "item_price_usd": 775,
+        "customer_tier": "enterprise",
+        "return_window_days": 30
+      },
+      "instructions": "How likely is this decision to cause a complaint?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.18028718,
+        0.16103391,
+        0.18531495,
+        0.23718376,
+        0.23618023
+      ],
+      "logits": [
+        1.76617026,
+        1.65323412,
+        1.79367602,
+        2.04045439,
+        2.03621435
+      ],
+      "expected": 2.18793607,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 7.06971917,
+      "family": "refunds",
+      "input_tokens": 342,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-triage-000016",
+      "qid": "urgency",
+      "type": "choice",
+      "state": {
+        "age": 76,
+        "temperature_c": 39.7,
+        "heart_rate_bpm": 71,
+        "spo2_percent": 99,
+        "pain_level": 7,
+        "symptom_duration_hours": 126
+      },
+      "instructions": "What is the intake urgency for this patient?",
+      "candidate_ids": [
+        "self_care",
+        "soon",
+        "urgent",
+        "emergency"
+      ],
+      "probabilities": [
+        0.09439724,
+        0.15484269,
+        0.35051361,
+        0.40024644
+      ],
+      "logits": [
+        22.26497841,
+        22.75987625,
+        23.57686615,
+        23.70954704
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "triage",
+      "input_tokens": 274,
+      "gold": "emergency",
+      "correct": true,
+      "teacher": {
+        "self_care": 0.05000000000000001,
+        "soon": 0.05000000000000001,
+        "urgent": 0.05000000000000001,
+        "emergency": 0.85
+      }
+    },
+    {
+      "id": "test-triage-000016",
+      "qid": "red-flag",
+      "type": "boolean",
+      "state": {
+        "age": 76,
+        "temperature_c": 39.7,
+        "heart_rate_bpm": 71,
+        "spo2_percent": 99,
+        "pain_level": 7,
+        "symptom_duration_hours": 126
+      },
+      "instructions": "Does any red-flag vital sign trigger apply?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.30398479,
+        0.69601524
+      ],
+      "logits": [
+        16.57513237,
+        17.40352631
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "triage",
+      "input_tokens": 146,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-triage-000016",
+      "qid": "severity",
+      "type": "score",
+      "state": {
+        "age": 76,
+        "temperature_c": 39.7,
+        "heart_rate_bpm": 71,
+        "spo2_percent": 99,
+        "pain_level": 7,
+        "symptom_duration_hours": 126
+      },
+      "instructions": "How severe does this intake look?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.23003437,
+        0.14679201,
+        0.21674925,
+        0.15713303,
+        0.24929135
+      ],
+      "logits": [
+        2.65046477,
+        2.2012527,
+        2.59097719,
+        2.26932883,
+        2.73085833
+      ],
+      "expected": 2.04885507,
+      "level": 4,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "triage",
+      "input_tokens": 332,
+      "gold": 4,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.8
+      }
+    },
+    {
+      "id": "test-leads-000017",
+      "qid": "tier",
+      "type": "choice",
+      "state": {
+        "company_size": 4237,
+        "budget_usd": 60000,
+        "timeline_days": 14,
+        "engagement_score": 0.57,
+        "industry": "finance"
+      },
+      "instructions": "How should this lead be classified?",
+      "candidate_ids": [
+        "hot",
+        "warm",
+        "cold"
+      ],
+      "probabilities": [
+        0.21103492,
+        0.40635473,
+        0.38261038
+      ],
+      "logits": [
+        20.79790115,
+        21.45310402,
+        21.39289474
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "leads",
+      "input_tokens": 183,
+      "gold": "hot",
+      "correct": false,
+      "teacher": {
+        "hot": 0.85,
+        "warm": 0.07500000000000001,
+        "cold": 0.07500000000000001
+      }
+    },
+    {
+      "id": "test-leads-000017",
+      "qid": "enterprise",
+      "type": "boolean",
+      "state": {
+        "company_size": 4237,
+        "budget_usd": 60000,
+        "timeline_days": 14,
+        "engagement_score": 0.57,
+        "industry": "finance"
+      },
+      "instructions": "Should this lead be routed to the enterprise team?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.63564968,
+        0.36435029
+      ],
+      "logits": [
+        17.16467285,
+        16.60814095
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "leads",
+      "input_tokens": 140,
+      "gold": true,
+      "correct": false,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-leads-000017",
+      "qid": "fit",
+      "type": "score",
+      "state": {
+        "company_size": 4237,
+        "budget_usd": 60000,
+        "timeline_days": 14,
+        "engagement_score": 0.57,
+        "industry": "finance"
+      },
+      "instructions": "How well does this lead fit the product?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.18250181,
+        0.1882529,
+        0.19631644,
+        0.23502089,
+        0.19790794
+      ],
+      "logits": [
+        1.37107801,
+        1.40210414,
+        1.44404566,
+        1.62399232,
+        1.45211995
+      ],
+      "expected": 2.07758021,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "leads",
+      "input_tokens": 317,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-support-000018",
+      "qid": "queue",
+      "type": "choice",
+      "state": {
+        "ticket": "Customer asks how to cancel and export data before the renewal date.",
+        "customer_tier": "pro",
+        "sentiment": -0.79,
+        "prior_contacts_7d": 1,
+        "sla_hours_left": 61
+      },
+      "instructions": "Which support queue should handle this ticket?",
+      "candidate_ids": [
+        "access",
+        "billing",
+        "deliverability",
+        "retention"
+      ],
+      "probabilities": [
+        0.27265733,
+        0.27115437,
+        0.19643979,
+        0.25974849
+      ],
+      "logits": [
+        20.79958153,
+        20.79405403,
+        20.47172165,
+        20.75107956
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "support",
+      "input_tokens": 281,
+      "gold": "retention",
+      "correct": false,
+      "teacher": {
+        "access": 0.05000000000000001,
+        "billing": 0.05000000000000001,
+        "deliverability": 0.05000000000000001,
+        "retention": 0.85
+      }
+    },
+    {
+      "id": "test-support-000018",
+      "qid": "escalate",
+      "type": "boolean",
+      "state": {
+        "ticket": "Customer asks how to cancel and export data before the renewal date.",
+        "customer_tier": "pro",
+        "sentiment": -0.79,
+        "prior_contacts_7d": 1,
+        "sla_hours_left": 61
+      },
+      "instructions": "Should this ticket be escalated to a human agent now?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.20778354,
+        0.79221642
+      ],
+      "logits": [
+        15.57946873,
+        16.91780663
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "support",
+      "input_tokens": 160,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-support-000018",
+      "qid": "churn",
+      "type": "score",
+      "state": {
+        "ticket": "Customer asks how to cancel and export data before the renewal date.",
+        "customer_tier": "pro",
+        "sentiment": -0.79,
+        "prior_contacts_7d": 1,
+        "sla_hours_left": 61
+      },
+      "instructions": "What is the churn risk for this customer?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.16530646,
+        0.18597138,
+        0.18670565,
+        0.26097363,
+        0.20104295
+      ],
+      "logits": [
+        1.16714787,
+        1.28493953,
+        1.28888011,
+        1.62376618,
+        1.36286533
+      ],
+      "expected": 2.14647532,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "support",
+      "input_tokens": 357,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-moderation-000019",
+      "qid": "category",
+      "type": "choice",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 4,
+          "threat_terms": 2,
+          "hate_terms": 3,
+          "nsfw_score": 0.8
+        },
+        "author_reports": 8,
+        "account_age_days": 954
+      },
+      "instructions": "Which policy category applies to this content?",
+      "candidate_ids": [
+        "clean",
+        "spam",
+        "harassment",
+        "nsfw"
+      ],
+      "probabilities": [
+        0.06924465,
+        0.17498586,
+        0.5405665,
+        0.21520303
+      ],
+      "logits": [
+        19.96147919,
+        20.88853836,
+        22.01645088,
+        21.09541512
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "moderation",
+      "input_tokens": 293,
+      "gold": "nsfw",
+      "correct": false,
+      "teacher": {
+        "clean": 0.05000000000000001,
+        "spam": 0.05000000000000001,
+        "harassment": 0.05000000000000001,
+        "nsfw": 0.85
+      }
+    },
+    {
+      "id": "test-moderation-000019",
+      "qid": "block",
+      "type": "boolean",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 4,
+          "threat_terms": 2,
+          "hate_terms": 3,
+          "nsfw_score": 0.8
+        },
+        "author_reports": 8,
+        "account_age_days": 954
+      },
+      "instructions": "Should this content be blocked?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.06257942,
+        0.93742055
+      ],
+      "logits": [
+        13.06541443,
+        15.77210999
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "moderation",
+      "input_tokens": 156,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-moderation-000019",
+      "qid": "severity",
+      "type": "score",
+      "state": {
+        "post_text": "user submitted content for review",
+        "signals": {
+          "spam_links": 4,
+          "threat_terms": 2,
+          "hate_terms": 3,
+          "nsfw_score": 0.8
+        },
+        "author_reports": 8,
+        "account_age_days": 954
+      },
+      "instructions": "How severe is this policy issue?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.14483523,
+        0.17657943,
+        0.21800798,
+        0.27964342,
+        0.18093401
+      ],
+      "logits": [
+        0.42113909,
+        0.61931312,
+        0.83007395,
+        1.07905757,
+        0.64367461
+      ],
+      "expected": 2.17526174,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "moderation",
+      "input_tokens": 362,
+      "gold": 4,
+      "correct": false,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.8
+      }
+    },
+    {
+      "id": "test-code-review-000020",
+      "qid": "risk",
+      "type": "choice",
+      "state": {
+        "files_changed": 20,
+        "lines_changed": 406,
+        "touches": [
+          "auth",
+          "ui",
+          "search"
+        ],
+        "tests_added": 7,
+        "coverage_delta": 2.23,
+        "author_experience_months": 3
+      },
+      "instructions": "What is the review risk level of this change?",
+      "candidate_ids": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "probabilities": [
+        0.31488845,
+        0.17024179,
+        0.51486969
+      ],
+      "logits": [
+        10.55850601,
+        9.94350719,
+        11.05020142
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "code-review",
+      "input_tokens": 201,
+      "gold": "high",
+      "correct": true,
+      "teacher": {
+        "low": 0.07500000000000001,
+        "medium": 0.07500000000000001,
+        "high": 0.85
+      }
+    },
+    {
+      "id": "test-code-review-000020",
+      "qid": "second-reviewer",
+      "type": "boolean",
+      "state": {
+        "files_changed": 20,
+        "lines_changed": 406,
+        "touches": [
+          "auth",
+          "ui",
+          "search"
+        ],
+        "tests_added": 7,
+        "coverage_delta": 2.23,
+        "author_experience_months": 3
+      },
+      "instructions": "Does this change require a second reviewer?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.15296653,
+        0.8470335
+      ],
+      "logits": [
+        9.33685684,
+        11.04837799
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "code-review",
+      "input_tokens": 140,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-code-review-000020",
+      "qid": "complexity",
+      "type": "score",
+      "state": {
+        "files_changed": 20,
+        "lines_changed": 406,
+        "touches": [
+          "auth",
+          "ui",
+          "search"
+        ],
+        "tests_added": 7,
+        "coverage_delta": 2.23,
+        "author_experience_months": 3
+      },
+      "instructions": "How complex is this change to review?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.09893857,
+        0.19460388,
+        0.21822968,
+        0.33911917,
+        0.14910859
+      ],
+      "logits": [
+        -7.61506653,
+        -6.93859959,
+        -6.82401752,
+        -6.383214,
+        -7.20489073
+      ],
+      "expected": 2.24485493,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "code-review",
+      "input_tokens": 327,
+      "gold": 3,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.8,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-refunds-000021",
+      "qid": "action",
+      "type": "choice",
+      "state": {
+        "order_status": "delivered",
+        "days_since_delivery": 87,
+        "reason": "changed_mind",
+        "item_price_usd": 387,
+        "customer_tier": "basic",
+        "return_window_days": 30
+      },
+      "instructions": "What should the agent do with this refund request?",
+      "candidate_ids": [
+        "approve",
+        "deny",
+        "escalate",
+        "request_info"
+      ],
+      "probabilities": [
+        0.26798353,
+        0.19790378,
+        0.37664723,
+        0.15746549
+      ],
+      "logits": [
+        19.5512085,
+        19.24806404,
+        19.89159203,
+        19.01948929
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "refunds",
+      "input_tokens": 273,
+      "gold": "deny",
+      "correct": false,
+      "teacher": {
+        "approve": 0.05000000000000001,
+        "deny": 0.85,
+        "escalate": 0.05000000000000001,
+        "request_info": 0.05000000000000001
+      }
+    },
+    {
+      "id": "test-refunds-000021",
+      "qid": "eligible",
+      "type": "boolean",
+      "state": {
+        "order_status": "delivered",
+        "days_since_delivery": 87,
+        "reason": "changed_mind",
+        "item_price_usd": 387,
+        "customer_tier": "basic",
+        "return_window_days": 30
+      },
+      "instructions": "Is the order eligible for a standard refund?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.45338193,
+        0.5466181
+      ],
+      "logits": [
+        14.03179359,
+        14.21880913
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "refunds",
+      "input_tokens": 147,
+      "gold": false,
+      "correct": false,
+      "teacher": {
+        "true": 0.1,
+        "false": 0.9
+      }
+    },
+    {
+      "id": "test-refunds-000021",
+      "qid": "escalation-risk",
+      "type": "score",
+      "state": {
+        "order_status": "delivered",
+        "days_since_delivery": 87,
+        "reason": "changed_mind",
+        "item_price_usd": 387,
+        "customer_tier": "basic",
+        "return_window_days": 30
+      },
+      "instructions": "How likely is this decision to cause a complaint?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.17677756,
+        0.16168337,
+        0.18919565,
+        0.23595649,
+        0.23638695
+      ],
+      "logits": [
+        1.33138001,
+        1.24212766,
+        1.39926946,
+        1.62013519,
+        1.6219579
+      ],
+      "expected": 2.19349194,
+      "level": 4,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "refunds",
+      "input_tokens": 342,
+      "gold": 4,
+      "correct": true,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.8
+      }
+    },
+    {
+      "id": "test-triage-000022",
+      "qid": "urgency",
+      "type": "choice",
+      "state": {
+        "age": 65,
+        "temperature_c": 37.2,
+        "heart_rate_bpm": 97,
+        "spo2_percent": 92,
+        "pain_level": 5,
+        "symptom_duration_hours": 159
+      },
+      "instructions": "What is the intake urgency for this patient?",
+      "candidate_ids": [
+        "self_care",
+        "soon",
+        "urgent",
+        "emergency"
+      ],
+      "probabilities": [
+        0.09066054,
+        0.15751803,
+        0.35126868,
+        0.40055284
+      ],
+      "logits": [
+        22.36296082,
+        22.91537857,
+        23.71739006,
+        23.84868431
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "triage",
+      "input_tokens": 274,
+      "gold": "urgent",
+      "correct": false,
+      "teacher": {
+        "self_care": 0.05000000000000001,
+        "soon": 0.05000000000000001,
+        "urgent": 0.85,
+        "emergency": 0.05000000000000001
+      }
+    },
+    {
+      "id": "test-triage-000022",
+      "qid": "red-flag",
+      "type": "boolean",
+      "state": {
+        "age": 65,
+        "temperature_c": 37.2,
+        "heart_rate_bpm": 97,
+        "spo2_percent": 92,
+        "pain_level": 5,
+        "symptom_duration_hours": 159
+      },
+      "instructions": "Does any red-flag vital sign trigger apply?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.30468822,
+        0.69531173
+      ],
+      "logits": [
+        16.82265663,
+        17.64772797
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "triage",
+      "input_tokens": 146,
+      "gold": false,
+      "correct": false,
+      "teacher": {
+        "true": 0.1,
+        "false": 0.9
+      }
+    },
+    {
+      "id": "test-triage-000022",
+      "qid": "severity",
+      "type": "score",
+      "state": {
+        "age": 65,
+        "temperature_c": 37.2,
+        "heart_rate_bpm": 97,
+        "spo2_percent": 92,
+        "pain_level": 5,
+        "symptom_duration_hours": 159
+      },
+      "instructions": "How severe does this intake look?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.23069976,
+        0.14758742,
+        0.21560685,
+        0.15710774,
+        0.24899831
+      ],
+      "logits": [
+        2.74580526,
+        2.29910874,
+        2.67814469,
+        2.36161995,
+        2.82213426
+      ],
+      "expected": 2.04611778,
+      "level": 4,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "triage",
+      "input_tokens": 332,
+      "gold": 2,
+      "correct": false,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.8,
+        "3": 0.04999999999999999,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-leads-000023",
+      "qid": "tier",
+      "type": "choice",
+      "state": {
+        "company_size": 95,
+        "budget_usd": 2000,
+        "timeline_days": 7,
+        "engagement_score": 0.19,
+        "industry": "finance"
+      },
+      "instructions": "How should this lead be classified?",
+      "candidate_ids": [
+        "hot",
+        "warm",
+        "cold"
+      ],
+      "probabilities": [
+        0.21536756,
+        0.40217692,
+        0.38245556
+      ],
+      "logits": [
+        21.03828049,
+        21.66282654,
+        21.61254692
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "leads",
+      "input_tokens": 171,
+      "gold": "cold",
+      "correct": false,
+      "teacher": {
+        "hot": 0.07500000000000001,
+        "warm": 0.07500000000000001,
+        "cold": 0.85
+      }
+    },
+    {
+      "id": "test-leads-000023",
+      "qid": "enterprise",
+      "type": "boolean",
+      "state": {
+        "company_size": 95,
+        "budget_usd": 2000,
+        "timeline_days": 7,
+        "engagement_score": 0.19,
+        "industry": "finance"
+      },
+      "instructions": "Should this lead be routed to the enterprise team?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.68109244,
+        0.31890759
+      ],
+      "logits": [
+        16.96870041,
+        16.20990372
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "leads",
+      "input_tokens": 132,
+      "gold": false,
+      "correct": true,
+      "teacher": {
+        "true": 0.1,
+        "false": 0.9
+      }
+    },
+    {
+      "id": "test-leads-000023",
+      "qid": "fit",
+      "type": "score",
+      "state": {
+        "company_size": 95,
+        "budget_usd": 2000,
+        "timeline_days": 7,
+        "engagement_score": 0.19,
+        "industry": "finance"
+      },
+      "instructions": "How well does this lead fit the product?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.18136235,
+        0.18639256,
+        0.193206,
+        0.23818427,
+        0.20085487
+      ],
+      "logits": [
+        1.47850907,
+        1.50586712,
+        1.54176915,
+        1.75105679,
+        1.58059478
+      ],
+      "expected": 2.09077692,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "leads",
+      "input_tokens": 297,
+      "gold": 1,
+      "correct": false,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.8,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.04999999999999999
+      }
+    },
+    {
+      "id": "test-support-000024",
+      "qid": "queue",
+      "type": "choice",
+      "state": {
+        "ticket": "Long-time customer is evaluating competitors and wants a retention offer.",
+        "customer_tier": "pro",
+        "sentiment": -0.82,
+        "prior_contacts_7d": 5,
+        "sla_hours_left": 47
+      },
+      "instructions": "Which support queue should handle this ticket?",
+      "candidate_ids": [
+        "access",
+        "billing",
+        "deliverability",
+        "retention"
+      ],
+      "probabilities": [
+        0.25796968,
+        0.30561766,
+        0.22372349,
+        0.21268918
+      ],
+      "logits": [
+        21.62804031,
+        21.79753304,
+        21.48560905,
+        21.43502998
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "support",
+      "input_tokens": 277,
+      "gold": "retention",
+      "correct": false,
+      "teacher": {
+        "access": 0.05000000000000001,
+        "billing": 0.05000000000000001,
+        "deliverability": 0.05000000000000001,
+        "retention": 0.85
+      }
+    },
+    {
+      "id": "test-support-000024",
+      "qid": "escalate",
+      "type": "boolean",
+      "state": {
+        "ticket": "Long-time customer is evaluating competitors and wants a retention offer.",
+        "customer_tier": "pro",
+        "sentiment": -0.82,
+        "prior_contacts_7d": 5,
+        "sla_hours_left": 47
+      },
+      "instructions": "Should this ticket be escalated to a human agent now?",
+      "candidate_ids": [
+        "false",
+        "true"
+      ],
+      "probabilities": [
+        0.25236028,
+        0.74763972
+      ],
+      "logits": [
+        16.59885025,
+        17.68491364
+      ],
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "support",
+      "input_tokens": 158,
+      "gold": true,
+      "correct": true,
+      "teacher": {
+        "true": 0.9,
+        "false": 0.1
+      }
+    },
+    {
+      "id": "test-support-000024",
+      "qid": "churn",
+      "type": "score",
+      "state": {
+        "ticket": "Long-time customer is evaluating competitors and wants a retention offer.",
+        "customer_tier": "pro",
+        "sentiment": -0.82,
+        "prior_contacts_7d": 5,
+        "sla_hours_left": 47
+      },
+      "instructions": "What is the churn risk for this customer?",
+      "candidate_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "probabilities": [
+        0.18652971,
+        0.17894343,
+        0.18227492,
+        0.23234278,
+        0.21990924
+      ],
+      "logits": [
+        1.88921416,
+        1.8476932,
+        1.86613965,
+        2.10883737,
+        2.05383849
+      ],
+      "expected": 2.12015867,
+      "level": 3,
+      "decode_steps": 0,
+      "mode": "fresh",
+      "forward_seconds": 4.00963554,
+      "family": "support",
+      "input_tokens": 352,
+      "gold": 4,
+      "correct": false,
+      "teacher": {
+        "0": 0.04999999999999999,
+        "1": 0.04999999999999999,
+        "2": 0.04999999999999999,
+        "3": 0.04999999999999999,
+        "4": 0.8
+      }
+    }
+  ]
+}

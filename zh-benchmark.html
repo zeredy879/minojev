@@ -61,11 +61,10 @@
     <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
     <a href="benchmark.html" style="color:var(--muted);text-decoration:none">English</a>
   </p>
-  <h1>头训练，对照<span>逐 token 生成</span></h1>
+  <h1>把答案<span>读出来</span>，别写出来</h1>
   <p>
-    同一个底座、同一批问题。<strong>minojev 从隐藏状态直接读出带类型的分布</strong>；基线则对同样的提示
-    逐 token 生成答案。头训练（head training）是 minojev 的核心：冻结骨干、一次性缓存候选路径特征，
-    只训练决策头。
+    同一个底座、同一批问题、两种回答方式。<strong>minojev 从隐藏状态直接读出带类型的分布</strong>；
+    基线只能逐 token 解码。真正让读出变好的是头训练：冻结骨干、缓存一次候选特征，然后只训决策头。
   </p>
 </header>
 <main>
