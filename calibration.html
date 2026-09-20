@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>minojev · confidence explorer</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="alternate icon" href="favicon.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<style>
+  :root {
+    --bg: #0a0d14; --panel: #121926; --panel-2: #19223a; --ink: #e8edf7; --muted: #8d9bb3;
+    --accent: #59d3a8; --accent-2: #6ea8fe; --warn: #f0b06a; --danger: #ef7b8b; --line: #25304a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.7 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: var(--accent-2); }
+  header { padding: 30px 24px 20px; border-bottom: 1px solid var(--line);
+    background: radial-gradient(800px 320px at 12% -20%, rgba(110,168,254,.14), transparent 60%), var(--bg); }
+  h1 { margin: 8px 0 8px; font-size: clamp(26px, 3.6vw, 38px); letter-spacing: -0.7px; }
+  h1 span { color: var(--accent); }
+  header p { margin: 0; color: var(--muted); max-width: 900px; }
+  main { max-width: 1120px; margin: 0 auto; padding: 24px 20px 80px; }
+  h2 { font-size: 19px; margin: 30px 0 10px; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .stat b { display: block; font-size: 22px; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .stat small { color: var(--muted); }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 12px; }
+  .control { display: grid; grid-template-columns: 90px 1fr 110px; gap: 14px; align-items: center; }
+  input[type=range] { width: 100%; accent-color: #59d3a8; }
+  .readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 14px; }
+  .readout .cell { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .readout .cell b { display: block; font-size: 20px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .readout .cell small { color: var(--muted); }
+  svg { display: block; width: 100%; height: auto; }
+  .gridline { stroke: #1a2338; }
+  .axis { stroke: #2b3752; }
+  .diagonal { stroke: #f0b06a; stroke-dasharray: 5 5; stroke-width: 1.5; }
+  .label { fill: #5f6d85; font: 10px ui-monospace, Menlo, monospace; }
+  .legend { display: flex; gap: 16px; color: var(--muted); font-size: 12.5px; margin-top: 8px; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 10px; height: 3px; margin-right: 5px; vertical-align: middle; }
+  .note { color: var(--muted); font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  th { color: var(--muted); font-weight: 500; }
+  #error { color: var(--danger); }
+</style>
+</head>
+<body>
+<header>
+  <p style="margin:0 0 4px;display:flex;gap:14px;flex-wrap:wrap">
+    <a href="index.html" style="color:var(--accent);text-decoration:none">← all demos</a>
+    <a href="benchmark.html" style="color:var(--muted);text-decoration:none">Benchmark</a>
+    <a href="playground.html" style="color:var(--muted);text-decoration:none">Domains</a>
+    <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
+    <a href="zh-calibration.html" style="color:var(--muted);text-decoration:none">中文</a>
+  </p>
+  <h1>Confidence you can <span>spend</span></h1>
+  <p>
+    A decision model is only useful if its confidence means something. This page uses the committed
+    calibrated predictions of the Qwen3-1.7B head-trained model: drag the threshold to see how many
+    decisions it can take alone, and how accurate those are.
+  </p>
+</header>
+<main>
+  <div class="stats" id="stats"></div>
+
+  <h2>Auto-decide vs escalate</h2>
+  <div class="panel">
+    <div class="control">
+      <label for="threshold">confidence ≥</label>
+      <input type="range" id="threshold" min="50" max="99" value="90" step="1" />
+      <b id="threshold-value" style="font-variant-numeric:tabular-nums">0.90</b>
+    </div>
+    <div class="readout" id="readout"></div>
+    <p class="note" id="threshold-note" style="margin-bottom:0"></p>
+  </div>
+
+  <h2>Reliability diagram</h2>
+  <div class="panel">
+    <svg id="reliability" viewBox="0 0 600 260" preserveAspectRatio="none"></svg>
+    <div class="legend">
+      <span><i style="background:#59d3a8"></i>observed accuracy per confidence bin</span>
+      <span><i style="background:#f0b06a"></i>perfect calibration</span>
+      <span><i style="background:#6ea8fe"></i>bin size</span>
+    </div>
+  </div>
+
+  <h2>Risk–coverage curve</h2>
+  <div class="panel">
+    <svg id="riskcurve" viewBox="0 0 600 240" preserveAspectRatio="none"></svg>
+    <div class="legend">
+      <span><i style="background:#59d3a8"></i>accuracy of auto-decided questions</span>
+      <span><i style="background:#6ea8fe"></i>coverage</span>
+    </div>
+  </div>
+
+  <h2>By source</h2>
+  <div class="panel"><table id="sources"><thead><tr><th>source</th><th>questions</th><th>accuracy</th><th>mean confidence</th></tr></thead><tbody></tbody></table></div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const pct = (x) => (100 * x).toFixed(1) + "%";
+let bundle = null;
+
+function selected(threshold) {
+  return bundle.points.filter((point) => point.confidence >= threshold);
+}
+
+function renderStats() {
+  const box = $("stats");
+  box.textContent = "";
+  const cells = [
+    ["questions", bundle.questions],
+    ["accuracy", pct(bundle.accuracy)],
+    ["expected calibration error", bundle.ece.toFixed(3)],
+    ["mean confidence", (bundle.points.reduce((sum, p) => sum + p.confidence, 0) / bundle.points.length).toFixed(3)],
+  ];
+  for (const [label, value] of cells) {
+    const node = document.createElement("div");
+    node.className = "stat";
+    const big = document.createElement("b");
+    big.textContent = value;
+    const small = document.createElement("small");
+    small.textContent = label;
+    node.append(big, small);
+    box.append(node);
+  }
+}
+
+function renderThreshold() {
+  const threshold = Number($("threshold").value) / 100;
+  $("threshold-value").textContent = threshold.toFixed(2);
+  const members = selected(threshold);
+  const coverage = members.length / bundle.points.length;
+  const accuracy = members.length ? members.reduce((sum, p) => sum + (p.correct ? 1 : 0), 0) / members.length : 0;
+  const readout = $("readout");
+  readout.textContent = "";
+  for (const [label, value] of [
+    ["auto-decided", pct(coverage)],
+    ["accuracy when auto-decided", pct(accuracy)],
+    ["escalated to a human", pct(1 - coverage)],
+    ["errors avoided vs 100% auto", String(Math.max(0, Math.round((accuracy - bundle.accuracy) * members.length)))],
+  ]) {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    const big = document.createElement("b");
+    big.textContent = value;
+    const small = document.createElement("small");
+    small.textContent = label;
+    cell.append(big, small);
+    readout.append(cell);
+  }
+  $("threshold-note").textContent =
+    `At this threshold the model answers ${members.length} of ${bundle.points.length} questions on its own ` +
+    `at ${pct(accuracy)} accuracy; the rest would be escalated. Suite: ${bundle.suite}.`;
+}
+
+function renderReliability() {
+  const svg = $("reliability");
+  svg.textContent = "";
+  const width = 600, height = 260, pad = { left: 46, right: 16, top: 14, bottom: 30 };
+  const x = (value) => pad.left + value * (width - pad.left - pad.right);
+  const y = (value) => height - pad.bottom - value * (height - pad.top - pad.bottom);
+  for (let index = 0; index <= 10; index += 1) {
+    const value = index / 10;
+    svg.append(line(x(value), pad.top, x(value), height - pad.bottom, "gridline"));
+    svg.append(line(pad.left, y(value), width - pad.right, y(value), "gridline"));
+  }
+  svg.append(line(pad.left, height - pad.bottom, width - pad.right, pad.top, "diagonal"));
+  for (const bin of bundle.bins) {
+    const barX = x(bin.low) + 1;
+    const barWidth = Math.max(2, x(bin.high) - x(bin.low) - 2);
+    const rect = rectangle(barX, y(bin.accuracy), barWidth, y(0) - y(bin.accuracy), "url(#barGradient)");
+    svg.append(rect);
+    const size = Math.min(0.16, bin.count / bundle.questions * 2.2 + 0.01);
+    svg.append(rectangle(barX, y(0) + 4, barWidth, size * 40, "#6ea8fe", 0.8));
+    const label = text(barX + barWidth / 2, height - pad.bottom + 16, `${bin.count}`, "middle");
+    svg.append(label);
+  }
+  svg.append(text(width - pad.right, pad.top + 4, "confidence →", "end"));
+  svg.append(text(pad.left - 6, pad.top + 10, "accuracy", "end"));
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  defs.innerHTML = '<linearGradient id="barGradient" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#6ea8fe"/><stop offset="1" stop-color="#59d3a8"/></linearGradient>';
+  svg.prepend(defs);
+}
+
+function renderRiskCurve() {
+  const svg = $("riskcurve");
+  svg.textContent = "";
+  const width = 600, height = 240, pad = { left: 46, right: 16, top: 14, bottom: 30 };
+  const x = (value) => pad.left + value * (width - pad.left - pad.right);
+  const y = (value) => height - pad.bottom - value * (height - pad.top - pad.bottom);
+  for (let index = 0; index <= 10; index += 1) {
+    const value = index / 10;
+    svg.append(line(x(value), pad.top, x(value), height - pad.bottom, "gridline"));
+    svg.append(line(pad.left, y(value), width - pad.right, y(value), "gridline"));
+  }
+  const thresholds = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99];
+  const accuracyPoints = [];
+  const coveragePoints = [];
+  for (const threshold of thresholds) {
+    const members = bundle.points.filter((point) => point.confidence >= threshold);
+    const coverage = members.length / bundle.points.length;
+    const accuracy = members.length ? members.reduce((sum, p) => sum + (p.correct ? 1 : 0), 0) / members.length : 0;
+    coveragePoints.push([coverage, threshold]);
+    accuracyPoints.push([coverage, accuracy]);
+  }
+  for (const [points, color] of [[coveragePoints, "#6ea8fe"], [accuracyPoints, "#59d3a8"]]) {
+    const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+    polyline.setAttribute("points", points.map(([cx, cy]) => `${x(cx)},${y(cy)}`).join(" "));
+    polyline.setAttribute("fill", "none");
+    polyline.setAttribute("stroke", color);
+    polyline.setAttribute("stroke-width", "2.5");
+    svg.append(polyline);
+  }
+  svg.append(text(width - pad.right, height - 8, "coverage →", "end"));
+  svg.append(text(pad.left - 6, pad.top + 10, "value", "end"));
+}
+
+function renderSources() {
+  const body = $("sources").querySelector("tbody");
+  body.textContent = "";
+  const groups = {};
+  for (const point of bundle.points) {
+    const key = point.family || "unknown";
+    groups[key] = groups[key] || [];
+    groups[key].push(point);
+  }
+  for (const [family, members] of Object.entries(groups).sort()) {
+    const row = document.createElement("tr");
+    const accuracy = members.reduce((sum, p) => sum + (p.correct ? 1 : 0), 0) / members.length;
+    const confidence = members.reduce((sum, p) => sum + p.confidence, 0) / members.length;
+    for (const value of [family, String(members.length), pct(accuracy), confidence.toFixed(3)]) {
+      const cell = document.createElement("td");
+      cell.textContent = value;
+      row.append(cell);
+    }
+    body.append(row);
+  }
+}
+
+function line(x1, y1, x2, y2, className) {
+  const node = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  for (const [key, value] of Object.entries({ x1, y1, x2, y2, class: className })) node.setAttribute(key, value);
+  return node;
+}
+
+function rectangle(x, y, width, height, fill, opacity) {
+  const node = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+  node.setAttribute("x", x);
+  node.setAttribute("y", y);
+  node.setAttribute("width", width);
+  node.setAttribute("height", Math.max(0, height));
+  node.setAttribute("fill", fill);
+  if (opacity !== undefined) node.setAttribute("opacity", opacity);
+  return node;
+}
+
+function text(x, y, content, anchor) {
+  const node = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  node.setAttribute("x", x);
+  node.setAttribute("y", y);
+  node.setAttribute("class", "label");
+  if (anchor) node.setAttribute("text-anchor", anchor);
+  node.textContent = content;
+  return node;
+}
+
+fetch("data/calibration.json")
+  .then((response) => { if (!response.ok) throw new Error("HTTP " + response.status); return response.json(); })
+  .then((data) => {
+    bundle = data;
+    renderStats();
+    renderThreshold();
+    renderReliability();
+    renderRiskCurve();
+    renderSources();
+    $("threshold").addEventListener("input", renderThreshold);
+  })
+  .catch((error) => {
+    document.querySelector("main").innerHTML = "<p id='error'>Could not load data/calibration.json (" + error.message + ").</p>";
+  });
+</script>
+</body>
+</html>
