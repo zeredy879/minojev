@@ -15,7 +15,17 @@
 > **一句话版本：** 模型读完你的问题，心里其实已经有了答案——minojev 直接把这个答案
 > 读成带类型、可校准的概率分布，而不是让模型把答案"写"成一句话。
 
-## 头训练，说人话
+## minojev 的 TLDR
+
+- **输出类型化决策，而不是文字。** `choice`（2–255 候选）、`boolean`、`score`（2–10 等级）
+  都直接返回完整概率分布。
+- **零输出 token。** 每条记录都报告 `decode_steps: 0`，没有文本要解析，也没有格式会出错。
+- **核心是头训练。** 冻结任意语言模型，只训练很小的决策头，几分钟得到可校准的决策层。
+- **与生成式基线实测对比。** 在 120 条决策的基准上，头训练 **95.8% vs 80.0%**，输出 0 token，
+  p95 延迟约好 5 倍。
+- **也有零训练路线。** 原生 logits 引擎直接读取候选选项（同一基准 88.3%）。
+
+## 头训练
 
 大部分 "Jev 式"项目要么调用托管 API，要么微调整个模型。minojev 的核心比两者都小：
 
@@ -24,10 +34,10 @@
 3. **只训练决策头。** 一个共享打分器加集合注意力——**约 0.8M 参数**——在缓存向量上用分布损失训练。
 4. **在 dev 上校准。** 每种原语拟合一个温度，使用留出结果。
 
-整个训练在 **Apple Silicon 笔记本上约 37 分钟、峰值 4GB 内存**。骨干没有被改动，因此没有
-灾难性遗忘、不需要 GPU，而且每一步都可见（见 [内存安全的训练](#内存安全的训练)）。
+在发布版本中，这一过程在 Apple Silicon 笔记本上只需几分钟。骨干全程不被修改，因此决策层
+可以独立于"读语言的模型"来生产和迭代。
 
-## 和逐 token 生成比，差在哪里
+## 基准对比
 
 同一底座（Qwen3-1.7B）、同一批问题、同样的提示。基线必须逐 token **生成**答案；minojev
 直接从隐藏状态读出带类型的分布。测试集：120 条平衡决策，覆盖 banking77、CLINC150、
@@ -52,7 +62,7 @@ OOD 来源单独隔离并单独报告。
 
 <img src="assets/explainer.svg" alt="聊天模型逐 token 生成再解析；minojev 一次前向直接读出分布" width="100%">
 
-## 在线试玩
+## 在线 demo
 
 - **[基准对比页](https://zeredy879.github.io/minojev/zh-benchmark.html)**——准确率、token 经济、响应速度并排展示；
 - **[多领域体验场](https://zeredy879.github.io/minojev/zh-playground.html)**——六个业务场景的带类型分布；
@@ -66,7 +76,7 @@ uv venv --python 3.12 .venv && . .venv/bin/activate
 uv pip install -e ".[test,monitor]"          # 需要 Hugging Face 骨干再加 .[hf]
 ```
 
-构建通用数据集并运行头训练（带实时监控）：
+构建通用数据集并运行头训练：
 
 ```bash
 # 1. 把宽松许可的公开数据集转换成决策请求（train/dev/test/OOD）
@@ -87,20 +97,7 @@ minojev compare --checkpoint runs/general-cal \
   --input data/general-test.jsonl --limit 120 --chat-template
 ```
 
-另开一个终端实时看训练面板：
-
-```bash
-minojev watch --run runs/general-head --port 8010   # http://127.0.0.1:8010/
-```
-
-## 盯住每一次训练（也别把电脑跑炸）
-
-监控面板不是装饰：每个训练阶段都会把 loss、梯度范数、tokens/s、ETA、MPS 显存、进程 RSS、
-CPU 负载和系统内存压力写入 `status.json` 与 `metrics.jsonl`。硬预算（`--max-memory-gb`）
-会在机器濒临危险前终止该步；校准前向分块执行；每个阶段先释放上一个模型再加载下一个。
-1.7B 头训练峰值 **4.0GB**，预算 12GB。
-
-## 我们怎么判断好坏
+## 评测标准
 
 loss 对决策模型是个糟糕的进度指标——teacher 分布有熵下界，异构批次又让它噪声很大。流水线报告：
 
@@ -158,7 +155,7 @@ model = DecisionModel.load(f"{path}/general", device="cpu")
 `choice` 支持 2–255 个候选，`score` 支持 2–10 个有序等级。扁平的单问题行会按 choice 解析。
 问题 id 永远不会进入模型输入。
 
-## 在本地跑起来
+## 本地服务
 
 ```bash
 minojev serve --checkpoint runs/general-cal --port 8000
@@ -168,7 +165,7 @@ curl -s localhost:8000/score -H 'content-type: application/json' \
 
 每条记录都会报告 `decode_steps: 0` 并携带完整候选分布。
 
-## 完全不想训练？
+## 零训练 logits 读出
 
 对预训练模型，`minojev.logits` 直接读取字母槽位置的选项 logits——基准里的零训练路线：
 

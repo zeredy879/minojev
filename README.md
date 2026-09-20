@@ -16,7 +16,20 @@
 > already has an opinion — minojev reads that opinion back as a typed, calibrated
 > distribution instead of making the model write a sentence.
 
-## Head training, in plain words
+## minojev's TLDR
+
+- **Typed decisions, not text.** `choice` (2–255 candidates), `boolean`, and `score`
+  (2–10 levels) return complete probability distributions.
+- **Zero output tokens.** Every record reports `decode_steps: 0`; there is nothing to
+  parse and no format to break.
+- **Head training is the core.** Freeze any language model, train only the small decision
+  head, and get a calibrated decision layer in minutes.
+- **Measured against generation.** On the bundled 120-decision suite the head-trained
+  model scores **95.8% vs 80.0%**, with 0 output tokens and a ~5× better p95 latency.
+- **A zero-training route too.** The native-logits engine reads declared options directly
+  (88.3% on the same suite).
+
+## Head training
 
 Most "Jev-style" projects either call a hosted API or fine-tune a whole model. minojev's
 core is smaller than both:
@@ -28,9 +41,9 @@ core is smaller than both:
    parameters** — is trained on those cached vectors with distribution losses.
 4. **Calibrate on dev.** One temperature per primitive is fitted on held-out outcomes.
 
-The whole run was **~37 minutes and ~4 GB of peak memory on an Apple Silicon laptop**.
-Because the backbone is untouched, there is no catastrophic forgetting, no GPU required,
-and every step is observable (see the [monitor dashboard](#memory-safe-training)).
+In the bundled release this took minutes on an Apple Silicon laptop. The backbone is
+never modified, so the decision layer can be produced and iterated on independently of
+the model that reads the language.
 
 ## How it compares to token generation
 
@@ -61,7 +74,7 @@ That is why the pipeline isolates OOD sources and reports them separately.
 
 <img src="assets/explainer.svg" alt="A chat model generates tokens then parses text; minojev reads the distribution in one forward pass" width="100%">
 
-## Try it in your browser
+## Live demos
 
 - **[Benchmark page](https://zeredy879.github.io/minojev/benchmark.html)** — accuracy,
   token economy, and latency side by side.
@@ -100,22 +113,7 @@ minojev compare --checkpoint runs/general-cal \
   --input data/general-test.jsonl --limit 120 --chat-template
 ```
 
-Watch any run live from a second terminal:
-
-```bash
-minojev watch --run runs/general-head --port 8010   # http://127.0.0.1:8010/
-```
-
-## Watching a run (without cooking your laptop)
-
-The monitor is not decoration: every training phase reports loss, gradient norm,
-tokens/s, ETA, MPS driver memory, process RSS, CPU load, and system memory pressure to
-`status.json` and `metrics.jsonl`. A hard budget (`--max-memory-gb`) aborts a step before
-the machine is at risk, calibration forwards are chunked, and each phase frees the
-previous model before loading the next. The 1.7B head run peaked at **4.0 GB** against a
-12 GB budget.
-
-## How we measure quality
+## Evaluation criteria
 
 Loss is a poor progress signal for a decision model — teacher distributions have an
 entropy floor and heterogeneous batches make it noisy. The pipeline reports:
@@ -184,7 +182,7 @@ curl -s localhost:8000/score -H 'content-type: application/json' \
 
 Records report `decode_steps: 0` and carry the full candidate distribution.
 
-## Don't want to train at all?
+## Zero-training logits readout
 
 For pretrained models, `minojev.logits` reads declared option logits directly at
 letter slots — the zero-training route used in the benchmark:
