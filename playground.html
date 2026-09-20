@@ -85,6 +85,14 @@
   Regenerate with <code>minojev demo --checkpoint &lt;dir&gt; --input data/domains-test.jsonl --limit 24 --output web/data/domains.json</code>.
 </footer>
 <script>
+const DOMAIN_LABELS = {
+  "support": "support",
+  "moderation": "moderation",
+  "code-review": "code review",
+  "refunds": "refunds",
+  "triage": "triage",
+  "leads": "leads",
+};
 const fmt = (x, digits = 3) => Number(x).toFixed(digits);
 const pct = (x) => (100 * x).toFixed(1) + "%";
 const state = { bundle: null, filter: "all" };
@@ -126,7 +134,9 @@ function renderChips() {
     const family = record.family || "other";
     counts[family] = (counts[family] || 0) + 1;
   });
-  const options = [["all", "all", (state.bundle.records || []).length]].concat(Object.entries(counts).sort());
+  const options = [["all", "all", (state.bundle.records || []).length]].concat(
+    Object.entries(counts).sort().map(([key, count]) => [key, DOMAIN_LABELS[key] || key, count])
+  );
   for (const [value, label, count] of options) {
     const chip = document.createElement("button");
     chip.className = "chip" + (state.filter === value ? " active" : "");
@@ -142,7 +152,7 @@ function renderRecord(record) {
   const head = document.createElement("header");
   const badge = document.createElement("span");
   badge.className = "domain-badge";
-  badge.textContent = record.family || "case";
+  badge.textContent = DOMAIN_LABELS[record.family] || record.family || "case";
   const title = document.createElement("strong");
   title.textContent = record.id;
   head.append(badge, title);
