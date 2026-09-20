@@ -48,6 +48,14 @@ def test_logits_readout_probabilities(tiny_model):
     assert len(records[1]["probabilities"]) == 2
 
 
+def test_logits_records_carry_family(tiny_model):
+    question = make_choice_question("c", "pick", {"a": "first", "b": "second"})
+    question.family = "unit-source"
+    request = Request(id="r", state="s", questions=[question])
+    records = score_logits(tiny_model.backbone, tiny_model.tokenizer, [request])
+    assert records[0]["family"] == "unit-source"
+
+
 def test_cli_end_to_end(tmp_path):
     root = Path(__file__).resolve().parents[1]
     env = {**os.environ, "PYTHONPATH": str(root / "src")}

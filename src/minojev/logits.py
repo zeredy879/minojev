@@ -78,6 +78,8 @@ def _record(request: Request, question: Question, logits: list[float], probabili
         "mode": mode,
         "prompt_version": prompt_version,
     }
+    if question.family:
+        record["family"] = question.family
     if question.qid in request.gold:
         gold = request.gold[question.qid]
         if question.kind == BOOLEAN:
@@ -186,6 +188,8 @@ def score_logits(backbone, tokenizer, requests: list[Request], device: str = "au
                 "forward_seconds": round(elapsed, 8),
                 "prompt_version": PROMPT_VERSION,
             }
+            if question.family:
+                record["family"] = question.family
             if question.qid in request.gold:
                 record["gold"] = request.gold[question.qid]
                 gold = request.gold[question.qid]
