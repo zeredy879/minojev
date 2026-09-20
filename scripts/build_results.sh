@@ -86,6 +86,13 @@ if [ -d "$GENERAL_CKPT" ]; then
   "$PY" scripts/export_hf_general.py
 fi
 
+# 7b. Reference experiment: frozen 1.7B head on the synthetic maze task.
+if [ -d runs/maze-17b-cal ]; then
+  "$PY" -m minojev.cli evaluate --checkpoint runs/maze-17b-cal \
+    --input data/maze-test.jsonl --limit 96 --balanced --batch-requests 4 \
+    --predictions results/maze-17b-predictions.jsonl --device mps > results/maze-17b-metrics.json
+fi
+
 # 8. Dataset and model export bundles for the Hub.
 "$PY" scripts/export_hf_dataset.py
 

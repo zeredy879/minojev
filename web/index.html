@@ -293,14 +293,14 @@
 <section>
   <div class="wrap">
     <h2>Measured on held-out data</h2>
-    <p class="sub">547k parameters, CPU, fully reproducible via <code style="color:#cfe1ff">scripts/build_results.sh</code>.</p>
+    <p class="sub">Flagship: Qwen3-1.7B head training. Compact from-scratch models power the maze and console demos. Reproduce with <code style="color:#cfe1ff">scripts/build_results.sh</code>.</p>
     <div class="results">
-      <div class="result"><b>83.8%</b><small>maze accuracy · <span class="tag">89.5% teacher top-set</span></small></div>
-      <div class="result"><b>97.7%</b><small>distance score top-set</small></div>
-      <div class="result"><b>0.016</b><small>maze ECE after calibration (was 0.090)</small></div>
-      <div class="result"><b>366/s</b><small>decisions per second, reused state</small></div>
-      <div class="result"><b>5/6</b><small>mazes solved by the agent</small></div>
-      <div class="result"><b>41</b><small>tests passing offline</small></div>
+      <div class="result"><b>95.8%</b><small>decision accuracy · <span class="tag">88.3% zero-shot logits</span></small></div>
+      <div class="result"><b>0</b><small>output tokens per decision</small></div>
+      <div class="result"><b>0.024</b><small>ECE after calibration · <span class="tag">0.014 on 200 requests</span></small></div>
+      <div class="result"><b>~5×</b><small>better p95 latency than token generation</small></div>
+      <div class="result"><b>5/6</b><small>mazes solved by the compact demo model</small></div>
+      <div class="result"><b>67</b><small>tests passing offline</small></div>
     </div>
   </div>
 </section>
