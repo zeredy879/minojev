@@ -1,0 +1,1673 @@
+{
+  "generated_at": "2026-09-20T12:08:33Z",
+  "model": "Qwen3-1.7B head-trained, gold-calibrated",
+  "suite": "200 balanced requests (banking77, CLINC150, Amazon Polarity, GSM8K verification)",
+  "questions": 200,
+  "accuracy": 0.975,
+  "ece": 0.0142,
+  "bins": [
+    {
+      "low": 0.5,
+      "high": 0.6,
+      "count": 4,
+      "mean_confidence": 0.5496,
+      "accuracy": 0.75
+    },
+    {
+      "low": 0.6,
+      "high": 0.7,
+      "count": 5,
+      "mean_confidence": 0.6579,
+      "accuracy": 0.8
+    },
+    {
+      "low": 0.7,
+      "high": 0.8,
+      "count": 5,
+      "mean_confidence": 0.7766,
+      "accuracy": 0.8
+    },
+    {
+      "low": 0.8,
+      "high": 0.9,
+      "count": 7,
+      "mean_confidence": 0.8656,
+      "accuracy": 1.0
+    },
+    {
+      "low": 0.9,
+      "high": 1.0,
+      "count": 179,
+      "mean_confidence": 0.9903,
+      "accuracy": 0.9888
+    }
+  ],
+  "thresholds": {
+    "0.5": {
+      "coverage": 1.0,
+      "accuracy": 0.975
+    },
+    "0.6": {
+      "coverage": 0.98,
+      "accuracy": 0.9796
+    },
+    "0.7": {
+      "coverage": 0.955,
+      "accuracy": 0.9843
+    },
+    "0.8": {
+      "coverage": 0.93,
+      "accuracy": 0.9892
+    },
+    "0.9": {
+      "coverage": 0.895,
+      "accuracy": 0.9888
+    },
+    "0.95": {
+      "coverage": 0.845,
+      "accuracy": 0.9941
+    }
+  },
+  "points": [
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999987,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999433,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.999902,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-2374",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.973639,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999995,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.998601,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.999468,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-494",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.931963,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.977647,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.99994,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.999968,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1743",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.980339,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999329,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.998032,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.995002,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-160",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.98834,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999999,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999927,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.999394,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-511",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.999284,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 1.0,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999997,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.786439,
+      "correct": false
+    },
+    {
+      "id": "openai/gsm8k-1547",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.992373,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999985,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999997,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.930946,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1688",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.997563,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999963,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.996188,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.9924,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-597",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.995286,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.503056,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999774,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.594296,
+      "correct": false
+    },
+    {
+      "id": "openai/gsm8k-797",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.997986,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.99963,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999944,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.983618,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-234",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.997041,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999988,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999998,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.603809,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-729",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.992045,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999869,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.973262,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.673191,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-881",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.983146,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.917328,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.867801,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.849833,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-937",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.953633,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.995793,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999954,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.98333,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1262",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.996633,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.807396,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999989,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.699473,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-559",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.997747,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999605,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.998272,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.620879,
+      "correct": false
+    },
+    {
+      "id": "openai/gsm8k-1383",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.940639,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.996251,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.998838,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.932514,
+      "correct": false
+    },
+    {
+      "id": "openai/gsm8k-2046",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.986605,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.998685,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999954,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.999352,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-2308",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.994354,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.998916,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999803,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.977732,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1409",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.997537,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999992,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999504,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.993762,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1700",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.99787,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999993,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999997,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.984395,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1938",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.967156,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.99991,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.989053,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.964996,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-2017",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.982431,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999791,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999488,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.974555,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1896",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.984549,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999993,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999984,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.978917,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1695",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.997357,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999423,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999997,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.982675,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-859",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.986162,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999994,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.995727,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.988798,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1628",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.999965,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.996297,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999171,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.973987,
+      "correct": false
+    },
+    {
+      "id": "openai/gsm8k-1403",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.999715,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999994,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999802,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.999789,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1867",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.993588,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.99823,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.988837,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.993897,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-2058",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.999588,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.879827,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.998099,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.996852,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-2463",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.979006,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.975803,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999187,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.993902,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1177",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.99131,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 1.0,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.996824,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.970917,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-412",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.993936,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.99305,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999984,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.787593,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-954",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.982724,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999988,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999936,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.981214,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1757",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.992619,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.749912,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999883,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.998827,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-587",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.994253,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.99581,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 1.0,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.997778,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1255",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.983285,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999101,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.99991,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.877318,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-777",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.999235,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.997072,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.998543,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.991834,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-747",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.979466,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999978,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.884999,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.548664,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1450",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.943221,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999513,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999934,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.891806,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-941",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.993491,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999712,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999728,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.920267,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1844",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.970064,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.934404,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 1.0,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.768665,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-350",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.99341,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999899,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999913,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.552434,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-530",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.976734,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999999,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999987,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.999294,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-2121",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.94863,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999576,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.99994,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.985863,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1559",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.996653,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.959664,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.95494,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.971543,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1934",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.790474,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999993,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.997917,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.996579,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1359",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.993497,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.999658,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999941,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.999599,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-1447",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.99499,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.99856,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.999968,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.692292,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-293",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.994009,
+      "correct": true
+    },
+    {
+      "id": "mteb/banking77-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "mteb/banking77",
+      "confidence": 0.927713,
+      "correct": true
+    },
+    {
+      "id": "clinc/clinc_oos-0",
+      "qid": "category",
+      "type": "choice",
+      "family": "clinc/clinc_oos",
+      "confidence": 0.998185,
+      "correct": true
+    },
+    {
+      "id": "fancyzhx/amazon_polarity-0",
+      "qid": "claim",
+      "type": "boolean",
+      "family": "fancyzhx/amazon_polarity",
+      "confidence": 0.993125,
+      "correct": true
+    },
+    {
+      "id": "openai/gsm8k-2005",
+      "qid": "correct",
+      "type": "boolean",
+      "family": "openai/gsm8k",
+      "confidence": 0.999699,
+      "correct": true
+    }
+  ]
+}

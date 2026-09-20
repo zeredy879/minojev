@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>minojev · decision workflow</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="alternate icon" href="favicon.png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<style>
+  :root {
+    --bg: #0a0d14; --panel: #121926; --panel-2: #19223a; --ink: #e8edf7; --muted: #8d9bb3;
+    --accent: #59d3a8; --accent-2: #6ea8fe; --warn: #f0b06a; --danger: #ef7b8b; --line: #25304a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.7 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: var(--accent-2); }
+  header { padding: 28px 24px 18px; border-bottom: 1px solid var(--line);
+    background: radial-gradient(800px 320px at 10% -20%, rgba(89,211,168,.13), transparent 60%), var(--bg); }
+  h1 { margin: 8px 0 6px; font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -0.6px; }
+  h1 span { color: var(--accent); }
+  header p { margin: 0; color: var(--muted); max-width: 900px; font-size: 13.5px; }
+  .cases { display: flex; flex-wrap: wrap; gap: 8px; max-width: 1180px; margin: 18px auto 0; padding: 0 20px; }
+  .case-chip { border: 1px solid var(--line); background: var(--panel-2); color: var(--muted); border-radius: 999px;
+    padding: 6px 13px; font-size: 13px; cursor: pointer; }
+  .case-chip.active { border-color: var(--accent); color: var(--accent); background: rgba(89,211,168,.12); }
+  main { max-width: 1180px; margin: 0 auto; padding: 18px 20px 80px; }
+  .state { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    font: 12.5px/1.7 ui-monospace, Menlo, monospace; color: var(--muted); white-space: pre-wrap; }
+  .flow { display: grid; grid-template-columns: 1fr 26px 1fr 26px 1fr; gap: 0; align-items: stretch; margin-top: 16px; }
+  @media (max-width: 900px) { .flow { grid-template-columns: 1fr; } .arrow { display: none; } }
+  .node { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 13px 15px; position: relative; overflow: hidden; }
+  .node:after { content: ""; position: absolute; inset: 0; border-radius: 12px; border: 1px solid transparent;
+    animation: pulse 3.2s ease-in-out infinite; pointer-events: none; }
+  .node:nth-child(3):after { animation-delay: .15s; }
+  .node:nth-child(5):after { animation-delay: .3s; }
+  @keyframes pulse { 0%, 100% { border-color: transparent; } 45% { border-color: rgba(89,211,168,.55); } }
+  .node h3 { margin: 0 0 2px; font-size: 13px; color: var(--accent-2); text-transform: uppercase; letter-spacing: .7px; }
+  .node .q { color: var(--muted); font-size: 12.5px; min-height: 34px; margin-bottom: 8px; }
+  .bar { display: grid; grid-template-columns: minmax(70px, 120px) 1fr 46px; gap: 8px; align-items: center; margin-bottom: 5px; }
+  .bar label { color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .track { height: 11px; background: #0d1424; border-radius: 6px; overflow: hidden; }
+  .fill { height: 100%; width: 0; border-radius: 6px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); transition: width .6s ease; }
+  .fill.chosen { background: linear-gradient(90deg, var(--accent), #b8f4dd); }
+  .bar .value { text-align: right; font: 11.5px ui-monospace, Menlo, monospace; color: var(--muted); }
+  .arrow { display: flex; align-items: center; justify-content: center; color: #3b4a6b; font-size: 20px; }
+  .action { margin-top: 16px; background: linear-gradient(180deg, #101a26, var(--panel)); border: 1px solid #1f5c49;
+    border-radius: 12px; padding: 14px 16px; }
+  .action h3 { margin: 0 0 6px; font-size: 13px; color: var(--accent); text-transform: uppercase; letter-spacing: .8px; }
+  .action p { margin: 0; font: 13.5px/1.8 ui-monospace, Menlo, monospace; color: var(--ink); }
+  .action small { color: var(--muted); display: block; margin-top: 6px; font-size: 12.5px; }
+  .badge { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 2px 9px;
+    font: 11.5px ui-monospace, Menlo, monospace; color: var(--muted); margin-right: 6px; }
+  #error { color: var(--danger); }
+</style>
+</head>
+<body>
+<header>
+  <p style="margin:0 0 4px;display:flex;gap:14px;flex-wrap:wrap">
+    <a href="index.html" style="color:var(--accent);text-decoration:none">← all demos</a>
+    <a href="playground.html" style="color:var(--muted);text-decoration:none">Domains</a>
+    <a href="calibration.html" style="color:var(--muted);text-decoration:none">Confidence</a>
+    <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
+    <a href="zh-workflow.html" style="color:var(--muted);text-decoration:none">中文</a>
+  </p>
+  <h1>From distribution to <span>action</span></h1>
+  <p>
+    One state, three typed questions, a single forward pass. The model returns distributions; deterministic
+    code turns them into the action below. This is the System One pattern: fuzzy judgments, exact branching.
+  </p>
+</header>
+<div class="cases" id="cases"></div>
+<main>
+  <div class="state" id="state">loading data/domains.json …</div>
+  <div class="flow" id="flow"></div>
+  <div class="action" id="action"></div>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const pct = (x) => (100 * x).toFixed(1) + "%";
+const DOMAIN_LABELS = {
+  "support": "support ticket",
+  "moderation": "content moderation",
+  "code-review": "code review",
+  "refunds": "refund request",
+  "triage": "intake triage",
+  "leads": "sales lead",
+};
+const ACTION_RULES = {
+  "support": (choice, gate, score) => `queue := ${choice}   ·   escalate := ${gate}   ·   churn level := ${score}/4`,
+  "moderation": (choice, gate, score) => `category := ${choice}   ·   block := ${gate}   ·   severity := ${score}/4`,
+  "code-review": (choice, gate, score) => `risk := ${choice}   ·   second reviewer := ${gate}   ·   complexity := ${score}/4`,
+  "refunds": (choice, gate, score) => `action := ${choice}   ·   eligible := ${gate}   ·   escalation risk := ${score}/4`,
+  "triage": (choice, gate, score) => `urgency := ${choice}   ·   red flag := ${gate}   ·   severity := ${score}/4`,
+  "leads": (choice, gate, score) => `tier := ${choice}   ·   enterprise route := ${gate}   ·   fit := ${score}/4`,
+};
+let bundle = null;
+let active = 0;
+let cases = [];
+
+function groupRequests() {
+  const grouped = new Map();
+  for (const record of bundle.records) {
+    if (!grouped.has(record.id)) grouped.set(record.id, { id: record.id, family: record.family, state: record.state, questions: [] });
+    grouped.get(record.id).questions.push(record);
+  }
+  const byFamily = new Map();
+  for (const request of grouped.values()) {
+    if (!byFamily.has(request.family) || byFamily.get(request.family).questions.length < request.questions.length) {
+      byFamily.set(request.family, request);
+    }
+  }
+  return [...byFamily.values()];
+}
+
+function renderCases() {
+  const box = $("cases");
+  box.textContent = "";
+  cases.forEach((request, index) => {
+    const chip = document.createElement("button");
+    chip.className = "case-chip" + (index === active ? " active" : "");
+    chip.textContent = `${DOMAIN_LABELS[request.family] || request.family} · ${request.id}`;
+    chip.onclick = () => { active = index; renderCases(); render(); };
+    box.append(chip);
+  });
+}
+
+function bar(label, probability, chosen) {
+  const row = document.createElement("div");
+  row.className = "bar";
+  const name = document.createElement("label");
+  name.textContent = label;
+  const track = document.createElement("div");
+  track.className = "track";
+  const fill = document.createElement("div");
+  fill.className = "fill" + (chosen ? " chosen" : "");
+  fill.style.width = pct(probability);
+  track.append(fill);
+  const value = document.createElement("div");
+  value.className = "value";
+  value.textContent = pct(probability);
+  row.append(name, track, value);
+  return row;
+}
+
+function node(record, kindLabel, topK) {
+  const box = document.createElement("div");
+  box.className = "node";
+  const title = document.createElement("h3");
+  title.textContent = kindLabel;
+  const question = document.createElement("div");
+  question.className = "q";
+  question.textContent = record.instructions;
+  box.append(title, question);
+  const probabilities = record.probabilities;
+  const order = probabilities
+    .map((probability, index) => [index, probability])
+    .sort((left, right) => right[1] - left[1])
+    .slice(0, topK);
+  for (const [index, probability] of order) {
+    box.append(bar(record.candidate_ids[index], probability, probability === Math.max(...probabilities)));
+  }
+  if (record.expected !== undefined) {
+    const note = document.createElement("div");
+    note.className = "q";
+    note.style.minHeight = "auto";
+    note.style.marginTop = "8px";
+    note.textContent = `expected level: ${record.expected.toFixed(2)}`;
+    box.append(note);
+  }
+  return box;
+}
+
+function arrow() {
+  const node = document.createElement("div");
+  node.className = "arrow";
+  node.textContent = "→";
+  return node;
+}
+
+function valueOf(record) {
+  if (record.type === "boolean") {
+    return record.probabilities[1] >= record.probabilities[0] ? "yes" : "no";
+  }
+  if (record.type === "score") {
+    return record.expected.toFixed(2);
+  }
+  const probabilities = record.probabilities;
+  return record.candidate_ids[probabilities.indexOf(Math.max(...probabilities))];
+}
+
+function render() {
+  const request = cases[active];
+  $("state").textContent = JSON.stringify(request.state, null, 2);
+  const choice = request.questions.find((question) => question.type === "choice");
+  const gate = request.questions.find((question) => question.type === "boolean");
+  const score = request.questions.find((question) => question.type === "score");
+  const flow = $("flow");
+  flow.textContent = "";
+  flow.append(node(choice, "Choice", 5), arrow(), node(gate, "Boolean gate", 2), arrow(), node(score, "Score", 5));
+  const rule = ACTION_RULES[request.family];
+  const action = rule
+    ? rule(valueOf(choice), valueOf(gate), Number(valueOf(score)).toFixed(1))
+    : `choice := ${valueOf(choice)}   ·   gate := ${valueOf(gate)}`;
+  $("action").innerHTML =
+    `<h3>Code action <span class="badge">one forward pass</span><span class="badge">thresholds live in code</span></h3>` +
+    `<p>${action}</p>` +
+    `<small>The distributions above come from the model; the branch, gate, and level are chosen by deterministic ` +
+    `code, not by generated text.</small>`;
+}
+
+fetch("data/domains.json")
+  .then((response) => { if (!response.ok) throw new Error("HTTP " + response.status); return response.json(); })
+  .then((data) => {
+    bundle = data;
+    cases = groupRequests();
+    if (!cases.length) throw new Error("no records");
+    renderCases();
+    render();
+  })
+  .catch((error) => {
+    $("state").innerHTML = `<span id="error">Could not load data/domains.json (${error.message}).</span>`;
+  });
+</script>
+</body>
+</html>

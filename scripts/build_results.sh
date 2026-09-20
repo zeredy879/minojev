@@ -83,6 +83,7 @@ if [ -d "$GENERAL_CKPT" ]; then
     --output results/compare-domains.json --markdown results/compare-domains.md --device mps
 
   "$PY" scripts/build_benchmark_bundle.py
+  "$PY" scripts/build_calibration_bundle.py
   "$PY" scripts/export_hf_general.py
 fi
 
