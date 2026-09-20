@@ -12,12 +12,11 @@
   <img alt="head params" src="https://img.shields.io/badge/decision__head-0.8M-8d9bb3">
 </p>
 
-> **The one-sentence version.** A chat model answers by *writing* text; minojev answers by
-> *reading* a probability distribution — and **head training** turns any frozen language
-> model into that decision layer in minutes on a laptop, with no output tokens and no
-> backbone fine-tuning.
+> **The one-sentence version.** By the time a model finishes reading your question it
+> already has an opinion — minojev reads that opinion back as a typed, calibrated
+> distribution instead of making the model write a sentence.
 
-## What is head training?
+## Head training, in plain words
 
 Most "Jev-style" projects either call a hosted API or fine-tune a whole model. minojev's
 core is smaller than both:
@@ -33,7 +32,7 @@ The whole run was **~37 minutes and ~4 GB of peak memory on an Apple Silicon lap
 Because the backbone is untouched, there is no catastrophic forgetting, no GPU required,
 and every step is observable (see the [monitor dashboard](#memory-safe-training)).
 
-## Benchmark: decisions vs token generation
+## How it compares to token generation
 
 Same backbone (Qwen3-1.7B), same questions, same prompts. The baseline must *generate*
 its answer, token by token; minojev reads a typed distribution from hidden states.
@@ -107,7 +106,7 @@ Watch any run live from a second terminal:
 minojev watch --run runs/general-head --port 8010   # http://127.0.0.1:8010/
 ```
 
-## Memory-safe training
+## Watching a run (without cooking your laptop)
 
 The monitor is not decoration: every training phase reports loss, gradient norm,
 tokens/s, ETA, MPS driver memory, process RSS, CPU load, and system memory pressure to
@@ -116,7 +115,7 @@ the machine is at risk, calibration forwards are chunked, and each phase frees t
 previous model before loading the next. The 1.7B head run peaked at **4.0 GB** against a
 12 GB budget.
 
-## Evaluation without loss
+## How we measure quality
 
 Loss is a poor progress signal for a decision model — teacher distributions have an
 entropy floor and heterogeneous batches make it noisy. The pipeline reports:
@@ -131,7 +130,7 @@ entropy floor and heterogeneous batches make it noisy. The pipeline reports:
 `minojev compare` produces JSON + Markdown reports from committed artifacts, and
 `scripts/build_benchmark_bundle.py` feeds the live benchmark page.
 
-## Models and datasets on Hugging Face
+## Models and data
 
 - Checkpoints: [`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev) —
   `general/` (Qwen3-1.7B + head), plus the tiny from-scratch `synth/` and `maze/` models.
@@ -175,7 +174,7 @@ model = DecisionModel.load(f"{path}/general", device="cpu")
 `choice` accepts 2–255 candidates, `score` 2–10 ordered levels. Flat single-question rows
 are accepted as choice questions. Question ids are never placed in the model input.
 
-## Serving
+## Run it locally
 
 ```bash
 minojev serve --checkpoint runs/general-cal --port 8000
@@ -185,7 +184,7 @@ curl -s localhost:8000/score -H 'content-type: application/json' \
 
 Records report `decode_steps: 0` and carry the full candidate distribution.
 
-## Native-logits engine (zero training)
+## Don't want to train at all?
 
 For pretrained models, `minojev.logits` reads declared option logits directly at
 letter slots — the zero-training route used in the benchmark:

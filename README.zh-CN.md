@@ -12,11 +12,10 @@
   <img alt="head params" src="https://img.shields.io/badge/decision__head-0.8M-8d9bb3">
 </p>
 
-> **一句话版本：** 聊天模型靠"写"文字回答，minojev 靠"读"概率分布回答——而
-> **头训练（head training）**能在笔记本上几分钟把一个冻结的语言模型变成这样的决策层，
-> 零输出 token，也不需要微调骨干。
+> **一句话版本：** 模型读完你的问题，心里其实已经有了答案——minojev 直接把这个答案
+> 读成带类型、可校准的概率分布，而不是让模型把答案"写"成一句话。
 
-## 什么是头训练？
+## 头训练，说人话
 
 大部分 "Jev 式"项目要么调用托管 API，要么微调整个模型。minojev 的核心比两者都小：
 
@@ -28,7 +27,7 @@
 整个训练在 **Apple Silicon 笔记本上约 37 分钟、峰值 4GB 内存**。骨干没有被改动，因此没有
 灾难性遗忘、不需要 GPU，而且每一步都可见（见 [内存安全的训练](#内存安全的训练)）。
 
-## 基准：决策读出 vs 逐 token 生成
+## 和逐 token 生成比，差在哪里
 
 同一底座（Qwen3-1.7B）、同一批问题、同样的提示。基线必须逐 token **生成**答案；minojev
 直接从隐藏状态读出带类型的分布。测试集：120 条平衡决策，覆盖 banking77、CLINC150、
@@ -94,14 +93,14 @@ minojev compare --checkpoint runs/general-cal \
 minojev watch --run runs/general-head --port 8010   # http://127.0.0.1:8010/
 ```
 
-## 内存安全的训练
+## 盯住每一次训练（也别把电脑跑炸）
 
 监控面板不是装饰：每个训练阶段都会把 loss、梯度范数、tokens/s、ETA、MPS 显存、进程 RSS、
 CPU 负载和系统内存压力写入 `status.json` 与 `metrics.jsonl`。硬预算（`--max-memory-gb`）
 会在机器濒临危险前终止该步；校准前向分块执行；每个阶段先释放上一个模型再加载下一个。
 1.7B 头训练峰值 **4.0GB**，预算 12GB。
 
-## 不用 loss 的评测
+## 我们怎么判断好坏
 
 loss 对决策模型是个糟糕的进度指标——teacher 分布有熵下界，异构批次又让它噪声很大。流水线报告：
 
@@ -115,7 +114,7 @@ loss 对决策模型是个糟糕的进度指标——teacher 分布有熵下界�
 `minojev compare` 会从提交在仓库里的产物生成 JSON + Markdown 报告，
 `scripts/build_benchmark_bundle.py` 为在线基准页提供数据。
 
-## Hugging Face 模型与数据集
+## 模型与数据
 
 - 检查点：[`zeredy879/minojev`](https://huggingface.co/zeredy879/minojev)——
   `general/`（Qwen3-1.7B + 决策头），以及从零训练的微型 `synth/`、`maze/`；
@@ -159,7 +158,7 @@ model = DecisionModel.load(f"{path}/general", device="cpu")
 `choice` 支持 2–255 个候选，`score` 支持 2–10 个有序等级。扁平的单问题行会按 choice 解析。
 问题 id 永远不会进入模型输入。
 
-## 本地服务
+## 在本地跑起来
 
 ```bash
 minojev serve --checkpoint runs/general-cal --port 8000
@@ -169,7 +168,7 @@ curl -s localhost:8000/score -H 'content-type: application/json' \
 
 每条记录都会报告 `decode_steps: 0` 并携带完整候选分布。
 
-## 原生 logits 引擎（零训练）
+## 完全不想训练？
 
 对预训练模型，`minojev.logits` 直接读取字母槽位置的选项 logits——基准里的零训练路线：
 

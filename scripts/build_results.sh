@@ -14,8 +14,10 @@ fi
 cd "$ROOT"
 mkdir -p results web/data
 
-if [ -d runs/qwen-lora/checkpoint ]; then
-  DOMAIN_CKPT=runs/qwen-lora/checkpoint
+if [ -d runs/qwen-head-cal ]; then
+  DOMAIN_CKPT=runs/qwen-head-cal
+elif [ -d runs/qwen-head-bf16 ]; then
+  DOMAIN_CKPT=runs/qwen-head-bf16
 else
   DOMAIN_CKPT=runs/qwen-head/checkpoint
 fi

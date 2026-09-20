@@ -63,11 +63,11 @@
     <a href="https://github.com/zeredy879/minojev" style="color:var(--muted);text-decoration:none">GitHub</a>
     <a href="zh-benchmark.html" style="color:var(--muted);text-decoration:none">中文</a>
   </p>
-  <h1>Head training, measured against <span>token generation</span></h1>
+  <h1>Read the answer. <span>Don't write it.</span></h1>
   <p>
-    Same backbone, same questions. <strong>minojev reads a typed distribution from hidden states</strong>;
-    the baseline answers the very same prompts by decoding tokens. Head training is minojev's core:
-    freeze the backbone, cache candidate-path features once, then train only the decision head.
+    Same backbone, same questions, two ways to answer. <strong>minojev reads a typed distribution out of
+    hidden states</strong>; the baseline has to decode tokens. Head training is what makes the readout
+    good: freeze the backbone, cache candidate features once, then train only the decision head.
   </p>
 </header>
 <main>
