@@ -74,6 +74,13 @@
   <div class="tabs" id="tabs"></div>
   <div class="cards" id="cards"><p id="error">Loading data/benchmark.json …</p></div>
 
+  <p class="note" style="margin-top:14px">
+    Measurement notes: timings come from one Apple Silicon laptop under normal desktop load and vary between
+    runs — run <code>minojev compare</code> on your own hardware. Requests are scored one at a time; batching
+    and shared-prefix reuse favour the engine, while token generation pays a growing tail (p95) and needs a
+    parse step for anything richer than a single letter.
+  </p>
+
   <h2>Per-source accuracy</h2>
   <div class="card"><table id="sources"><thead><tr><th>source</th><th>minojev</th><th>generative</th></tr></thead><tbody></tbody></table></div>
 

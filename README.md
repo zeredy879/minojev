@@ -47,7 +47,8 @@ is told to answer with a single letter.
 | ECE | **0.024** | 0.097 | not available |
 | Output tokens / decision | **0** | **0** | 3.48 |
 | Time to first token (p50) | **0 ms** | **0 ms** | ~100 ms |
-| Latency p95 | **~1.1 s** | ~1.1 s | ~5.3 s |
+| Latency p50 | **264 ms** | — | 361 ms |
+| Latency p95 | **~0.6 s** | — | ~3.3 s |
 | Format / parse failures | **0** | 0 | 0 |
 
 Full test suite (200 balanced requests, calibrated release): **97.5% accuracy, ECE

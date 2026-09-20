@@ -11,10 +11,10 @@ Workload: 120 requests, 120 decisions.
 | input tokens / decision | 271.400 | 141.100 |
 | output tokens / decision | 0.000 | 3.483 |
 | decode steps / decision | 0.000 | 3.483 |
-| time to first token (p50) | 0 ms | 132.2 ms |
-| latency per request p50 | 500.3 ms | 549.1 ms |
-| latency per request p95 | 1057.8 ms | 5319.9 ms |
-| decisions / second | 1.760 | 3.500 |
+| time to first token (p50) | 0 ms | 74.7 ms |
+| latency per request p50 | 264.3 ms | 361.4 ms |
+| latency per request p95 | 582.6 ms | 3311.6 ms |
+| decisions / second | 3.300 | 5.550 |
 | format / parse failures | 0 | 0.0% |
 
 | source | engine accuracy | generative accuracy |
