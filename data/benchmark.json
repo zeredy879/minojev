@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20T08:40:29Z",
+  "generated_at": "2026-09-20T08:55:07Z",
   "model": "Qwen3-1.7B + trained decision head (bf16)",
   "reference": {
     "method": "zero-training native logits readout (letter-slot softmax, openjev-style)",
@@ -28,9 +28,9 @@
         "output_tokens_per_decision": 0.0,
         "input_tokens_per_decision": 271.4,
         "ttft_p50_ms": 0.0,
-        "latency_p50_ms": 500.271,
-        "latency_p95_ms": 1057.777,
-        "decisions_per_second": 1.76,
+        "latency_p50_ms": 264.275,
+        "latency_p95_ms": 582.591,
+        "decisions_per_second": 3.3,
         "parse_failure_rate": 0.0,
         "selective_accuracy": {
           "0.5": {
@@ -52,10 +52,10 @@
         "accuracy_when_parsed": 0.8,
         "output_tokens_per_decision": 3.483,
         "input_tokens_per_decision": 141.1,
-        "ttft_p50_ms": 132.206,
-        "latency_p50_ms": 549.114,
-        "latency_p95_ms": 5319.86,
-        "decisions_per_second": 3.5,
+        "ttft_p50_ms": 74.698,
+        "latency_p50_ms": 361.372,
+        "latency_p95_ms": 3311.598,
+        "decisions_per_second": 5.55,
         "parse_failure_rate": 0.0
       },
       "per_source": {
