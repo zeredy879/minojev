@@ -1,0 +1,24 @@
+{
+  "checkpoint": "runs/snake-calibrated",
+  "target": "gold",
+  "questions": {
+    "choice": 128,
+    "boolean": 512,
+    "score": 128
+  },
+  "temperature": {
+    "choice": 0.9812,
+    "boolean": 0.6512,
+    "score": 1.0
+  },
+  "nll_before": {
+    "choice": 0.639584,
+    "boolean": 0.205996,
+    "score": 1.152947
+  },
+  "nll_after": {
+    "choice": 0.639351,
+    "boolean": 0.173186,
+    "score": 1.152947
+  }
+}

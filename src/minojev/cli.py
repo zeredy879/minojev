@@ -131,6 +131,43 @@ def build_parser() -> argparse.ArgumentParser:
     maze_rollout.add_argument("--size", type=int, default=6)
     maze_rollout.add_argument("--device", default="auto")
 
+    snake_data = subparsers.add_parser("snake-data", help="generate snake decision requests as JSONL")
+    snake_data.add_argument("--out", required=True)
+    snake_data.add_argument("--count", type=int, default=512)
+    snake_data.add_argument("--split", choices=["train", "dev", "test"], default="train")
+    snake_data.add_argument("--seed", type=int, default=17)
+    snake_data.add_argument("--size", type=int, default=6)
+    snake_data.add_argument("--length", type=int, default=3)
+
+    snake_rollout = subparsers.add_parser("snake-rollout", help="run the snake controller and export replay frames")
+    snake_rollout.add_argument("--checkpoint", required=True)
+    snake_rollout.add_argument("--output", required=True)
+    snake_rollout.add_argument("--count", type=int, default=6)
+    snake_rollout.add_argument("--seed", type=int, default=7)
+    snake_rollout.add_argument("--size", type=int, default=6)
+    snake_rollout.add_argument("--length", type=int, default=3)
+    snake_rollout.add_argument("--max-steps", type=int, default=120)
+    snake_rollout.add_argument("--target-food", type=int, default=5)
+    snake_rollout.add_argument("--device", default="auto")
+
+    sokoban_data = subparsers.add_parser("sokoban-data", help="generate Sokoban decision requests as JSONL")
+    sokoban_data.add_argument("--out", required=True)
+    sokoban_data.add_argument("--count", type=int, default=512)
+    sokoban_data.add_argument("--split", choices=["train", "dev", "test"], default="train")
+    sokoban_data.add_argument("--seed", type=int, default=17)
+    sokoban_data.add_argument("--size", type=int, default=7)
+    sokoban_data.add_argument("--boxes", type=int, default=1)
+
+    sokoban_rollout = subparsers.add_parser("sokoban-rollout", help="run the Sokoban controller and export replay frames")
+    sokoban_rollout.add_argument("--checkpoint", required=True)
+    sokoban_rollout.add_argument("--output", required=True)
+    sokoban_rollout.add_argument("--count", type=int, default=8)
+    sokoban_rollout.add_argument("--seed", type=int, default=11)
+    sokoban_rollout.add_argument("--size", type=int, default=7)
+    sokoban_rollout.add_argument("--boxes", type=int, default=1)
+    sokoban_rollout.add_argument("--max-steps", type=int, default=90)
+    sokoban_rollout.add_argument("--device", default="auto")
+
     build_data = subparsers.add_parser("build-data", help="convert public datasets into general decision JSONL splits")
     build_data.add_argument("--out-dir", default="data")
     build_data.add_argument("--per-source", type=int, default=4000, help="rows per training source")
@@ -338,6 +375,65 @@ def _cmd_maze_rollout(args) -> int:
     return 0
 
 
+def _cmd_snake_data(args) -> int:
+    from .snake import generate_split as generate_snake_split
+
+    requests = generate_snake_split(args.count, seed=args.seed, split=args.split, size=args.size, length=args.length)
+    write_requests(requests, args.out)
+    print(json.dumps({"split": args.split, "requests": len(requests), "size": args.size, "out": args.out}))
+    return 0
+
+
+def _cmd_snake_rollout(args) -> int:
+    from .snake import rollout_bundle
+
+    model = DecisionModel.load(args.checkpoint, device=args.device)
+    bundle = rollout_bundle(
+        model,
+        count=args.count,
+        seed=args.seed,
+        size=args.size,
+        length=args.length,
+        max_steps=args.max_steps,
+        target_food=args.target_food,
+        device=args.device,
+    )
+    path = Path(args.output)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2) + "\n")
+    print(json.dumps({"output": args.output, **bundle["summary"]}))
+    return 0
+
+
+def _cmd_sokoban_data(args) -> int:
+    from .sokoban import generate_split as generate_sokoban_split
+
+    requests = generate_sokoban_split(args.count, seed=args.seed, split=args.split, size=args.size, boxes=args.boxes)
+    write_requests(requests, args.out)
+    print(json.dumps({"split": args.split, "requests": len(requests), "size": args.size, "out": args.out}))
+    return 0
+
+
+def _cmd_sokoban_rollout(args) -> int:
+    from .sokoban import rollout_bundle
+
+    model = DecisionModel.load(args.checkpoint, device=args.device)
+    bundle = rollout_bundle(
+        model,
+        count=args.count,
+        seed=args.seed,
+        size=args.size,
+        boxes=args.boxes,
+        max_steps=args.max_steps,
+        device=args.device,
+    )
+    path = Path(args.output)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2) + "\n")
+    print(json.dumps({"output": args.output, **bundle["summary"]}))
+    return 0
+
+
 def _cmd_build_data(args) -> int:
     from .dataset_build import BuildConfig, build_dataset
 
@@ -509,6 +605,10 @@ def main(argv: list[str] | None = None) -> int:
         "demo": _cmd_demo,
         "maze-data": _cmd_maze_data,
         "maze-rollout": _cmd_maze_rollout,
+        "snake-data": _cmd_snake_data,
+        "snake-rollout": _cmd_snake_rollout,
+        "sokoban-data": _cmd_sokoban_data,
+        "sokoban-rollout": _cmd_sokoban_rollout,
         "domain-data": _cmd_domain_data,
         "build-data": _cmd_build_data,
         "posttrain": _cmd_posttrain,

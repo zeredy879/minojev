@@ -1,0 +1,53 @@
+{
+  "questions": 1536,
+  "labelled": 1536,
+  "accuracy": 0.8352864583333334,
+  "accuracy_by_type": {
+    "boolean": 0.964844,
+    "choice": 0.679688,
+    "score": 0.472656
+  },
+  "accuracy_by_family": {
+    "boolean": 0.964844,
+    "choice": 0.679688,
+    "score": 0.472656
+  },
+  "gold_nll": 0.3941944651806142,
+  "mean_confidence": 0.8287713196549479,
+  "expected_calibration_error": 0.012438697688802057,
+  "accuracy_by_candidate_count": {
+    "2": 0.964844,
+    "3-4": 0.576172
+  },
+  "selective_accuracy": {
+    "0.5": {
+      "coverage": 0.86263,
+      "accuracy": 0.900377
+    },
+    "0.7": {
+      "coverage": 0.751302,
+      "accuracy": 0.948007
+    },
+    "0.9": {
+      "coverage": 0.658854,
+      "accuracy": 0.969368
+    }
+  },
+  "teacher_scored": 1536,
+  "teacher_ce": 0.60935246501282,
+  "distribution_error": 0.14804050691942597,
+  "brier": 0.14804050691942597,
+  "teacher_argmax_accuracy": 0.8391927083333334,
+  "teacher_topset_accuracy": 0.8658854166666666,
+  "teacher_argmax_by_family": {
+    "boolean": 0.964844,
+    "choice": 0.703125,
+    "score": 0.472656
+  },
+  "teacher_topset_by_family": {
+    "boolean": 0.964844,
+    "choice": 0.863281,
+    "score": 0.472656
+  },
+  "decode_steps": 0
+}
