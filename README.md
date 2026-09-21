@@ -84,8 +84,6 @@ That is why the pipeline isolates OOD sources and reports them separately.
   replayed step by step with its probabilities.
 - **[Snake agent](https://zeredy879.github.io/minojev/snake.html)** — a from-scratch
   policy eats food while reporting move, safety, and distance distributions.
-- **[Sokoban agent](https://zeredy879.github.io/minojev/sokoban.html)** — BFS-supervised
-  single-push levels, with deadlock judgments.
 - **[Decision console](https://zeredy879.github.io/minojev/console.html)** — one state,
   many runtime questions.
 
@@ -221,10 +219,9 @@ src/minojev/
   metrics.py      accuracy, ECE, Brier, selective accuracy, by-source
   maze.py         grid-world tasks and agent rollout
   snake.py        snake tasks and agent rollout
-  sokoban.py      Sokoban tasks, BFS solver, and agent rollout
   synth.py        attribute decision families
 tests/            offline suite (unit + end-to-end + dashboards)
-web/              landing, benchmark, playground, maze, snake, Sokoban, console (EN + 中文)
+web/              landing, benchmark, playground, maze, snake, console (EN + 中文)
 ```
 
 ## Development notes

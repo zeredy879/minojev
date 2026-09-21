@@ -3,7 +3,7 @@
 #
 # Checkpoints expected (train with the commands in the README):
 #   runs/synth/checkpoint, runs/maze/checkpoint          - from-scratch tiny models
-#   runs/snake/checkpoint, runs/sokoban/checkpoint       - from-scratch game models
+#   runs/snake/checkpoint                               - from-scratch game model
 #   runs/qwen-lora/checkpoint or runs/qwen-head/checkpoint - post-trained Qwen3-0.6B
 set -eu
 
@@ -65,7 +65,7 @@ GENERAL_CKPT=runs/general-head-goldcal
 
 "$PY" scripts/maze_preview.py --input web/data/maze.json --output web/data/maze-preview.svg
 
-# 5b. Snake and Sokoban game replays (tiny from-scratch models).
+# 5b. Snake game replay (tiny from-scratch model).
 if [ -d runs/snake ]; then
   "$PY" -m minojev.cli calibrate --checkpoint runs/snake/checkpoint \
     --input data/snake-dev.jsonl --output runs/snake-calibrated --target gold --device cpu \
@@ -76,18 +76,6 @@ if [ -d runs/snake ]; then
   "$PY" -m minojev.cli snake-rollout --checkpoint runs/snake-calibrated \
     --output web/data/snake.json --count 6 --seed 7 --device cpu
   "$PY" scripts/snake_preview.py --input web/data/snake.json --output web/data/snake-preview.svg
-fi
-
-if [ -d runs/sokoban ]; then
-  "$PY" -m minojev.cli calibrate --checkpoint runs/sokoban/checkpoint \
-    --input data/sokoban-dev.jsonl --output runs/sokoban-calibrated --target gold --device cpu \
-    > results/calibration-sokoban.json
-  "$PY" -m minojev.cli evaluate --checkpoint runs/sokoban-calibrated \
-    --input data/sokoban-test.jsonl --predictions results/sokoban-predictions.jsonl \
-    --device cpu > results/sokoban-metrics.json
-  "$PY" -m minojev.cli sokoban-rollout --checkpoint runs/sokoban-calibrated \
-    --output web/data/sokoban.json --count 8 --seed 11 --device cpu
-  "$PY" scripts/sokoban_preview.py --input web/data/sokoban.json --output web/data/sokoban-preview.svg
 fi
 
 # 6. Example scores for the quickstart.

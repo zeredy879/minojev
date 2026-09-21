@@ -68,7 +68,6 @@ OOD 来源单独隔离并单独报告。
 - **[多领域体验场](https://zeredy879.github.io/minojev/zh-playground.html)**——六个业务场景的带类型分布；
 - **[迷宫智能体](https://zeredy879.github.io/minojev/zh-maze.html)**——逐步回放学到的策略与概率；
 - **[贪吃蛇智能体](https://zeredy879.github.io/minojev/zh-snake.html)**——从零训练的策略边吃食物，边报告走法、安全与距离分布；
-- **[推箱子智能体](https://zeredy879.github.io/minojev/zh-sokoban.html)**——BFS 求解器监督的单推关卡，并给出死锁判断；
 - **[决策控制台](https://zeredy879.github.io/minojev/zh-console.html)**——一个状态、多个运行时问题。
 
 ## 快速开始
@@ -201,10 +200,9 @@ src/minojev/
   metrics.py      准确率、ECE、Brier、选择性准确率、分来源
   maze.py         网格世界任务与智能体回放
   snake.py        贪吃蛇任务与智能体回放
-  sokoban.py      推箱子任务、BFS 求解器与智能体回放
   synth.py        属性决策任务
 tests/            离线测试套件（单元 + 端到端 + 面板）
-web/              主页、基准、体验场、迷宫、贪吃蛇、推箱子、控制台（中英双语）
+web/              主页、基准、体验场、迷宫、贪吃蛇、控制台（中英双语）
 ```
 
 ## 开发说明
