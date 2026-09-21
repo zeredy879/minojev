@@ -138,7 +138,6 @@
     <span class="spacer"></span>
     <a class="link" href="zh-maze.html">迷宫</a>
     <a class="link" href="zh-snake.html">贪吃蛇</a>
-    <a class="link" href="zh-sokoban.html">推箱子</a>
     <a class="link" href="zh-console.html">决策控制台</a>
     <a class="link" href="zh-playground.html">多领域体验</a>
     <a class="link" href="zh-workflow.html">决策工作流</a>
@@ -279,11 +278,6 @@
         <p>边吃食物边避开自己的身体：走法选择、四道安全判断、距离评分，每一步只需一次前向传播。</p>
         <div class="live" id="snake-stat">加载中…</div>
       </a>
-      <a class="demo" href="zh-sokoban.html">
-        <h3>推箱子智能体回放</h3>
-        <p>关卡由解反推生成，BFS 求解器提供监督。看模型把箱子推上目标点，并报告自己的死锁判断。</p>
-        <div class="live" id="sokoban-stat">加载中…</div>
-      </a>
       <a class="demo" href="zh-console.html">
         <h3>并行决策控制台</h3>
         <p>同一个状态下的多个问题——选择、判断、打分——一次全部算完，并叠上参考分布做对照。</p>
@@ -311,14 +305,14 @@
 <section>
   <div class="wrap">
     <h2>留出集上的真实成绩</h2>
-    <p class="sub">旗舰模型：Qwen3-1.7B 头训练；迷宫、贪吃蛇、推箱子与控制台 Demo 使用从零训练的紧凑模型。运行 <code style="color:#cfe1ff">scripts/build_results.sh</code> 可完整复现。</p>
+    <p class="sub">旗舰模型：Qwen3-1.7B 头训练；迷宫、贪吃蛇与控制台 Demo 使用从零训练的紧凑模型。运行 <code style="color:#cfe1ff">scripts/build_results.sh</code> 可完整复现。</p>
     <div class="results">
       <div class="result"><b>95.8%</b><small>决策准确率 · <span class="tag">零训练 logits 88.3%</span></small></div>
       <div class="result"><b>0</b><small>每决策输出 token</small></div>
       <div class="result"><b>0.024</b><small>校准后 ECE · <span class="tag">200 条评测为 0.014</span></small></div>
       <div class="result"><b>~5×</b><small>p95 延迟优于逐 token 生成</small></div>
       <div class="result"><b>5/6</b><small>紧凑 Demo 模型解出的迷宫数</small></div>
-      <div class="result"><b>80</b><small>离线跑通的测试数</small></div>
+      <div class="result"><b>73</b><small>离线跑通的测试数</small></div>
     </div>
   </div>
 </section>
@@ -412,12 +406,6 @@ load("data/snake.json", "snake-stat", (bundle) => {
   if (!bundle || !bundle.summary) return null;
   const s = bundle.summary;
   return `吃满 ${s.successes}/${s.games} 局 · 共吃到 ${s.food_eaten} 个食物 · ${s.total_steps} 步`;
-});
-
-load("data/sokoban.json", "sokoban-stat", (bundle) => {
-  if (!bundle || !bundle.summary) return null;
-  const s = bundle.summary;
-  return `通关 ${s.successes}/${s.levels} 关 · 共 ${s.total_steps} 步 · ${s.forced_moves} 次强制移动`;
 });
 
 load("data/demo.json", "console-stat", (bundle) => {

@@ -141,7 +141,6 @@
     <span class="spacer"></span>
     <a class="link" href="maze.html">Maze</a>
     <a class="link" href="snake.html">Snake</a>
-    <a class="link" href="sokoban.html">Sokoban</a>
     <a class="link" href="console.html">Console</a>
     <a class="link" href="playground.html">Domains</a>
     <a class="link" href="workflow.html">Workflow</a>
@@ -285,11 +284,6 @@
         <p>A learned policy eats food while avoiding its own body: move choice, four safety booleans, and a distance score, all from one forward pass per step.</p>
         <div class="live" id="snake-stat">loading…</div>
       </a>
-      <a class="demo" href="sokoban.html">
-        <h3>Sokoban agent replay</h3>
-        <p>Backwards-generated puzzles supervised by a BFS solver. Watch the model push boxes onto targets and report its own deadlock judgments.</p>
-        <div class="live" id="sokoban-stat">loading…</div>
-      </a>
       <a class="demo" href="console.html">
         <h3>Parallel decision console</h3>
         <p>One state, many runtime questions scored together, with teacher distributions overlaid.</p>
@@ -317,14 +311,14 @@
 <section>
   <div class="wrap">
     <h2>Measured on held-out data</h2>
-    <p class="sub">Flagship: Qwen3-1.7B head training. Compact from-scratch models power the maze, snake, Sokoban, and console demos. Reproduce with <code style="color:#cfe1ff">scripts/build_results.sh</code>.</p>
+    <p class="sub">Flagship: Qwen3-1.7B head training. Compact from-scratch models power the maze, snake, and console demos. Reproduce with <code style="color:#cfe1ff">scripts/build_results.sh</code>.</p>
     <div class="results">
       <div class="result"><b>95.8%</b><small>decision accuracy · <span class="tag">88.3% zero-shot logits</span></small></div>
       <div class="result"><b>0</b><small>output tokens per decision</small></div>
       <div class="result"><b>0.024</b><small>ECE after calibration · <span class="tag">0.014 on 200 requests</span></small></div>
       <div class="result"><b>~5×</b><small>better p95 latency than token generation</small></div>
       <div class="result"><b>5/6</b><small>mazes solved by the compact demo model</small></div>
-      <div class="result"><b>80</b><small>tests passing offline</small></div>
+      <div class="result"><b>73</b><small>tests passing offline</small></div>
     </div>
   </div>
 </section>
@@ -418,12 +412,6 @@ load("data/snake.json", "snake-stat", (bundle) => {
   if (!bundle || !bundle.summary) return null;
   const s = bundle.summary;
   return `${s.successes}/${s.games} games fed · ${s.food_eaten} food eaten · ${s.total_steps} steps`;
-});
-
-load("data/sokoban.json", "sokoban-stat", (bundle) => {
-  if (!bundle || !bundle.summary) return null;
-  const s = bundle.summary;
-  return `${s.successes}/${s.levels} levels solved · ${s.total_steps} steps · ${s.forced_moves} forced moves`;
 });
 
 load("data/demo.json", "console-stat", (bundle) => {
